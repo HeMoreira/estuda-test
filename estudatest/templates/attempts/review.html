@@ -1,0 +1,87 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Resultado — {{ attempt.test.name }} — EstudaTest{% endblock %}
+{% block extra_css %}<link rel="stylesheet" href="{% static 'css/pages/attempt.css' %}">{% endblock %}
+{% block main_class %}main--full{% endblock %}
+
+{% block content %}
+<div class="attempt-layout">
+
+  <div class="page-header">
+    <div>
+      <h1 class="page-header__title">Resultado</h1>
+      <div class="page-header__sub">{{ attempt.test.name }}</div>
+    </div>
+    <a href="{% url 'dashboard' %}" class="btn btn--ghost btn--sm">← Início</a>
+  </div>
+
+  <!-- Score summary -->
+  <div class="score-summary">
+    <div class="score-summary__number"
+      style="color:{% if score_pct >= 70 %}var(--color-green){% elif score_pct >= 40 %}#BA7517{% else %}var(--color-red){% endif %}">
+      {{ score_pct }}%
+    </div>
+    <div class="score-summary__label">
+      {{ correct_count }} de {{ total }} questões corretas
+    </div>
+    <div class="score-summary__meta">
+      <span class="score-summary__meta-item"><strong>Tempo:</strong> {{ duration_str }}</span>
+      <span class="score-summary__meta-item"><strong>Tentativa:</strong> {{ attempt.started_at|date:"d/m/Y H:i" }}</span>
+    </div>
+  </div>
+
+  <!-- Revisão por questão -->
+  <h2 style="font-size:1rem;font-weight:600;margin-bottom:1rem;color:var(--color-text-muted)">
+    Revisão das questões
+  </h2>
+
+  <div class="review-list">
+    {% for item in answer_data %}
+    <div class="review-item {% if item.record.is_correct %}review-item--correct{% else %}review-item--wrong{% endif %}">
+      <div class="review-item__header">
+        {% if item.record.is_correct %}
+          <span class="badge badge--correct">✓ Correto</span>
+        {% else %}
+          <span class="badge badge--wrong">✗ Incorreto</span>
+        {% endif %}
+        <span class="badge badge--type">{{ item.question.get_question_type_display }}</span>
+      </div>
+      <div class="review-item__statement">{{ item.question.statement }}</div>
+      <div class="review-item__answers">
+        {% if not item.record.is_correct %}
+        <div class="review-item__answer-row">
+          Sua resposta: <strong>
+            {% with ga=item.record.given_answer %}
+              {% if ga is not None %}{{ ga }}{% else %}—{% endif %}
+            {% endwith %}
+          </strong>
+        </div>
+        <div class="review-item__answer-row">
+          Resposta correta: <strong>{{ item.correct_display }}</strong>
+        </div>
+        {% else %}
+        <div class="review-item__answer-row">
+          Resposta: <strong>{{ item.correct_display }}</strong>
+        </div>
+        {% endif %}
+      </div>
+      <div class="review-item__explanation">
+        💡 {{ item.question.explanation }}
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+
+  <!-- Ações finais -->
+  <div style="display:flex;gap:.75rem;justify-content:center;margin-top:2rem;flex-wrap:wrap">
+    <form method="post" action="{% url 'attempts:start' attempt.test.pk %}">
+      {% csrf_token %}
+      <button type="submit" class="btn btn--primary">Refazer prova</button>
+    </form>
+    <a href="{% url 'tests_app:edit' attempt.test.pk %}" class="btn btn--ghost">Editar prova</a>
+    <a href="{% url 'dashboard' %}" class="btn btn--ghost">← Início</a>
+  </div>
+
+</div>
+{% endblock %}

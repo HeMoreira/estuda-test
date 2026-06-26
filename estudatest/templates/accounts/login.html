@@ -1,0 +1,56 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Entrar — EstudaTest{% endblock %}
+
+{% block main_class %}main main--narrow{% endblock %}
+
+{% block content %}
+<div style="padding-top:3rem">
+  <div style="text-align:center;margin-bottom:2.5rem">
+    <h1 style="font-size:1.6rem;font-weight:800;letter-spacing:-0.03em">Estuda<span style="color:var(--color-accent)">Test</span></h1>
+    <p style="color:var(--color-text-muted);margin-top:0.4rem;font-size:0.9rem">Entre para acessar suas provas</p>
+  </div>
+
+  <div style="background:var(--color-surface);border:1px solid var(--color-border);border-radius:var(--radius-lg);padding:2rem">
+    {% if form.non_field_errors %}
+    <div class="form__errors-list" style="margin-bottom:1.25rem">
+      {% for error in form.non_field_errors %}
+      <li>{{ error }}</li>
+      {% endfor %}
+    </div>
+    {% endif %}
+
+    <form method="post" novalidate>
+      {% csrf_token %}
+      <div class="form__group">
+        <label class="form__label" for="{{ form.username.id_for_label }}">{{ form.username.label }}</label>
+        {{ form.username }}
+        {% if form.username.errors %}
+        <div class="form__error">{{ form.username.errors|join:', ' }}</div>
+        {% endif %}
+      </div>
+      <div class="form__group">
+        <label class="form__label" for="{{ form.password.id_for_label }}">{{ form.password.label }}</label>
+        {{ form.password }}
+        {% if form.password.errors %}
+        <div class="form__error">{{ form.password.errors|join:', ' }}</div>
+        {% endif %}
+      </div>
+      <button type="submit" class="btn btn--primary" style="width:100%;justify-content:center;padding:.75rem">Entrar</button>
+    </form>
+  </div>
+
+  <p style="text-align:center;color:var(--color-text-faint);font-size:0.78rem;margin-top:1.5rem">
+    Contas de administrador são criadas via terminal.
+  </p>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.querySelectorAll('.form__input, input[type=text], input[type=password]').forEach(el => {
+  el.classList.add('form__input');
+});
+</script>
+{% endblock %}

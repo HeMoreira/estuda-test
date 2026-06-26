@@ -1,0 +1,76 @@
+/* button.css — BEM: .btn, .btn--primary, .btn--ghost, .btn--danger, .btn--sm */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.55rem 1.1rem;
+  border-radius: var(--radius-md);
+  border: 1px solid transparent;
+  font-size: 0.875rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background var(--transition), border-color var(--transition), color var(--transition);
+  white-space: nowrap;
+  text-decoration: none;
+}
+
+.btn--primary {
+  background: var(--color-accent);
+  color: #fff;
+  border-color: var(--color-accent);
+}
+.btn--primary:hover {
+  background: var(--color-accent-hover);
+  border-color: var(--color-accent-hover);
+  text-decoration: none;
+  color: #fff;
+}
+
+.btn--ghost {
+  background: transparent;
+  color: var(--color-text-muted);
+  border-color: var(--color-border);
+}
+.btn--ghost:hover {
+  background: var(--color-surface-2);
+  color: var(--color-text);
+  border-color: var(--color-border-hover);
+  text-decoration: none;
+}
+
+.btn--danger {
+  background: transparent;
+  color: var(--color-red);
+  border-color: #3d2020;
+}
+.btn--danger:hover {
+  background: var(--color-danger-bg);
+  border-color: var(--color-red);
+  text-decoration: none;
+}
+
+.btn--success {
+  background: var(--color-green);
+  color: #fff;
+  border-color: var(--color-green);
+}
+.btn--success:hover {
+  background: #178c66;
+  text-decoration: none;
+  color: #fff;
+}
+
+.btn--sm {
+  padding: 0.35rem 0.75rem;
+  font-size: 0.8rem;
+}
+
+.btn--icon {
+  padding: 0.45rem;
+  border-radius: var(--radius-sm);
+}
+
+.btn:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}

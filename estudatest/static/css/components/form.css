@@ -1,0 +1,108 @@
+/* form.css — BEM: .form, .form__group, .form__input, .form__label, .form__error */
+.form__group {
+  margin-bottom: 1.25rem;
+}
+
+.form__label {
+  display: block;
+  font-size: 0.82rem;
+  font-weight: 500;
+  color: var(--color-text-muted);
+  margin-bottom: 0.4rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.form__input,
+.form__select,
+.form__textarea {
+  width: 100%;
+  background: var(--color-surface-2);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  color: var(--color-text);
+  padding: 0.6rem 0.85rem;
+  font-size: 0.9rem;
+  transition: border-color var(--transition), background var(--transition);
+  outline: none;
+}
+
+.form__input:focus,
+.form__select:focus,
+.form__textarea:focus {
+  border-color: var(--color-accent);
+  background: var(--color-surface);
+}
+
+.form__input::placeholder,
+.form__textarea::placeholder {
+  color: var(--color-text-faint);
+}
+
+.form__select option {
+  background: var(--color-surface);
+}
+
+.form__textarea {
+  resize: vertical;
+  min-height: 80px;
+}
+
+.form__error {
+  color: var(--color-red);
+  font-size: 0.8rem;
+  margin-top: 0.3rem;
+}
+
+.form__errors-list {
+  background: var(--color-danger-bg);
+  border: 1px solid #5c2424;
+  border-radius: var(--radius-md);
+  padding: 0.75rem 1rem;
+  margin-bottom: 1rem;
+}
+
+.form__errors-list li {
+  font-size: 0.85rem;
+  color: #f87171;
+  padding: 0.1rem 0;
+}
+
+.form__errors-list li::before {
+  content: '× ';
+}
+
+.form__hint {
+  font-size: 0.78rem;
+  color: var(--color-text-faint);
+  margin-top: 0.25rem;
+}
+
+.messages-list {
+  margin-bottom: 1.25rem;
+}
+
+.message {
+  padding: 0.65rem 1rem;
+  border-radius: var(--radius-md);
+  font-size: 0.875rem;
+  margin-bottom: 0.5rem;
+}
+
+.message--error {
+  background: var(--color-danger-bg);
+  color: #f87171;
+  border: 1px solid #5c2424;
+}
+
+.message--success {
+  background: var(--color-success-bg);
+  color: #4ade80;
+  border: 1px solid #1a4a2e;
+}
+
+.message--info {
+  background: #1a1f3a;
+  color: #93c5fd;
+  border: 1px solid #1e3a6a;
+}

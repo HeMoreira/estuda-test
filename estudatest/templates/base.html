@@ -1,0 +1,48 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{% block title %}EstudaTest{% endblock %}</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{% static 'css/base.css' %}">
+  <link rel="stylesheet" href="{% static 'css/layout.css' %}">
+  <link rel="stylesheet" href="{% static 'css/components/button.css' %}">
+  <link rel="stylesheet" href="{% static 'css/components/card.css' %}">
+  <link rel="stylesheet" href="{% static 'css/components/modal.css' %}">
+  <link rel="stylesheet" href="{% static 'css/components/form.css' %}">
+  <link rel="stylesheet" href="{% static 'css/components/badge.css' %}">
+  <link rel="stylesheet" href="{% static 'css/components/progress.css' %}">
+  {% block extra_css %}{% endblock %}
+</head>
+<body>
+<div class="layout">
+  <nav class="nav">
+    <a href="{% url 'dashboard' %}" class="nav__brand">Estuda<span>Test</span></a>
+    {% if user.is_authenticated %}
+    <div class="nav__actions">
+      <span class="nav__user">{{ user.username }}</span>
+      <form method="post" action="{% url 'accounts:logout' %}" style="margin:0">
+        {% csrf_token %}
+        <button type="submit" class="btn btn--ghost btn--sm">Sair</button>
+      </form>
+    </div>
+    {% endif %}
+  </nav>
+
+  <main class="{% block main_class %}main{% endblock %}">
+    {% if messages %}
+    <div class="messages-list">
+      {% for msg in messages %}
+      <div class="message message--{{ msg.tags }}">{{ msg }}</div>
+      {% endfor %}
+    </div>
+    {% endif %}
+    {% block content %}{% endblock %}
+  </main>
+</div>
+{% block extra_js %}{% endblock %}
+</body>
+</html>

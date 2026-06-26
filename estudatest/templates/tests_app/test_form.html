@@ -1,0 +1,109 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{% if action == 'create' %}Nova prova{% else %}Editar — {{ test.name }}{% endif %} — EstudaTest{% endblock %}
+{% block extra_css %}<link rel="stylesheet" href="{% static 'css/pages/test-editor.css' %}">{% endblock %}
+{% block main_class %}main--full{% endblock %}
+
+{% block content %}
+<div class="editor-layout">
+
+  <div class="page-header">
+    <div>
+      <h1 class="page-header__title">{% if action == 'create' %}Nova prova{% else %}Editar prova{% endif %}</h1>
+      {% if action == 'edit' %}
+      <div class="page-header__sub">{{ test.questions.count }} questão{{ test.questions.count|pluralize:"ões" }} · Criada em {{ test.created_at|date:"d/m/Y" }}</div>
+      {% endif %}
+    </div>
+    <a href="{% url 'dashboard' %}" class="btn btn--ghost btn--sm">← Voltar</a>
+  </div>
+
+  <!-- Formulário principal -->
+  <div class="editor-section">
+    <div class="editor-section__title">Informações da prova</div>
+    <form method="post" id="testForm">
+      {% csrf_token %}
+      <div class="form__group">
+        <label class="form__label" for="{{ form.name.id_for_label }}">{{ form.name.label }}</label>
+        {{ form.name }}
+        {% if form.name.errors %}<div class="form__error">{{ form.name.errors|join:', ' }}</div>{% endif %}
+      </div>
+      <div class="form__group">
+        <label class="form__label" for="{{ form.category.id_for_label }}">{{ form.category.label }}</label>
+        {{ form.category }}
+        {% if form.category.errors %}<div class="form__error">{{ form.category.errors|join:', ' }}</div>{% endif %}
+      </div>
+      <div style="display:flex;gap:.6rem;justify-content:flex-end">
+        <button type="submit" class="btn btn--primary btn--sm">Salvar</button>
+      </div>
+    </form>
+  </div>
+
+  {% if action == 'edit' %}
+  <!-- Lista de questões -->
+  <div class="editor-section">
+    <div class="editor-section__title" style="display:flex;justify-content:space-between;align-items:center">
+      <span>Questões</span>
+      <a href="{% url 'tests_app:question_add' test.pk %}" class="btn btn--primary btn--sm">+ Adicionar questão</a>
+    </div>
+
+    {% if questions %}
+    <div class="question-list">
+      {% for q in questions %}
+      <div class="question-item">
+        <span class="question-item__order">{{ forloop.counter }}</span>
+        <div style="flex:1;min-width:0">
+          <div class="question-item__preview">{{ q.statement_preview }}</div>
+          <div style="margin-top:.3rem">
+            <span class="badge badge--type">{{ q.get_question_type_display }}</span>
+          </div>
+        </div>
+        <div class="question-item__actions">
+          <a href="{% url 'tests_app:question_edit' test.pk q.pk %}" class="btn btn--ghost btn--sm btn--icon" title="Editar">✏️</a>
+          <button class="btn btn--danger btn--sm btn--icon" title="Remover"
+            onclick="deleteQuestion({{ q.pk }}, this)" data-test="{{ test.pk }}">🗑</button>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+    {% else %}
+    <p style="color:var(--color-text-faint);font-size:.875rem;text-align:center;padding:1.5rem 0">
+      Nenhuma questão ainda. Adicione a primeira!
+    </p>
+    {% endif %}
+  </div>
+
+  {% if questions %}
+  <div style="display:flex;justify-content:center;margin-top:1rem">
+    <form method="post" action="{% url 'attempts:start' test.pk %}">
+      {% csrf_token %}
+      <button type="submit" class="btn btn--success">▶ Realizar prova</button>
+    </form>
+  </div>
+  {% endif %}
+  {% endif %}
+
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+// Apply form__input class to Django-rendered fields
+document.querySelectorAll('#testForm input[type=text], #testForm select').forEach(el => {
+  if (el.tagName === 'SELECT') el.classList.add('form__select');
+  else el.classList.add('form__input');
+});
+
+function deleteQuestion(qpk, btn) {
+  if (!confirm('Remover esta questão?')) return;
+  const testPk = btn.dataset.test;
+  const csrf = document.querySelector('[name=csrfmiddlewaretoken]').value;
+  fetch(`/tests/${testPk}/questions/${qpk}/delete/`, {
+    method: 'DELETE',
+    headers: { 'X-CSRFToken': csrf },
+  }).then(r => r.json()).then(d => {
+    if (d.ok) location.reload();
+  });
+}
+</script>
+{% endblock %}

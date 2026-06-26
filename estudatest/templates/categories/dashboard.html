@@ -1,0 +1,243 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Início — EstudaTest{% endblock %}
+{% block extra_css %}<link rel="stylesheet" href="{% static 'css/pages/dashboard.css' %}">{% endblock %}
+
+{% block content %}
+<div class="dashboard-content">
+
+  {% if not has_any %}
+  <div class="empty-state">
+    <div class="empty-state__icon">📋</div>
+    <h2 class="empty-state__title">Nenhuma prova ainda</h2>
+    <p class="empty-state__sub">Crie sua primeira prova para começar a estudar com repetição espaçada.</p>
+    <a href="{% url 'tests_app:create' %}" class="btn btn--primary" style="margin-top:.5rem">+ Nova prova</a>
+  </div>
+
+  {% else %}
+
+  <div class="dashboard-header">
+    <h1 class="dashboard-header__title">Suas provas</h1>
+    <p class="dashboard-header__sub">
+      Clique em uma prova para ver detalhes ou realizá-la.
+    </p>
+  </div>
+
+  {% for group in categories_with_tests %}
+  <div class="category-section">
+    <div class="category-section__header">
+      <span class="category-section__name">{{ group.category.name }}</span>
+      <span class="category-section__count">{{ group.tests|length }} prova{{ group.tests|length|pluralize }}</span>
+    </div>
+    <div class="tests-grid">
+      {% for item in group.tests %}
+      <div class="test-card" data-test-id="{{ item.test.id }}" onclick="openTestDetail({{ item.test.id }})">
+        <div class="test-card__urgency-bar" style="background:{{ item.urgency_color }}"></div>
+        <div class="test-card__name">{{ item.test.name }}</div>
+        <div class="test-card__meta">
+          <div class="test-card__meta-row">
+            <span>{{ item.question_count }} questão{{ item.question_count|pluralize:"ões" }}</span>
+          </div>
+          {% if item.last_attempt %}
+          <div class="test-card__last-attempt" style="color:{{ item.urgency_color }}">
+            Última: {{ item.last_attempt.started_at|timesince }} atrás
+          </div>
+          {% else %}
+          <div class="test-card__last-attempt" style="color:var(--color-text-faint)">
+            Nunca realizada
+          </div>
+          {% endif %}
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+  {% endfor %}
+
+  {% if uncategorized_data %}
+  <div class="category-section">
+    <div class="category-section__header">
+      <span class="category-section__name">Sem categoria</span>
+      <span class="category-section__count">{{ uncategorized_data|length }} prova{{ uncategorized_data|length|pluralize }}</span>
+    </div>
+    <div class="tests-grid">
+      {% for item in uncategorized_data %}
+      <div class="test-card" data-test-id="{{ item.test.id }}" onclick="openTestDetail({{ item.test.id }})">
+        <div class="test-card__urgency-bar" style="background:{{ item.urgency_color }}"></div>
+        <div class="test-card__name">{{ item.test.name }}</div>
+        <div class="test-card__meta">
+          <div class="test-card__meta-row">
+            <span>{{ item.question_count }} questão{{ item.question_count|pluralize:"ões" }}</span>
+          </div>
+          {% if item.last_attempt %}
+          <div class="test-card__last-attempt" style="color:{{ item.urgency_color }}">
+            Última: {{ item.last_attempt.started_at|timesince }} atrás
+          </div>
+          {% else %}
+          <div class="test-card__last-attempt" style="color:var(--color-text-faint)">
+            Nunca realizada
+          </div>
+          {% endif %}
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+  {% endif %}
+
+  {% endif %}
+</div>
+
+<!-- FAB -->
+{% if user.is_authenticated %}
+<div class="dashboard-fab">
+  <button class="dashboard-fab__secondary" onclick="openCategoryModal()">+ Categoria</button>
+  <a href="{% url 'tests_app:create' %}" class="dashboard-fab__primary">+ Nova prova</a>
+</div>
+{% endif %}
+
+<!-- Modal detalhes da prova -->
+<div class="modal-backdrop" id="testDetailBackdrop">
+  <div class="modal" id="testDetailModal">
+    <div class="modal__header">
+      <h2 class="modal__title" id="modalTestName">—</h2>
+      <button class="modal__close" onclick="closeTestDetail()">✕</button>
+    </div>
+    <div class="modal__body">
+      <div style="display:flex;gap:.5rem;flex-wrap:wrap;margin-bottom:1rem">
+        <span class="badge badge--category" id="modalCategory" style="display:none"></span>
+        <span class="badge badge--type" id="modalQCount"></span>
+        <span style="font-size:.75rem;color:var(--color-text-faint);align-self:center" id="modalUpdated"></span>
+      </div>
+
+      <div class="modal-detail__stats" id="modalStats">
+        <div class="modal-detail__stat">
+          <div class="modal-detail__stat-label">Tentativas</div>
+          <div class="modal-detail__stat-value" id="modalAttemptCount">—</div>
+        </div>
+        <div class="modal-detail__stat">
+          <div class="modal-detail__stat-label">Última realização</div>
+          <div class="modal-detail__stat-value" id="modalLastDate">—</div>
+        </div>
+        <div class="modal-detail__stat">
+          <div class="modal-detail__stat-label">Tempo médio</div>
+          <div class="modal-detail__stat-value" id="modalAvgDuration">—</div>
+        </div>
+        <div class="modal-detail__stat">
+          <div class="modal-detail__stat-label">Último tempo</div>
+          <div class="modal-detail__stat-value" id="modalLastDuration">—</div>
+        </div>
+      </div>
+
+      <div class="modal-detail__chart-row" id="modalScoreRow" style="display:none">
+        <div class="modal-detail__chart-wrap">
+          <canvas id="scoreChart" width="80" height="80"></canvas>
+          <div class="modal-detail__chart-center" id="scoreChartLabel"></div>
+        </div>
+        <div>
+          <div class="modal-detail__score-label">Taxa de acerto</div>
+          <div id="scoreChartDesc" style="font-size:.8rem;color:var(--color-text-faint);margin-top:.2rem"></div>
+        </div>
+      </div>
+    </div>
+    <div class="modal__footer">
+      <button class="btn btn--ghost btn--sm" onclick="closeTestDetail()">Fechar</button>
+      <a id="modalEditBtn" href="#" class="btn btn--ghost btn--sm">Editar</a>
+      <form id="modalStartForm" method="post" action="#" style="margin:0">
+        {% csrf_token %}
+        <button type="submit" class="btn btn--primary btn--sm">Realizar prova</button>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- Modal criar categoria -->
+<div class="modal-backdrop" id="categoryBackdrop">
+  <div class="modal" style="max-width:380px">
+    <div class="modal__header">
+      <h2 class="modal__title">Nova categoria</h2>
+      <button class="modal__close" onclick="closeCategoryModal()">✕</button>
+    </div>
+    <div class="modal__body">
+      <div id="categoryFormErrors"></div>
+      <div class="form__group">
+        <label class="form__label">Nome da categoria</label>
+        <input type="text" class="form__input" id="categoryNameInput" placeholder="Ex: Biologia, Direito Civil..." maxlength="100">
+      </div>
+    </div>
+    <div class="modal__footer">
+      <button class="btn btn--ghost btn--sm" onclick="closeCategoryModal()">Cancelar</button>
+      <button class="btn btn--primary btn--sm" onclick="submitCategory()">Salvar</button>
+    </div>
+  </div>
+</div>
+
+{% endblock %}
+
+{% block extra_js %}
+<script src="{% static 'js/modal.js' %}"></script>
+<script>
+const DETAIL_URL = "{% url 'tests_app:detail_json' 0 %}".replace('/0/', '/');
+const CREATE_ATTEMPT_BASE = "{% url 'attempts:start' 0 %}".replace('/0/', '/');
+const CSRF = document.querySelector('[name=csrfmiddlewaretoken]').value;
+
+function openTestDetail(id) {
+  fetch(DETAIL_URL + id + '/')
+    .then(r => r.json())
+    .then(d => {
+      document.getElementById('modalTestName').textContent = d.name;
+      document.getElementById('modalQCount').textContent = d.question_count + ' questões';
+
+      const catEl = document.getElementById('modalCategory');
+      if (d.category) { catEl.textContent = d.category; catEl.style.display = ''; }
+      else catEl.style.display = 'none';
+
+      document.getElementById('modalUpdated').textContent = 'Atualizada em ' + d.updated_at;
+      document.getElementById('modalAttemptCount').textContent = d.attempt_count || '0';
+      document.getElementById('modalLastDate').textContent = d.last_attempt_date || '—';
+      document.getElementById('modalAvgDuration').textContent = d.avg_duration || '—';
+      document.getElementById('modalLastDuration').textContent = d.last_duration || '—';
+
+      const scoreRow = document.getElementById('modalScoreRow');
+      if (d.score_percent !== null && d.score_percent !== undefined) {
+        scoreRow.style.display = 'flex';
+        document.getElementById('scoreChartLabel').textContent = d.score_percent + '%';
+        document.getElementById('scoreChartDesc').textContent = 'na última tentativa';
+        drawDonut('scoreChart', d.score_percent);
+      } else {
+        scoreRow.style.display = 'none';
+      }
+
+      document.getElementById('modalEditBtn').href = '/tests/' + id + '/edit/';
+      document.getElementById('modalStartForm').action = '/attempts/start/' + id + '/';
+
+      document.getElementById('testDetailBackdrop').classList.add('modal-backdrop--open');
+    });
+}
+
+function closeTestDetail() {
+  document.getElementById('testDetailBackdrop').classList.remove('modal-backdrop--open');
+}
+
+function drawDonut(canvasId, pct) {
+  const canvas = document.getElementById(canvasId);
+  const ctx = canvas.getContext('2d');
+  const cx = 40, cy = 40, r = 30, lw = 10;
+  ctx.clearRect(0, 0, 80, 80);
+  ctx.beginPath(); ctx.arc(cx,cy,r,0,Math.PI*2);
+  ctx.strokeStyle = '#2e3033'; ctx.lineWidth = lw; ctx.stroke();
+  const angle = (pct/100) * Math.PI * 2 - Math.PI/2;
+  ctx.beginPath(); ctx.arc(cx,cy,r,-Math.PI/2, angle);
+  const color = pct >= 70 ? '#1D9E75' : pct >= 40 ? '#BA7517' : '#E24B4A';
+  ctx.strokeStyle = color; ctx.lineWidth = lw; ctx.lineCap = 'round'; ctx.stroke();
+}
+
+document.getElementById('testDetailBackdrop').addEventListener('click', function(e) {
+  if (e.target === this) closeTestDetail();
+});
+document.getElementById('categoryBackdrop').addEventListener('click', function(e) {
+  if (e.target === this) closeCategoryModal();
+});
+</script>
+{% endblock %}
