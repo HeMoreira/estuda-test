@@ -1,0 +1,53 @@
+<div class="modal-backdrop" id="testDetailBackdrop">
+    <div class="modal" id="testDetailModal">
+        <div class="modal__header">
+            <h2 class="modal__title" id="modalTestName">—</h2>
+            <button class="modal__close" onclick="closeTestDetail()">✕</button>
+        </div>
+        <div class="modal__body">
+            <div style="display:flex;gap:.5rem;flex-wrap:wrap;margin-bottom:1rem">
+                <span class="badge badge--category" id="modalCategory" style="display:none"></span>
+                <span class="badge badge--type" id="modalQCount"></span>
+                <span style="font-size:.75rem;color:var(--color-text-faint);align-self:center" id="modalUpdated"></span>
+            </div>
+
+            <div class="modal-detail__stats" id="modalStats">
+                <div class="modal-detail__stat">
+                    <div class="modal-detail__stat-label">Tentativas</div>
+                    <div class="modal-detail__stat-value" id="modalAttemptCount">—</div>
+                </div>
+                <div class="modal-detail__stat">
+                    <div class="modal-detail__stat-label">Última realização</div>
+                    <div class="modal-detail__stat-value" id="modalLastDate">—</div>
+                </div>
+                <div class="modal-detail__stat">
+                    <div class="modal-detail__stat-label">Tempo médio</div>
+                    <div class="modal-detail__stat-value" id="modalAvgDuration">—</div>
+                </div>
+                <div class="modal-detail__stat">
+                    <div class="modal-detail__stat-label">Último tempo</div>
+                    <div class="modal-detail__stat-value" id="modalLastDuration">—</div>
+                </div>
+            </div>
+
+            <div class="modal-detail__chart-row" id="modalScoreRow" style="display:none">
+                <div class="modal-detail__chart-wrap">
+                    <canvas id="scoreChart" width="80" height="80"></canvas>
+                    <div class="modal-detail__chart-center" id="scoreChartLabel"></div>
+                </div>
+                <div>
+                    <div class="modal-detail__score-label">Taxa de acerto</div>
+                    <div id="scoreChartDesc" style="font-size:.8rem;color:var(--color-text-faint);margin-top:.2rem"></div>
+                </div>
+            </div>
+        </div>
+        <div class="modal__footer">
+            <button class="btn btn--ghost btn--sm" onclick="closeTestDetail()">Fechar</button>
+            <a id="modalEditBtn" href="#" class="btn btn--ghost btn--sm">Editar</a>
+            <form id="modalStartForm" method="post" action="#" style="margin:0">
+                {% csrf_token %}
+                <button type="submit" class="btn btn--primary btn--sm">Realizar prova</button>
+            </form>
+        </div>
+    </div>
+</div>

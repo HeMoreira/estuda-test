@@ -18,6 +18,7 @@ INSTALLED_APPS = [
     'categories',
     'tests_app',
     'attempts',
+    'main',
 ]
 
 MIDDLEWARE = [

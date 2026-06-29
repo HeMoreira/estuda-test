@@ -1,0 +1,108 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Início — EstudaTest{% endblock %}
+{% block extra_css %}<link rel="stylesheet" href="{% static 'css/pages/dashboard.css' %}">{% endblock %}
+
+{% block content %}
+<div class="dashboard-content">
+    {% if not has_any %}
+    <div class="empty-state">
+        <div class="empty-state__icon">📋</div>
+        <h2 class="empty-state__title">Nenhuma prova ainda</h2>
+        <p class="empty-state__sub">Crie sua primeira prova para começar a estudar com repetição espaçada.</p>
+        <a href="{% url 'tests_app:create' %}" class="btn btn--primary" style="margin-top:.5rem">+ Nova prova</a>
+    </div>
+    {% else %}
+    <div class="dashboard-header">
+        <h1 class="dashboard-header__title">Suas provas</h1>
+        <p class="dashboard-header__sub">Clique em uma prova para ver detalhes ou realizá-la.</p>
+    </div>
+
+    {% for group in categories_with_tests %}
+        <div class="category-section">
+            <div class="category-section__header">
+                <span class="category-section__name">{{ group.category.name }}</span>
+                <span class="category-section__count">{{ group.tests|length }} prova{{ group.tests|length|pluralize }}</span>
+            </div>
+            <div class="tests-grid">
+            {% for item in group.tests %}
+                <div class="test-card" data-id="{{ item.test.id }}">
+                    <div class="test-card__urgency-bar" data-urgency_color="{{ item.urgency_color }}"></div>
+                    <div class="test-card__name">{{ item.test.name }}</div>
+                    <div class="test-card__meta">
+                        <div class="test-card__meta-row">
+                            {% include 'main/partials/name_according_to_count.html' with count=item.question_count singular='questão' plural='questões' %}
+                        </div>
+                        {% if item.last_attempt %}
+                            <div class="test-card__last-attempt" data-last_attempt="{{ item.last_attempt }}">Última: {{ item.last_attempt.started_at|timesince }} atrás</div>
+                        {% else %}
+                            <div class="test-card__last-attempt">Nunca realizada</div>
+                        {% endif %}
+                    </div>
+                </div>
+            {% endfor %}
+            </div>
+        </div>
+    {% endfor %}
+
+    <!-- TODO: Lógica para "Sem categoria" deve ser removida e substituída por uma categoria "Sem categoria" quando não especificada, reduzindo redundancia em várias partes do programa -->
+    {% if uncategorized_data %}
+    <div class="category-section">
+      <div class="category-section__header">
+        <span class="category-section__name">Sem categoria</span>
+        <span class="category-section__count">{{ uncategorized_data|length }} prova{{ uncategorized_data|length|pluralize }}</span>
+      </div>
+      <div class="tests-grid">
+        {% for item in uncategorized_data %}
+        <div class="test-card" data-test-id="{{ item.test.id }}" onclick="openTestDetail({{ item.test.id }})">
+          <div class="test-card__urgency-bar" style="background:{{ item.urgency_color }}"></div>
+          <div class="test-card__name">{{ item.test.name }}</div>
+          <div class="test-card__meta">
+            <div class="test-card__meta-row">
+              <span>{{ item.question_count }} questão{{ item.question_count|pluralize:"ões" }}</span>
+            </div>
+            {% if item.last_attempt %}
+            <div class="test-card__last-attempt" style="color:{{ item.urgency_color }}">
+              Última: {{ item.last_attempt.started_at|timesince }} atrás
+            </div>
+            {% else %}
+            <div class="test-card__last-attempt" style="color:var(--color-text-faint)">
+              Nunca realizada
+            </div>
+            {% endif %}
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+    {% endif %}
+
+    {% endif %}
+</div>
+
+<!-- FAB -->
+{% if user.is_authenticated %}
+<div class="dashboard-fab">
+  <button class="dashboard-fab__secondary" onclick="openCategoryModal()">+ Categoria</button>
+  <a href="{% url 'tests_app:create' %}" class="dashboard-fab__primary">+ Nova prova</a>
+</div>
+{% endif %}
+
+<!-- Modal detalhes da prova -->
+{% include 'main/partials/test_details_modal.html' %}
+
+<!-- Modal criar categoria -->
+{% include 'main/partials/category_definition_modal.html' %}
+
+{% endblock %}
+
+{% block extra_js %}
+<script src="{% static 'js/components/modal.js' %}"></script>
+<script src="{% static 'js/pages/dashboard.js' %}"></script>
+<script>
+    // Build base URL safely: use a known pk then replace only that pk segment
+    const DETAIL_BASE = "{% url 'tests_app:detail_json' 999999 %}".replace('/999999/', '/');
+    const CSRF = document.querySelector('[name=csrfmiddlewaretoken]').value;
+</script>
+{% endblock %}

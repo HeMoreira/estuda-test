@@ -1,0 +1,19 @@
+<div class="modal-backdrop" id="categoryBackdrop">
+    <div class="modal" style="max-width:380px">
+        <div class="modal__header">
+            <h2 class="modal__title">Nova categoria</h2>
+            <button class="modal__close" onclick="closeCategoryModal()">✕</button>
+        </div>
+        <div class="modal__body">
+            <div id="categoryFormErrors"></div>
+            <div class="form__group">
+                <label class="form__label">Nome da categoria</label>
+                <input type="text" class="form__input" id="categoryNameInput" placeholder="Ex: Biologia, Direito Civil..." maxlength="100">
+            </div>
+        </div>
+        <div class="modal__footer">
+            <button class="btn btn--ghost btn--sm" onclick="closeCategoryModal()">Cancelar</button>
+            <button class="btn btn--primary btn--sm" onclick="submitCategory()">Salvar</button>
+        </div>
+    </div>
+</div>
