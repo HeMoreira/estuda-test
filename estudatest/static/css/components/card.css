@@ -40,6 +40,8 @@
   transition: border-color var(--transition), background var(--transition), transform var(--transition);
   position: relative;
   overflow: hidden;
+  min-width: 0;
+  word-break: break-word;
 }
 
 .test-card:hover {

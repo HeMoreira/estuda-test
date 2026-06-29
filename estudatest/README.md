@@ -11,8 +11,8 @@ pip install -r requirements.txt
 
 ### 2. Configurar variáveis de ambiente
 ```bash
-cp .env.example .env
-# Edite .env com suas configurações
+
+# Defina SECRET_KEY, DEBUG, ALLOWED_HOSTS e DATABASE_URL em um arquivo .env
 ```
 
 ### 3. Aplicar migrations
@@ -24,7 +24,7 @@ python manage.py migrate
 ```bash
 python manage.py createsuperuser
 ```
-> Contas de admin só podem ser criadas via terminal — não há registro público.
+> Contas de admin só podem ser criadas via terminal.
 
 ### 5. Rodar o servidor
 ```bash

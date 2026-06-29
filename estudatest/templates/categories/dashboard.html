@@ -178,16 +178,16 @@
 {% block extra_js %}
 <script src="{% static 'js/modal.js' %}"></script>
 <script>
-const DETAIL_URL = "{% url 'tests_app:detail_json' 0 %}".replace('/0/', '/');
-const CREATE_ATTEMPT_BASE = "{% url 'attempts:start' 0 %}".replace('/0/', '/');
+// Build base URL safely: use a known pk then replace only that pk segment
+const DETAIL_BASE = "{% url 'tests_app:detail_json' 999999 %}".replace('/999999/', '/');
 const CSRF = document.querySelector('[name=csrfmiddlewaretoken]').value;
 
 function openTestDetail(id) {
-  fetch(DETAIL_URL + id + '/')
+  fetch(DETAIL_BASE + id + '/')
     .then(r => r.json())
     .then(d => {
       document.getElementById('modalTestName').textContent = d.name;
-      document.getElementById('modalQCount').textContent = d.question_count + ' questões';
+      document.getElementById('modalQCount').textContent = d.question_count + ' questão' + (d.question_count !== 1 ? 'ões' : '');
 
       const catEl = document.getElementById('modalCategory');
       if (d.category) { catEl.textContent = d.category; catEl.style.display = ''; }
@@ -213,7 +213,8 @@ function openTestDetail(id) {
       document.getElementById('modalStartForm').action = '/attempts/start/' + id + '/';
 
       document.getElementById('testDetailBackdrop').classList.add('modal-backdrop--open');
-    });
+    })
+    .catch(err => console.error('Erro ao carregar detalhes:', err));
 }
 
 function closeTestDetail() {

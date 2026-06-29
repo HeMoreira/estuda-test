@@ -5,6 +5,7 @@ from django.views.decorators.http import require_POST
 from tests_app.models import Test, Question
 from tests_app.question_validator import check_answer
 from .models import Attempt, AnswerRecord
+import random
 
 
 SESSION_KEY = 'attempt_progress'
@@ -42,6 +43,26 @@ def attempt_question(request, attempt_id, n):
     session = request.session.get(SESSION_KEY, {})
     answered_ids = session.get('answered', [])
 
+    # Pre-compute shuffled data per question type (stored in session so
+    # the same shuffle is shown on re-renders after POST feedback)
+    shuffle_key = f'shuffle_{attempt_id}_{question.id}'
+    shuffled = request.session.get(shuffle_key)
+
+    if shuffled is None:
+        if question.question_type == 'ordering':
+            items = list(question.data.get('items', []))
+            indexed = list(enumerate(items))   # [(original_idx, label), ...]
+            random.shuffle(indexed)
+            shuffled = {'indexed': indexed}
+        elif question.question_type == 'matching':
+            rights = [p['right'] for p in question.data.get('pairs', [])]
+            random.shuffle(rights)
+            shuffled = {'rights': rights}
+        else:
+            shuffled = {}
+        request.session[shuffle_key] = shuffled
+        request.session.modified = True
+
     if request.method == 'POST':
         if question.question_type in ['multi_answer', 'ordering', 'matching']:
             given = request.POST.getlist('answer')
@@ -76,6 +97,7 @@ def attempt_question(request, attempt_id, n):
             'feedback': feedback,
             'next_n': n + 1 if n < total else None,
             'is_last': n == total,
+            'shuffled': shuffled,
         })
 
     return render(request, 'attempts/question.html', {
@@ -85,6 +107,7 @@ def attempt_question(request, attempt_id, n):
         'total': total,
         'progress_pct': progress_pct,
         'feedback': None,
+        'shuffled': shuffled,
     })
 
 

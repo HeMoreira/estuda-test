@@ -17,7 +17,7 @@ def get_urgency_ratio(attempt_count: int, last_attempt_date) -> float:
         return 0.0
 
     n = min(attempt_count, 50)
-    limit_days = 30 + (n / 50) ** 2 * 335
+    limit_days = 1 + (n / 50) ** 2 * 335
 
     if hasattr(last_attempt_date, 'date'):
         last_date = last_attempt_date.date()

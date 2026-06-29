@@ -27,10 +27,10 @@
     <div class="attempt-card__statement">{{ question.statement }}</div>
 
     {% if not feedback %}
-    <!-- Formulário de resposta -->
     <form method="post" id="answerForm">
       {% csrf_token %}
 
+      {# ── Múltipla escolha ── #}
       {% if question.question_type == 'multiple_choice' %}
         <div class="attempt-options">
           {% for opt in question.data.options %}
@@ -41,6 +41,7 @@
           {% endfor %}
         </div>
 
+      {# ── Resposta múltipla ── #}
       {% elif question.question_type == 'multi_answer' %}
         <p style="font-size:.8rem;color:var(--color-text-faint);margin-bottom:.75rem">Selecione todas as corretas.</p>
         <div class="attempt-options">
@@ -52,6 +53,7 @@
           {% endfor %}
         </div>
 
+      {# ── Verdadeiro ou Falso ── #}
       {% elif question.question_type == 'true_false' %}
         <div class="attempt-options" style="max-width:280px">
           <label class="attempt-option">
@@ -62,6 +64,7 @@
           </label>
         </div>
 
+      {# ── Resposta escrita ── #}
       {% elif question.question_type == 'written' %}
         <div class="form__group">
           <input type="text" name="answer" class="form__input"
@@ -69,36 +72,54 @@
           <div class="form__hint">Espaços, pontuação e acentos são ignorados.</div>
         </div>
 
+      {# ── Ordenar elementos (embaralhado, drag-and-drop) ── #}
       {% elif question.question_type == 'ordering' %}
         <p style="font-size:.8rem;color:var(--color-text-faint);margin-bottom:.75rem">
-          Arraste para ordenar corretamente.
+          Arraste os itens para colocá-los na ordem correta.
         </p>
         <div class="ordering-list" id="orderingList">
-          {% for item in question.data.items %}
-          <div class="ordering-item" draggable="true" data-idx="{{ forloop.counter0 }}">
+          {% for orig_idx, label in shuffled.indexed %}
+          <div class="ordering-item" draggable="true" data-orig="{{ orig_idx }}">
             <span class="ordering-item__handle">⠿</span>
-            <span class="ordering-item__label">{{ item }}</span>
+            <span class="ordering-item__label">{{ label }}</span>
           </div>
           {% endfor %}
         </div>
+        {# Hidden inputs updated by JS #}
         <div id="orderingInputs"></div>
 
+      {# ── Relacionar colunas (clique para associar pares) ── #}
       {% elif question.question_type == 'matching' %}
         <p style="font-size:.8rem;color:var(--color-text-faint);margin-bottom:.75rem">
-          Selecione a correspondência de cada item.
+          Clique em um item da esquerda e depois em um da direita para associá-los.
         </p>
-        {% for pair in question.data.pairs %}
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:.75rem;margin-bottom:.5rem;align-items:center">
-          <div class="matching-left">{{ pair.left }}</div>
-          <select name="answer" class="form__select">
-            <option value="">— selecione —</option>
-            {% for p in question.data.pairs %}
-            <option value="{{ p.right }}">{{ p.right }}</option>
+        <div class="matching-ui">
+          <div class="matching-col" id="matchLeft">
+            {% for pair in question.data.pairs %}
+            <button type="button"
+              class="matching-btn matching-btn--left"
+              data-left="{{ pair.left }}"
+              onclick="matchClick('left', this)">{{ pair.left }}</button>
             {% endfor %}
-          </select>
+          </div>
+          <div class="matching-col" id="matchRight">
+            {% for r in shuffled.rights %}
+            <button type="button"
+              class="matching-btn matching-btn--right"
+              data-right="{{ r }}"
+              onclick="matchClick('right', this)">{{ r }}</button>
+            {% endfor %}
+          </div>
         </div>
-        {% endfor %}
+        {# Pairs status display #}
+        <div class="matching-pairs-done" id="matchPairsDone"></div>
+        {# Hidden inputs built by JS #}
+        <div id="matchingInputs"></div>
+        {# How many pairs to complete #}
+        <p style="font-size:.75rem;color:var(--color-text-faint);margin-top:.5rem"
+          id="matchStatus">0 / {{ question.data.pairs|length }} pares associados</p>
 
+      {# ── Flashcard ── #}
       {% elif question.question_type == 'flashcard' %}
         <div class="flashcard-reveal">
           <div class="flashcard-front">{{ question.data.front }}</div>
@@ -106,7 +127,7 @@
         </div>
         <button type="button" class="btn btn--ghost btn--sm" style="margin-bottom:1rem"
           onclick="revealFlashcard()">Revelar resposta</button>
-        <div class="attempt-options" style="max-width:280px" id="flashcardOptions" style="display:none">
+        <div class="attempt-options" style="max-width:280px" id="flashcardOptions">
           <label class="attempt-option">
             <input type="radio" name="answer" value="true" required> Acertei ✓
           </label>
@@ -122,7 +143,7 @@
     </form>
 
     {% else %}
-    <!-- Feedback pós-resposta -->
+    {# ── Feedback pós-resposta ── #}
     <div class="attempt-feedback {% if feedback.correct %}attempt-feedback--correct{% else %}attempt-feedback--wrong{% endif %}">
       <div class="attempt-feedback__title">
         {% if feedback.correct %}✓ Correto!{% else %}✗ Incorreto{% endif %}
@@ -146,11 +167,8 @@
 
   </div>
 
-  <!-- Link de saída -->
   <div style="text-align:center;margin-top:1.5rem">
-    <a href="{% url 'dashboard' %}" style="font-size:.8rem;color:var(--color-text-faint)">
-      Abandonar prova
-    </a>
+    <a href="{% url 'dashboard' %}" style="font-size:.8rem;color:var(--color-text-faint)">Abandonar prova</a>
   </div>
 
 </div>
@@ -158,4 +176,10 @@
 
 {% block extra_js %}
 <script src="{% static 'js/attempt.js' %}"></script>
+<script>
+  // Pass total matching pairs count to JS
+  {% if question.question_type == 'matching' %}
+  window.MATCH_TOTAL = {{ question.data.pairs|length }};
+  {% endif %}
+</script>
 {% endblock %}

@@ -24,6 +24,12 @@
 
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
+/* Prevent long words / URLs from breaking out of containers */
+body, p, span, div, h1, h2, h3, h4, li, td, th, label, input, textarea, button {
+  overflow-wrap: break-word;
+  word-break: break-word;
+}
+
 html { font-size: 16px; scroll-behavior: smooth; }
 
 body {
