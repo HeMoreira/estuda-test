@@ -67,11 +67,10 @@
 {% endblock %}
 
 {% block extra_js %}
-<script src="{% static 'js/components/modal.js' %}"></script>
 <script src="{% static 'js/pages/dashboard.js' %}"></script>
 <script>
     // Build base URL safely: use a known pk then replace only that pk segment
-    const DETAIL_BASE = "{% url 'tests_app:detail_json' 999999 %}".replace('/999999/', '/');
+    const DETAIL_BASE = "{% url 'tests_app:detail_json' 999999 %}".replace('999999', 'PK');
     const CSRF = document.querySelector('[name=csrfmiddlewaretoken]').value;
 </script>
 {% endblock %}

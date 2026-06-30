@@ -72,6 +72,13 @@
 }
 
 /* test detail modal specifics */
+.modal-detail__header {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+    margin-bottom: 1rem;
+}
+
 .modal-detail__stats {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -122,6 +129,22 @@
   justify-content: center;
   font-size: 0.9rem;
   font-weight: 700;
+}
+
+.modal-detail__updated {
+    font-size: 0.75rem;
+    color: var(--color-text-faint);
+    align-self: center;
+}
+
+.modal-detail__chart-desc {
+    font-size: 0.8rem;
+    color: var(--color-text-faint);
+    margin-top: 0.2rem;
+}
+
+.modal__form {
+    margin: 0;
 }
 
 .modal-detail__score-label {

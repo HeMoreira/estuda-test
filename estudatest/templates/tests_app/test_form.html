@@ -19,7 +19,7 @@
             </h1>
             {% if action == 'edit' %}
                 <div class="page-header__sub">
-                    {{ test.questions.count }} questão{{ test.questions.count|pluralize:"ões" }} · Criada em {{ test.created_at|date:"d/m/Y" }}
+                    {% include 'main/partials/name_according_to_count.html' with count=test.questions.count singular='questão' plural='questões' %} · Criada em {{ test.created_at|date:"d/m/Y" }}
                 </div>
             {% endif %}
         </div>
