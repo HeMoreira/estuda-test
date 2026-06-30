@@ -8,7 +8,7 @@ class TestForm(forms.ModelForm):
         super().__init__(*args, **kwargs)
         self.fields['category'].queryset = Category.objects.filter(user=user).exclude(name='~ sem categoria')
         self.fields['category'].empty_label = '— Sem categoria —'
-        self.fields['name'].widget.attrs.update({'class': 'form__input', 'placeholder': 'Nome da prova'})
+        self.fields['name'].widget.attrs.update({'class': 'form__input', 'placeholder': 'Nome da prova', 'maxlength': '30'})
         self.fields['category'].widget.attrs.update({'class': 'form__select'})
 
     class Meta:
@@ -23,10 +23,12 @@ class QuestionForm(forms.ModelForm):
         self.fields['statement'].widget.attrs.update({
             'class': 'form__textarea', 'rows': 4,
             'placeholder': 'Digite o enunciado da questão...',
+            'maxlength': '500',
         })
         self.fields['explanation'].widget.attrs.update({
             'class': 'form__textarea', 'rows': 3,
             'placeholder': 'Explique por que a resposta é correta...',
+            'maxlength': '500',
         })
 
     class Meta:
