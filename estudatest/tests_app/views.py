@@ -5,6 +5,7 @@ from django.http import JsonResponse
 from django.views.decorators.http import require_POST, require_http_methods
 from django.db.models import Avg
 from attempts.models import Attempt
+from .utils import get_or_create_default_category
 from .models import Test, Question
 from .forms import TestForm, QuestionForm
 from .question_validator import validate_question_data
@@ -18,6 +19,8 @@ def test_create(request):
         if form.is_valid():
             test = form.save(commit=False)
             test.user = request.user
+            if not test.category:
+                test.category = get_or_create_default_category(request)
             test.save()
             return redirect('tests_app:edit', pk=test.pk)
     else:

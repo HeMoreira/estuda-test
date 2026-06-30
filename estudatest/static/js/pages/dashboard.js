@@ -59,6 +59,7 @@ document.getElementById('categoryBackdrop').addEventListener('click', function(e
 document.querySelectorAll('.test-card').forEach(card => {
     const urgencyBar = card.querySelector('.test-card__urgency-bar');
     const lastAttemptText = card.querySelector('.test-card__last-attempt');
+    const newCategoryButton = document.querySelector('#new-category-button');
 
     card.addEventListener('click', () => openTestDetail(card.dataset.id));
     urgencyBar.style.backgroundColor = urgencyBar.dataset.urgency_color;
@@ -67,4 +68,5 @@ document.querySelectorAll('.test-card').forEach(card => {
     } else {
         lastAttemptText.style.color = 'var(--color-text-faint)';
     }
+    newCategoryButton.addEventListener('click', () => openCategoryModal(card.dataset.id));
 });

@@ -31,25 +31,9 @@ def dashboard(request):
         if tests_data:
             categories_with_tests.append({'category': cat, 'tests': tests_data})
 
-    uncategorized = Test.objects.filter(user=request.user, category__isnull=True)
-    uncategorized_data = []
-    for test in uncategorized:
-        last_attempt = test.attempts.order_by('-started_at').first()
-        attempt_count = test.attempts.count()
-        ratio = get_urgency_ratio(attempt_count, last_attempt.started_at if last_attempt else None)
-        color = urgency_color(ratio)
-        uncategorized_data.append({
-            'test': test,
-            'last_attempt': last_attempt,
-            'urgency_ratio': ratio,
-            'urgency_color': color,
-            'question_count': test.question_count(),
-        })
-
-    has_any = categories.exists() or uncategorized.exists()
+    has_any = categories.exists()
     return render(request, 'main/dashboard.html', {
         'categories_with_tests': categories_with_tests,
-        'uncategorized_data': uncategorized_data,
         'has_any': has_any,
         'all_categories': Category.objects.filter(user=request.user),
     })

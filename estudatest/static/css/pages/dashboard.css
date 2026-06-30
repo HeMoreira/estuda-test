@@ -15,15 +15,31 @@
   margin-top: 0.25rem;
 }
 
+.dashboard-fab-container {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 13rem;
+    background: linear-gradient(
+        to top, 
+        var(--color-bg) 0%, 
+        var(--color-bg) 60%,
+        var(--color-bg) 60%,
+        transparent 100%
+    );
+    width: 100%;
+}
+
 .dashboard-fab {
-  position: fixed;
-  bottom: 2rem;
-  left: 50%;
-  transform: translateX(-50%);
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-  z-index: 50;
+    position: fixed;
+    bottom: 2rem;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    z-index: 50;
 }
 
 .dashboard-fab__primary {

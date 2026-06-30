@@ -6,7 +6,7 @@ from categories.models import Category
 class TestForm(forms.ModelForm):
     def __init__(self, user, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.fields['category'].queryset = Category.objects.filter(user=user)
+        self.fields['category'].queryset = Category.objects.filter(user=user).exclude(name='~ sem categoria')
         self.fields['category'].empty_label = '— Sem categoria —'
         self.fields['name'].widget.attrs.update({'class': 'form__input', 'placeholder': 'Nome da prova'})
         self.fields['category'].widget.attrs.update({'class': 'form__select'})
