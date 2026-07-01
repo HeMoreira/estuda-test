@@ -37,7 +37,7 @@
   border-radius: var(--radius-lg);
   padding: 1rem;
   cursor: pointer;
-  transition: border-color var(--transition), background var(--transition), transform var(--transition);
+  transition: all var(--transition);
   position: relative;
   overflow: hidden;
   min-width: 0;
@@ -55,7 +55,7 @@
   top: 0;
   left: 0;
   right: 0;
-  height: 3px;
+  height: 4px;
 }
 
 .test-card__name {
@@ -85,22 +85,6 @@
   font-size: 0.72rem;
   font-weight: 500;
   margin-top: 0.4rem;
-}
-
-/* dashboard grid container with fade at bottom */
-.dashboard-grid-wrapper {
-  position: relative;
-}
-
-.dashboard-grid-wrapper::after {
-  content: '';
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  height: 80px;
-  background: linear-gradient(to bottom, transparent, var(--color-bg));
-  pointer-events: none;
 }
 
 /* empty state */

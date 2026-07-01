@@ -71,7 +71,7 @@
                         </div>
                         <div class="question-item__actions">
                             <a href="{% url 'tests_app:question_edit' test.pk question.pk %}" class="btn btn--ghost btn--sm btn--icon" title="Editar">✏️</a>
-                            <button class="btn btn--danger btn--sm btn--icon question-item__delete" title="Remover" data-question="{{ question.pk }}" data-test="{{ test.pk }}">🗑</button>
+                            <button class="btn btn--danger btn--sm btn--icon" title="Remover" data-question="{{ question.pk }}" data-test="{{ test.pk }}">🗑</button>
                         </div>
                     </div>
                 {% endfor %}

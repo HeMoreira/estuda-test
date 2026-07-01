@@ -8,185 +8,181 @@
 {% block content %}
 <div class="editor-layout">
 
-  <div class="page-header">
-    <div>
-      <h1 class="page-header__title">{% if action == 'add' %}Nova questão{% else %}Editar questão{% endif %}</h1>
-      <div class="page-header__sub">Prova: {{ test.name }}</div>
+    <div class="page-header">
+        <div>
+            <h1 class="page-header__title">{% if action == 'add' %}Nova questão{% else %}Editar questão{% endif %}</h1>
+            <div class="page-header__sub">Prova: {{ test.name }}</div>
+        </div>
+        <a href="{% url 'tests_app:edit' test.pk %}" class="btn btn--ghost btn--sm">← Voltar</a>
     </div>
-    <a href="{% url 'tests_app:edit' test.pk %}" class="btn btn--ghost btn--sm">← Voltar</a>
-  </div>
 
-  {% if errors %}
-  <div class="form__errors-list">
-    {% for e in errors %}<li>{{ e }}</li>{% endfor %}
-  </div>
-  {% endif %}
-
-  <form method="post" id="questionForm">
-    {% csrf_token %}
-
-    <!-- Tipo da questão -->
-    <div class="editor-section">
-      <div class="editor-section__title">Tipo de questão</div>
-      <div class="question-type-selector">
-        {% for val, label in form.question_type.field.choices %}
-        <button type="button"
-          class="question-type-btn {% if form.question_type.value == val or forloop.first and not form.question_type.value %}question-type-btn--active{% endif %}"
-          data-type="{{ val }}"
-          onclick="selectType('{{ val }}', this)">
-          <div class="question-type-btn__label">{{ label }}</div>
-        </button>
+    {% if errors %}
+        <div class="form__errors-list">
+        {% for e in errors %}
+            <li>{{ e }}</li>
         {% endfor %}
-      </div>
-      <input type="hidden" name="question_type" id="selectedType"
-        value="{{ form.question_type.value|default:'' }}">
-    </div>
+        </div>
+    {% endif %}
 
-    <!-- Enunciado -->
-    <div class="editor-section">
-      <div class="editor-section__title">Enunciado</div>
-      <div class="form__group" style="margin-bottom:0">
-        <textarea name="statement" class="form__textarea" rows="4"
-          placeholder="Digite o enunciado da questão...">{{ form.statement.value|default:'' }}</textarea>
-        {% if form.statement.errors %}<div class="form__error">{{ form.statement.errors|join:', ' }}</div>{% endif %}
-      </div>
-    </div>
+    <form method="post" id="questionForm">
+        {% csrf_token %}
 
-    <!-- Fieldsets dinâmicos por tipo -->
-    <div class="editor-section">
-      <div class="editor-section__title">Resposta</div>
+        <div class="editor-section">
+            <div class="editor-section__title">Tipo de questão</div>
+            <div class="question-type-selector" id="typeSelectorContainer">
+                {% for val, label in form.question_type.field.choices %}
+                    <button type="button"
+                        class="question-type-btn {% if form.question_type.value == val or forloop.first and not form.question_type.value %}question-type-btn--active{% endif %}"
+                        data-type="{{ val }}">
+                        <div class="question-type-btn__label">{{ label }}</div>
+                    </button>
+                {% endfor %}
+            </div>
+            <input type="hidden" name="question_type" id="selectedType" value="{{ form.question_type.value|default:'' }}">
+        </div>
 
-      <!-- Múltipla escolha -->
-      <div class="fieldset-panel" id="panel-multiple_choice">
-        <p style="font-size:.8rem;color:var(--color-text-faint);margin-bottom:.75rem">Marque a alternativa correta.</p>
-        <div class="option-list" id="mc-options">
-          <div class="option-row">
-            <input type="radio" name="data_correct" class="option-row__radio" value="0">
-            <input type="text" name="data_options" class="option-row__input" placeholder="Alternativa A">
-            <button type="button" class="option-row__remove" onclick="removeOption(this)">✕</button>
-          </div>
-          <div class="option-row">
-            <input type="radio" name="data_correct" class="option-row__radio" value="1">
-            <input type="text" name="data_options" class="option-row__input" placeholder="Alternativa B">
-            <button type="button" class="option-row__remove" onclick="removeOption(this)">✕</button>
+        <div class="editor-section">
+          <div class="editor-section__title">Enunciado</div>
+          <div class="form__group margin-bottom-0">
+            <textarea name="statement" class="form__textarea" rows="4"
+              placeholder="Digite o enunciado da questão...">{{ form.statement.value|default:'' }}</textarea>
+            {% if form.statement.errors %}<div class="form__error">{{ form.statement.errors|join:', ' }}</div>{% endif %}
           </div>
         </div>
-        <button type="button" class="add-option-btn" onclick="addOption('mc-options','data_options','data_correct','radio','Alternativa',5)">+ Adicionar alternativa</button>
-      </div>
 
-      <!-- Resposta múltipla -->
-      <div class="fieldset-panel" id="panel-multi_answer">
-        <p style="font-size:.8rem;color:var(--color-text-faint);margin-bottom:.75rem">Marque todas as corretas.</p>
-        <div class="option-list" id="ma-options">
-          <div class="option-row">
-            <input type="checkbox" name="data_correct" class="option-row__check" value="0">
-            <input type="text" name="data_options" class="option-row__input" placeholder="Opção 1">
-            <button type="button" class="option-row__remove" onclick="removeOption(this)">✕</button>
+        <div class="editor-section" id="dynamicPanelsContainer">
+          <div class="editor-section__title">Resposta</div>
+
+          <div class="fieldset-panel" id="panel-multiple_choice">
+            <p class="fieldset-panel__hint">Marque a alternativa correta.</p>
+            <div class="option-list" id="mc-options">
+              <div class="option-row">
+                <input type="radio" name="data_correct" class="option-row__radio" value="0">
+                <input type="text" name="data_options" class="option-row__input" placeholder="Alternativa A">
+                <button type="button" class="option-row__remove js-remove-option">✕</button>
+              </div>
+              <div class="option-row">
+                <input type="radio" name="data_correct" class="option-row__radio" value="1">
+                <input type="text" name="data_options" class="option-row__input" placeholder="Alternativa B">
+                <button type="button" class="option-row__remove js-remove-option">✕</button>
+              </div>
+            </div>
+            <button type="button" class="add-option-btn" 
+                    data-action="add-option" 
+                    data-target="mc-options" 
+                    data-input-name="data_options" 
+                    data-input-type="radio" 
+                    data-placeholder="Alternativa" 
+                    data-max="5">+ Adicionar alternativa</button>
           </div>
-          <div class="option-row">
-            <input type="checkbox" name="data_correct" class="option-row__check" value="1">
-            <input type="text" name="data_options" class="option-row__input" placeholder="Opção 2">
-            <button type="button" class="option-row__remove" onclick="removeOption(this)">✕</button>
+
+          <div class="fieldset-panel" id="panel-multi_answer">
+            <p class="fieldset-panel__hint">Marque todas as corretas.</p>
+            <div class="option-list" id="ma-options">
+              <div class="option-row">
+                <input type="checkbox" name="data_correct" class="option-row__check" value="0">
+                <input type="text" name="data_options" class="option-row__input" placeholder="Opção 1">
+                <button type="button" class="option-row__remove js-remove-option">✕</button>
+              </div>
+              <div class="option-row">
+                <input type="checkbox" name="data_correct" class="option-row__check" value="1">
+                <input type="text" name="data_options" class="option-row__input" placeholder="Opção 2">
+                <button type="button" class="option-row__remove js-remove-option">✕</button>
+              </div>
+            </div>
+            <button type="button" class="add-option-btn" 
+                    data-action="add-option" 
+                    data-target="ma-options" 
+                    data-input-name="data_options" 
+                    data-input-type="checkbox" 
+                    data-placeholder="Opção" 
+                    data-max="8">+ Adicionar opção</button>
+          </div>
+
+          <div class="fieldset-panel" id="panel-true_false">
+            <p class="fieldset-panel__hint">A afirmação é:</p>
+            <div class="attempt-options true-false-wrapper">
+              <label class="attempt-option">
+                <input type="radio" name="data_correct" value="true"> Verdadeiro
+              </label>
+              <label class="attempt-option">
+                <input type="radio" name="data_correct" value="false"> Falso
+              </label>
+            </div>
+          </div>
+
+          <div class="fieldset-panel" id="panel-written">
+            <p class="fieldset-panel__hint">
+              Espaços, pontuação e acentos serão ignorados na comparação.
+            </p>
+            <div class="form__group margin-bottom-0">
+              <label class="form__label">Resposta esperada</label>
+              <input type="text" name="data_answer" class="form__input" placeholder="Resposta correta...">
+            </div>
+          </div>
+
+          <div class="fieldset-panel" id="panel-ordering">
+            <p class="fieldset-panel__hint">Adicione os itens já na ordem correta.</p>
+            <div class="option-list" id="ord-options">
+              <div class="option-row">
+                <span class="option-row__index">1</span>
+                <input type="text" name="data_items" class="option-row__input" placeholder="Item 1">
+                <button type="button" class="option-row__remove js-remove-order">✕</button>
+              </div>
+              <div class="option-row">
+                <span class="option-row__index">2</span>
+                <input type="text" name="data_items" class="option-row__input" placeholder="Item 2">
+                <button type="button" class="option-row__remove js-remove-order">✕</button>
+              </div>
+            </div>
+            <button type="button" class="add-option-btn" data-action="add-order">+ Adicionar item</button>
+          </div>
+
+          <div class="fieldset-panel" id="panel-matching">
+            <p class="fieldset-panel__hint">Adicione os pares correspondentes (Termo em cima, Definição embaixo).</p>
+            <div class="pair-list" id="match-pairs">
+              <div class="pair-row">
+                <input type="text" name="data_pairs_left" class="option-row__input pair-row__input--top" placeholder="Coluna A (Termo)">
+                <input type="text" name="data_pairs_right" class="option-row__input pair-row__input--bottom" placeholder="Coluna B (Significado/Resposta)">
+                <button type="button" class="option-row__remove js-remove-pair">✕</button>
+              </div>
+              <div class="pair-row">
+                <input type="text" name="data_pairs_left" class="option-row__input pair-row__input--top" placeholder="Coluna A (Termo)">
+                <input type="text" name="data_pairs_right" class="option-row__input pair-row__input--bottom" placeholder="Coluna B (Significado/Resposta)">
+                <button type="button" class="option-row__remove js-remove-pair">✕</button>
+              </div>
+            </div>
+            <button type="button" class="add-option-btn" data-action="add-pair">+ Adicionar par</button>
+          </div>
+
+          <div class="fieldset-panel" id="panel-flashcard">
+            <p class="fieldset-panel__hint">O aluno decide se acertou ou errou.</p>
+            <div class="form__group">
+              <label class="form__label">Frente do card (pergunta)</label>
+              <textarea name="data_front" class="form__textarea" rows="2" placeholder="Pergunta ou conceito..."></textarea>
+            </div>
+            <div class="form__group margin-bottom-0">
+              <label class="form__label">Verso do card (resposta)</label>
+              <textarea name="data_back" class="form__textarea" rows="2" placeholder="Resposta ou definição..."></textarea>
+            </div>
+          </div>
+
+        </div>
+        
+        <div class="editor-section">
+          <div class="editor-section__title">Explicação da resposta</div>
+          <div class="form__group margin-bottom-0">
+            <textarea name="explanation" class="form__textarea" rows="3"
+              placeholder="Explique por que a resposta é correta...">{{ form.explanation.value|default:'' }}</textarea>
+            {% if form.explanation.errors %}<div class="form__error">{{ form.explanation.errors|join:', ' }}</div>{% endif %}
           </div>
         </div>
-        <button type="button" class="add-option-btn" onclick="addOption('ma-options','data_options','data_correct','checkbox','Opção',8)">+ Adicionar opção</button>
-      </div>
 
-      <!-- Verdadeiro ou Falso -->
-      <div class="fieldset-panel" id="panel-true_false">
-        <p style="font-size:.8rem;color:var(--color-text-faint);margin-bottom:.75rem">A afirmação é:</p>
-        <div class="attempt-options" style="max-width:280px">
-          <label class="attempt-option">
-            <input type="radio" name="data_correct" value="true"> Verdadeiro
-          </label>
-          <label class="attempt-option">
-            <input type="radio" name="data_correct" value="false"> Falso
-          </label>
+        <div class="form-actions-footer">
+          <a href="{% url 'tests_app:edit' test.pk %}" class="btn btn--ghost">Cancelar</a>
+          <button type="submit" class="btn btn--primary">Salvar questão</button>
         </div>
-      </div>
-
-      <!-- Resposta escrita -->
-      <div class="fieldset-panel" id="panel-written">
-        <p style="font-size:.8rem;color:var(--color-text-faint);margin-bottom:.75rem">
-          Espaços, pontuação e acentos serão ignorados na comparação.
-        </p>
-        <div class="form__group" style="margin-bottom:0">
-          <label class="form__label">Resposta esperada</label>
-          <input type="text" name="data_answer" class="form__input" placeholder="Resposta correta...">
-        </div>
-      </div>
-
-      <!-- Ordenar -->
-      <div class="fieldset-panel" id="panel-ordering">
-        <p style="font-size:.8rem;color:var(--color-text-faint);margin-bottom:.75rem">
-          Adicione os itens já na ordem correta.
-        </p>
-        <div class="option-list" id="ord-options">
-          <div class="option-row">
-            <span style="color:var(--color-text-faint);font-size:.8rem;min-width:1.2rem">1</span>
-            <input type="text" name="data_items" class="option-row__input" placeholder="Item 1">
-            <button type="button" class="option-row__remove" onclick="removeOrderItem(this)">✕</button>
-          </div>
-          <div class="option-row">
-            <span style="color:var(--color-text-faint);font-size:.8rem;min-width:1.2rem">2</span>
-            <input type="text" name="data_items" class="option-row__input" placeholder="Item 2">
-            <button type="button" class="option-row__remove" onclick="removeOrderItem(this)">✕</button>
-          </div>
-        </div>
-        <button type="button" class="add-option-btn" onclick="addOrderItem()">+ Adicionar item</button>
-      </div>
-
-      <!-- Relacionar colunas -->
-      <div class="fieldset-panel" id="panel-matching">
-        <p style="font-size:.8rem;color:var(--color-text-faint);margin-bottom:.75rem">Adicione os pares correspondentes.</p>
-        <div class="pair-list" id="match-pairs">
-          <div class="pair-row">
-            <input type="text" name="data_pairs_left" class="option-row__input" placeholder="Coluna A">
-            <span class="pair-row__sep">→</span>
-            <input type="text" name="data_pairs_right" class="option-row__input" placeholder="Coluna B">
-            <button type="button" class="option-row__remove" onclick="removePair(this)">✕</button>
-          </div>
-          <div class="pair-row">
-            <input type="text" name="data_pairs_left" class="option-row__input" placeholder="Coluna A">
-            <span class="pair-row__sep">→</span>
-            <input type="text" name="data_pairs_right" class="option-row__input" placeholder="Coluna B">
-            <button type="button" class="option-row__remove" onclick="removePair(this)">✕</button>
-          </div>
-        </div>
-        <button type="button" class="add-option-btn" onclick="addPair()">+ Adicionar par</button>
-      </div>
-
-      <!-- Flashcard -->
-      <div class="fieldset-panel" id="panel-flashcard">
-        <p style="font-size:.8rem;color:var(--color-text-faint);margin-bottom:.75rem">O aluno decide se acertou ou errou.</p>
-        <div class="form__group">
-          <label class="form__label">Frente do card (pergunta)</label>
-          <textarea name="data_front" class="form__textarea" rows="2" placeholder="Pergunta ou conceito..."></textarea>
-        </div>
-        <div class="form__group" style="margin-bottom:0">
-          <label class="form__label">Verso do card (resposta)</label>
-          <textarea name="data_back" class="form__textarea" rows="2" placeholder="Resposta ou definição..."></textarea>
-        </div>
-      </div>
-
-    </div><!-- /fieldsets -->
-
-    <!-- Explicação -->
-    <div class="editor-section">
-      <div class="editor-section__title">Explicação da resposta</div>
-      <div class="form__group" style="margin-bottom:0">
-        <textarea name="explanation" class="form__textarea" rows="3"
-          placeholder="Explique por que a resposta é correta...">{{ form.explanation.value|default:'' }}</textarea>
-        {% if form.explanation.errors %}<div class="form__error">{{ form.explanation.errors|join:', ' }}</div>{% endif %}
-      </div>
-    </div>
-
-    <div style="display:flex;gap:.6rem;justify-content:flex-end">
-      <a href="{% url 'tests_app:edit' test.pk %}" class="btn btn--ghost">Cancelar</a>
-      <button type="submit" class="btn btn--primary">Salvar questão</button>
-    </div>
-
-  </form>
+    </form>
 </div>
 {% endblock %}
 
@@ -194,7 +190,6 @@
 <script src="{% static 'js/question-builder.js' %}"></script>
 {% if action == 'edit' and question_data_json %}
 <script>
-// Pre-populate editing data
 const _editData = {{ question_data_json|safe }};
 const _editType = '{{ question.question_type }}';
 document.addEventListener('DOMContentLoaded', () => populateEditData(_editType, _editData));

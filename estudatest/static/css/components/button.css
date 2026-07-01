@@ -9,21 +9,21 @@
   font-size: 0.875rem;
   font-weight: 500;
   cursor: pointer;
-  transition: background var(--transition), border-color var(--transition), color var(--transition);
+  transition: all var(--transition);
   white-space: nowrap;
   text-decoration: none;
 }
 
 .btn--primary {
   background: var(--color-accent);
-  color: #fff;
+  color: var(--color-text);
   border-color: var(--color-accent);
 }
 .btn--primary:hover {
   background: var(--color-accent-hover);
   border-color: var(--color-accent-hover);
   text-decoration: none;
-  color: #fff;
+  color: var(--color-text);
 }
 
 .btn--ghost {
@@ -32,7 +32,7 @@
   border-color: var(--color-border);
 }
 .btn--ghost:hover {
-  background: var(--color-surface-2);
+  background: var(--color-border);
   color: var(--color-text);
   border-color: var(--color-border-hover);
   text-decoration: none;
@@ -41,7 +41,7 @@
 .btn--danger {
   background: transparent;
   color: var(--color-red);
-  border-color: #3d2020;
+  border-color: var(--color-danger-bg);
 }
 .btn--danger:hover {
   background: var(--color-danger-bg);
@@ -51,13 +51,13 @@
 
 .btn--success {
   background: var(--color-green);
-  color: #fff;
+  color: var(--color-text);
   border-color: var(--color-green);
 }
 .btn--success:hover {
-  background: #178c66;
+  background: var(--color-success-border);
   text-decoration: none;
-  color: #fff;
+  color: var(--color-text);
 }
 
 .btn--sm {

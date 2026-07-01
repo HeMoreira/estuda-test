@@ -8,12 +8,15 @@
   --color-text: #e8e9ea;
   --color-text-muted: #888c92;
   --color-text-faint: #555a60;
+  --color-accent-bg: #1a1f35;
   --color-accent: #5b7cf6;
   --color-accent-hover: #4a6de5;
   --color-green: #1D9E75;
   --color-red: #E24B4A;
-  --color-danger-bg: #2d1a1a;
-  --color-success-bg: #112820;
+  --color-success-bg: #1a4a2e;
+  --color-success-border: #4ade80;
+  --color-danger-bg: #5c2424;
+  --color-danger-border: #f87171;
   --radius-sm: 6px;
   --radius-md: 10px;
   --radius-lg: 14px;
@@ -24,7 +27,6 @@
 
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-/* Prevent long words / URLs from breaking out of containers */
 body, p, span, div, h1, h2, h3, h4, li, td, th, label, input, textarea, button {
   overflow-wrap: break-word;
   word-break: break-word;

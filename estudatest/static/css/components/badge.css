@@ -11,8 +11,8 @@
 }
 
 .badge--type {
-  background: #1e2035;
-  color: #7b91f0;
+  background: var(--color-accent-bg);
+  color: var(--color-accent);;
   border: 1px solid #2a2f52;
 }
 
@@ -24,12 +24,12 @@
 
 .badge--correct {
   background: var(--color-success-bg);
-  color: #4ade80;
-  border: 1px solid #1a4a2e;
+  color: var(--color-success-border);
+  border: 1px solid var(--color-success-bg);
 }
 
 .badge--wrong {
   background: var(--color-danger-bg);
-  color: #f87171;
-  border: 1px solid #5c2424;
+  color: var(--color-danger-border);
+  border: 1px solid var(--color-danger-bg);
 }
