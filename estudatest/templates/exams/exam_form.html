@@ -1,8 +1,8 @@
 {% extends 'base.html' %}
 {% load static %}
 
-{% block title %}{% if action == 'create' %}Nova prova{% else %}Editar — {{ test.name }}{% endif %} — EstudaTest{% endblock %}
-{% block extra_css %}<link rel="stylesheet" href="{% static 'css/pages/test-editor.css' %}">{% endblock %}
+{% block title %}{% if action == 'create' %}Nova prova{% else %}Editar — {{ exam.name }}{% endif %} — EstudaTest{% endblock %}
+{% block extra_css %}<link rel="stylesheet" href="{% static 'css/pages/exam-editor.css' %}">{% endblock %}
 {% block main_class %}main--full{% endblock %}
 
 {% block content %}
@@ -19,7 +19,7 @@
             </h1>
             {% if action == 'edit' %}
                 <div class="page-header__sub">
-                    {% include 'main/partials/name_according_to_count.html' with count=test.questions.count singular='questão' plural='questões' %} · Criada em {{ test.created_at|date:"d/m/Y" }}
+                    {% include 'main/partials/name_according_to_count.html' with count=exam.questions.count singular='questão' plural='questões' %} · Criada em {{ exam.created_at|date:"d/m/Y" }}
                 </div>
             {% endif %}
         </div>
@@ -29,7 +29,7 @@
     <!-- Formulário principal -->
     <div class="editor-section">
         <div class="editor-section__title">Informações da prova</div>
-        <form method="post" id="testForm">
+        <form method="post" id="examForm">
             {% csrf_token %}
             <div class="form__group">
                 <label class="form__label" for="{{ form.name.id_for_label }}">{{ form.name.label }}</label>
@@ -45,7 +45,7 @@
                     <div class="form__error">{{ form.category.errors|join:', ' }}</div>
                 {% endif %}
             </div>
-            <div id="testForm-submit-container">
+            <div id="examForm-submit-container">
                 <button type="submit" class="btn btn--primary btn--sm">Salvar</button>
             </div>
         </form>
@@ -56,7 +56,7 @@
         <div class="editor-section">
             <div class="editor-section__title">
                 <span>Questões</span>
-                <a href="{% url 'tests_app:question_add' test.pk %}" class="btn btn--primary btn--sm">+ Adicionar questão</a>
+                <a href="{% url 'exams:question_add' exam.pk %}" class="btn btn--primary btn--sm">+ Adicionar questão</a>
             </div>
             {% if questions %}
                 <div class="question-list">
@@ -70,8 +70,8 @@
                             </div>
                         </div>
                         <div class="question-item__actions">
-                            <a href="{% url 'tests_app:question_edit' test.pk question.pk %}" class="btn btn--ghost btn--sm btn--icon" title="Editar">✏️</a>
-                            <button class="btn btn--danger btn--sm btn--icon" title="Remover" data-question="{{ question.pk }}" data-test="{{ test.pk }}">🗑</button>
+                            <a href="{% url 'exams:question_edit' exam.pk question.pk %}" class="btn btn--ghost btn--sm btn--icon" title="Editar">✏️</a>
+                            <button class="btn btn--danger btn--sm btn--icon" title="Remover" data-question="{{ question.pk }}" data-exam="{{ exam.pk }}">🗑</button>
                         </div>
                     </div>
                 {% endfor %}
@@ -83,8 +83,8 @@
             {% endif %}
         </div>
         {% if questions %}
-            <div class="test-attempt">
-                <form method="post" action="{% url 'attempts:start' test.pk %}">
+            <div class="exam-attempt">
+                <form method="post" action="{% url 'attempts:start' exam.pk %}">
                     {% csrf_token %}
                     <button type="submit" class="btn btn--success">▶ Realizar prova</button>
                 </form>
@@ -96,5 +96,5 @@
 {% endblock %}
 
 {% block extra_js %}
-<script src="{% static 'js/pages/test_form.js' %}"></script>
+<script src="{% static 'js/pages/exam_form.js' %}"></script>
 {% endblock %}

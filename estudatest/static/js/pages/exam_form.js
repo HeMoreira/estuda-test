@@ -1,13 +1,13 @@
-document.querySelectorAll('#testForm input[type=text], #testForm select').forEach(el => {
+document.querySelectorAll('#examForm input[type=text], #examForm select').forEach(el => {
   if (el.tagName === 'SELECT') el.classList.add('form__select');
   else el.classList.add('form__input');
 });
 
 function deleteQuestion(qpk, btn) {
   if (!confirm('Remover esta questão?')) return;
-  const testPk = btn.dataset.test;
+  const examPk = btn.dataset.exam;
   const csrf = document.querySelector('[name=csrfmiddlewaretoken]').value;
-  fetch(`/tests/${testPk}/questions/${qpk}/delete/`, {
+  fetch(`/exams/${examPk}/questions/${qpk}/delete/`, {
     method: 'DELETE',
     headers: { 'X-CSRFToken': csrf },
   }).then(r => r.json()).then(d => {

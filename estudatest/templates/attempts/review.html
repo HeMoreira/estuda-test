@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 {% load static %}
 
-{% block title %}Resultado — {{ attempt.test.name }} — EstudaTest{% endblock %}
+{% block title %}Resultado — {{ attempt.exam.name }} — EstudaTest{% endblock %}
 {% block extra_css %}<link rel="stylesheet" href="{% static 'css/pages/attempt.css' %}">{% endblock %}
 {% block main_class %}main--full{% endblock %}
 
@@ -11,7 +11,7 @@
   <div class="page-header">
     <div>
       <h1 class="page-header__title">Resultado</h1>
-      <div class="page-header__sub">{{ attempt.test.name }}</div>
+      <div class="page-header__sub">{{ attempt.exam.name }}</div>
     </div>
     <a href="{% url 'dashboard' %}" class="btn btn--ghost btn--sm">← Início</a>
   </div>
@@ -48,14 +48,10 @@
         <span class="badge badge--type">{{ item.question.get_question_type_display }}</span>
       </div>
       <div class="review-item__statement">{{ item.question.statement }}</div>
-      <div class="review-item__answers">
+        <div class="review-item__answers">
         {% if not item.record.is_correct %}
         <div class="review-item__answer-row">
-          Sua resposta: <strong>
-            {% with ga=item.record.given_answer %}
-              {% if ga is not None %}{{ ga }}{% else %}—{% endif %}
-            {% endwith %}
-          </strong>
+          Sua resposta: <strong>{{ item.given_display }}</strong>
         </div>
         <div class="review-item__answer-row">
           Resposta correta: <strong>{{ item.correct_display }}</strong>
@@ -75,11 +71,11 @@
 
   <!-- Ações finais -->
   <div style="display:flex;gap:.75rem;justify-content:center;margin-top:2rem;flex-wrap:wrap">
-    <form method="post" action="{% url 'attempts:start' attempt.test.pk %}">
+    <form method="post" action="{% url 'attempts:start' attempt.exam.pk %}">
       {% csrf_token %}
       <button type="submit" class="btn btn--primary">Refazer prova</button>
     </form>
-    <a href="{% url 'tests_app:edit' attempt.test.pk %}" class="btn btn--ghost">Editar prova</a>
+    <a href="{% url 'exams:edit' attempt.exam.pk %}" class="btn btn--ghost">Editar prova</a>
     <a href="{% url 'dashboard' %}" class="btn btn--ghost">← Início</a>
   </div>
 

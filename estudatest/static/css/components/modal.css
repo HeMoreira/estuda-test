@@ -71,7 +71,7 @@
   justify-content: flex-end;
 }
 
-/* test detail modal specifics */
+/* exam detail modal specifics */
 .modal-detail__header {
     display: flex;
     gap: 0.5rem;

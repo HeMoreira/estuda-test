@@ -3,7 +3,7 @@ from .models import Attempt, AnswerRecord
 
 @admin.register(Attempt)
 class AttemptAdmin(admin.ModelAdmin):
-    list_display = ['user', 'test', 'started_at', 'score']
+    list_display = ['user', 'exam', 'started_at', 'score']
 
 @admin.register(AnswerRecord)
 class AnswerRecordAdmin(admin.ModelAdmin):

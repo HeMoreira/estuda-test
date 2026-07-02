@@ -39,14 +39,14 @@ function closeCategoryModal() {
     document.getElementById('categoryBackdrop').classList.remove('modal-backdrop--open');
 }
 
-function openTestDetail(id) {
+function openExamDetail(id) {
     // Garante que a URL base global do Django existe antes de fazer o fetch
     if (typeof DETAIL_BASE === 'undefined') return console.error('DETAIL_BASE não definida.');
 
     fetch(DETAIL_BASE.replace('PK', id))
         .then(r => r.json())
         .then(d => {
-            document.getElementById('modalTestName').textContent = d.name;
+            document.getElementById('modalExamName').textContent = d.name;
             document.getElementById('modalQCount').textContent = `${d.question_count} quest${d.question_count !== 1 ? 'ões' : 'ão'}`;
 
             const catEl = document.getElementById('modalCategory');
@@ -72,16 +72,16 @@ function openTestDetail(id) {
                 scoreRow.style.display = 'none';
             }
 
-            document.getElementById('modalEditBtn').href = `/tests/${id}/edit/`;
+            document.getElementById('modalEditBtn').href = `/exams/${id}/edit/`;
             document.getElementById('modalStartForm').action = `/attempts/start/${id}/`;
 
-            document.getElementById('testDetailBackdrop').classList.add('modal-backdrop--open');
+            document.getElementById('examDetailBackdrop').classList.add('modal-backdrop--open');
         })
         .catch(err => console.error('Erro ao carregar detalhes:', err));
 }
 
-function closeTestDetail() {
-    document.getElementById('testDetailBackdrop').classList.remove('modal-backdrop--open');
+function closeExamDetail() {
+    document.getElementById('examDetailBackdrop').classList.remove('modal-backdrop--open');
 }
 
 // Submissão do formulário de categoria via AJAX
@@ -120,9 +120,9 @@ function submitCategory() {
 }
 
 // Inicialização dos cards e listeners para os modais
-document.querySelectorAll('.test-card').forEach(card => {
-    const urgencyBar = card.querySelector('.test-card__urgency-bar');
-    const lastAttemptText = card.querySelector('.test-card__last-attempt');
+document.querySelectorAll('.exam-card').forEach(card => {
+    const urgencyBar = card.querySelector('.exam-card__urgency-bar');
+    const lastAttemptText = card.querySelector('.exam-card__last-attempt');
 
     if (urgencyBar) {
         urgencyBar.style.backgroundColor = urgencyBar.dataset.urgency_color;
@@ -132,7 +132,7 @@ document.querySelectorAll('.test-card').forEach(card => {
                 : 'var(--color-text-faint)';
         }
     }
-    card.addEventListener('click', () => openTestDetail(card.dataset.id));
+    card.addEventListener('click', () => openExamDetail(card.dataset.id));
 });
 
 const newCategoryButton = document.querySelector('#new-category-button');
@@ -144,10 +144,10 @@ if (categorySaveBtn) {
     categorySaveBtn.addEventListener('click', submitCategory);
 }
 
-const testDetailBackdrop = document.getElementById('testDetailBackdrop');
-if (testDetailBackdrop) {
-    testDetailBackdrop.addEventListener('click', function(e) {
-        if (e.target === this) closeTestDetail();
+const examDetailBackdrop = document.getElementById('examDetailBackdrop');
+if (examDetailBackdrop) {
+    examDetailBackdrop.addEventListener('click', function(e) {
+        if (e.target === this) closeExamDetail();
     });
 }
 
@@ -158,8 +158,8 @@ if (categoryBackdrop) {
     });
 }
 
-document.querySelectorAll('#testDetailModal .modal__close, #testDetailModal .modal-close-btn').forEach(btn => {
-    btn.addEventListener('click', closeTestDetail);
+document.querySelectorAll('#examDetailModal .modal__close, #examDetailModal .modal-close-btn').forEach(btn => {
+    btn.addEventListener('click', closeExamDetail);
 });
 document.querySelectorAll('#categoryModal .modal__close, #categoryModal .modal-close-btn').forEach(btn => {
     btn.addEventListener('click', closeCategoryModal);
@@ -169,6 +169,6 @@ document.querySelectorAll('#categoryModal .modal__close, #categoryModal .modal-c
 document.addEventListener('keydown', function(e) {
     if (e.key === 'Escape') {
         closeCategoryModal();
-        closeTestDetail();
+        closeExamDetail();
     }
 });

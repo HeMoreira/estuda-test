@@ -41,7 +41,7 @@ Acesse: http://127.0.0.1:8000
 |-----|-----------------|
 | `accounts` | Login/logout via `django.contrib.auth` |
 | `categories` | Categorias do usuário + dashboard principal |
-| `tests_app` | Provas e questões (7 tipos) |
+| `exams` | Provas e questões (7 tipos) |
 | `attempts` | Realização, progresso em sessão e histórico |
 
 ## Tipos de questão suportados

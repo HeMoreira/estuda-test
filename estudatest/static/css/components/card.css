@@ -1,4 +1,4 @@
-/* card.css — BEM: .test-card, .test-card__*, .category-section */
+/* card.css — BEM: .exam-card, .exam-card__*, .category-section */
 .category-section {
   margin-bottom: 2.5rem;
 }
@@ -25,13 +25,13 @@
   color: var(--color-text-faint);
 }
 
-.tests-grid {
+.exams-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
   gap: 0.85rem;
 }
 
-.test-card {
+.exam-card {
   background: var(--color-surface);
   border: 1px solid var(--color-border);
   border-radius: var(--radius-lg);
@@ -44,13 +44,13 @@
   word-break: break-word;
 }
 
-.test-card:hover {
+.exam-card:hover {
   border-color: var(--color-border-hover);
   background: var(--color-surface-2);
   transform: translateY(-1px);
 }
 
-.test-card__urgency-bar {
+.exam-card__urgency-bar {
   position: absolute;
   top: 0;
   left: 0;
@@ -58,7 +58,7 @@
   height: 4px;
 }
 
-.test-card__name {
+.exam-card__name {
   font-size: 0.9rem;
   font-weight: 600;
   color: var(--color-text);
@@ -67,13 +67,13 @@
   line-height: 1.4;
 }
 
-.test-card__meta {
+.exam-card__meta {
   display: flex;
   flex-direction: column;
   gap: 0.2rem;
 }
 
-.test-card__meta-row {
+.exam-card__meta-row {
   font-size: 0.75rem;
   color: var(--color-text-muted);
   display: flex;
@@ -81,7 +81,7 @@
   gap: 0.35rem;
 }
 
-.test-card__last-attempt {
+.exam-card__last-attempt {
   font-size: 0.72rem;
   font-weight: 500;
   margin-top: 0.4rem;

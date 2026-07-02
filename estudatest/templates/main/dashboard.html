@@ -11,7 +11,7 @@
         <div class="empty-state__icon">📋</div>
         <h2 class="empty-state__title">Nenhuma prova ainda</h2>
         <p class="empty-state__sub">Crie sua primeira prova para começar a estudar com repetição espaçada.</p>
-        <a href="{% url 'tests_app:create' %}" class="btn btn--primary" style="margin-top:.5rem">+ Nova prova</a>
+        <a href="{% url 'exams:create' %}" class="btn btn--primary" style="margin-top:.5rem">+ Nova prova</a>
     </div>
 {% else %}
     <div class="dashboard-header">
@@ -19,25 +19,25 @@
         <p class="dashboard-header__sub">Clique em uma prova para ver detalhes ou realizá-la.</p>
     </div>
 
-    {% for group in categories_with_tests %}
+    {% for group in categories_with_exams %}
         <div class="category-section">
             <div class="category-section__header">
                 <span class="category-section__name">{{ group.category.name }}</span>
-                <span class="category-section__count">{{ group.tests|length }} prova{{ group.tests|length|pluralize }}</span>
+                <span class="category-section__count">{{ group.exams|length }} prova{{ group.exams|length|pluralize }}</span>
             </div>
-            <div class="tests-grid">
-            {% for item in group.tests %}
-                <div class="test-card" data-id="{{ item.test.id }}">
-                    <div class="test-card__urgency-bar" data-urgency_color="{{ item.urgency_color }}"></div>
-                    <div class="test-card__name">{{ item.test.name }}</div>
-                    <div class="test-card__meta">
-                        <div class="test-card__meta-row">
+            <div class="exams-grid">
+            {% for item in group.exams %}
+                <div class="exam-card" data-id="{{ item.exam.id }}">
+                    <div class="exam-card__urgency-bar" data-urgency_color="{{ item.urgency_color }}"></div>
+                    <div class="exam-card__name">{{ item.exam.name }}</div>
+                    <div class="exam-card__meta">
+                        <div class="exam-card__meta-row">
                             {% include 'main/partials/name_according_to_count.html' with count=item.question_count singular='questão' plural='questões' %}
                         </div>
                         {% if item.last_attempt %}
-                            <div class="test-card__last-attempt" data-last_attempt="{{ item.last_attempt }}">Última: {{ item.last_attempt.started_at|timesince }} atrás</div>
+                            <div class="exam-card__last-attempt" data-last_attempt="{{ item.last_attempt }}">Última: {{ item.last_attempt.started_at|timesince }} atrás</div>
                         {% else %}
-                            <div class="test-card__last-attempt">Nunca realizada</div>
+                            <div class="exam-card__last-attempt">Nunca realizada</div>
                         {% endif %}
                     </div>
                 </div>
@@ -53,13 +53,13 @@
 <div class="dashboard-fab-container">
     <div class="dashboard-fab">
         <button id="new-category-button" class="dashboard-fab__secondary">+ Nova Categoria</button>
-        <a href="{% url 'tests_app:create' %}" class="dashboard-fab__primary">+ Novo Teste</a>
+        <a href="{% url 'exams:create' %}" class="dashboard-fab__primary">+ Novo Teste</a>
     </div>
 </div>
 {% endif %}
 
 <!-- Modal detalhes da prova -->
-{% include 'main/partials/test_details_modal.html' %}
+{% include 'main/partials/exam_details_modal.html' %}
 
 <!-- Modal criar categoria -->
 {% include 'main/partials/category_definition_modal.html' %}
@@ -70,7 +70,7 @@
 <script src="{% static 'js/pages/dashboard.js' %}"></script>
 <script>
     // Build base URL safely: use a known pk then replace only that pk segment
-    const DETAIL_BASE = "{% url 'tests_app:detail_json' 999999 %}".replace('999999', 'PK');
+    const DETAIL_BASE = "{% url 'exams:detail_json' 999999 %}".replace('999999', 'PK');
     const CSRF = document.querySelector('[name=csrfmiddlewaretoken]').value;
 </script>
 {% endblock %}

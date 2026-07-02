@@ -33,11 +33,13 @@
       {# ── Múltipla escolha ── #}
       {% if question.question_type == 'multiple_choice' %}
         <div class="attempt-options">
-          {% for opt in question.data.options %}
-          <label class="attempt-option">
-            <input type="radio" name="answer" value="{{ forloop.counter0 }}" required>
-            {{ opt }}
-          </label>
+          {% for opt in question.options.all %}
+            {% if opt.text %}
+            <label class="attempt-option">
+              <input type="radio" name="answer" value="{{ opt.pk }}" required>
+              {{ opt.text }}
+            </label>
+            {% endif %}
           {% endfor %}
         </div>
 
@@ -45,11 +47,13 @@
       {% elif question.question_type == 'multi_answer' %}
         <p style="font-size:.8rem;color:var(--color-text-faint);margin-bottom:.75rem">Selecione todas as corretas.</p>
         <div class="attempt-options">
-          {% for opt in question.data.options %}
-          <label class="attempt-option">
-            <input type="checkbox" name="answer" value="{{ forloop.counter0 }}">
-            {{ opt }}
-          </label>
+          {% for opt in question.options.all %}
+            {% if opt.text %}
+            <label class="attempt-option">
+              <input type="checkbox" name="answer" value="{{ opt.pk }}">
+              {{ opt.text }}
+            </label>
+            {% endif %}
           {% endfor %}
         </div>
 
@@ -78,10 +82,10 @@
           Arraste os itens para colocá-los na ordem correta.
         </p>
         <div class="ordering-list" id="orderingList">
-          {% for orig_idx, label in shuffled.indexed %}
-          <div class="ordering-item" draggable="true" data-orig="{{ orig_idx }}">
+          {% for pair in shuffled.indexed %}
+          <div class="ordering-item" draggable="true" data-orig="{{ pair.0 }}">
             <span class="ordering-item__handle">⠿</span>
-            <span class="ordering-item__label">{{ label }}</span>
+            <span class="ordering-item__label">{{ pair.1 }}</span>
           </div>
           {% endfor %}
         </div>
@@ -95,7 +99,7 @@
         </p>
         <div class="matching-ui">
           <div class="matching-col" id="matchLeft">
-            {% for pair in question.data.pairs %}
+            {% for pair in question.pairs.all %}
             <button type="button"
               class="matching-btn matching-btn--left"
               data-left="{{ pair.left }}"
@@ -117,13 +121,13 @@
         <div id="matchingInputs"></div>
         {# How many pairs to complete #}
         <p style="font-size:.75rem;color:var(--color-text-faint);margin-top:.5rem"
-          id="matchStatus">0 / {{ question.data.pairs|length }} pares associados</p>
+          id="matchStatus">0 / {{ question.pairs.count }} pares associados</p>
 
       {# ── Flashcard ── #}
       {% elif question.question_type == 'flashcard' %}
         <div class="flashcard-reveal">
-          <div class="flashcard-front">{{ question.data.front }}</div>
-          <div class="flashcard-back" id="flashcardBack">{{ question.data.back }}</div>
+          <div class="flashcard-front">{{ question.front }}</div>
+          <div class="flashcard-back" id="flashcardBack">{{ question.back }}</div>
         </div>
         <button type="button" class="btn btn--ghost btn--sm" style="margin-bottom:1rem"
           onclick="revealFlashcard()">Revelar resposta</button>
@@ -179,7 +183,7 @@
 <script>
   // Pass total matching pairs count to JS
   {% if question.question_type == 'matching' %}
-  window.MATCH_TOTAL = {{ question.data.pairs|length }};
+  window.MATCH_TOTAL = {{ question.pairs.count }};
   {% endif %}
 </script>
 {% endblock %}

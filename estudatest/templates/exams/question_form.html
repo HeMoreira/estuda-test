@@ -2,7 +2,7 @@
 {% load static %}
 
 {% block title %}{% if action == 'add' %}Nova questão{% else %}Editar questão{% endif %} — EstudaTest{% endblock %}
-{% block extra_css %}<link rel="stylesheet" href="{% static 'css/pages/test-editor.css' %}">{% endblock %}
+{% block extra_css %}<link rel="stylesheet" href="{% static 'css/pages/exam-editor.css' %}">{% endblock %}
 {% block main_class %}main--full{% endblock %}
 
 {% block content %}
@@ -11,9 +11,9 @@
     <div class="page-header">
         <div>
             <h1 class="page-header__title">{% if action == 'add' %}Nova questão{% else %}Editar questão{% endif %}</h1>
-            <div class="page-header__sub">Prova: {{ test.name }}</div>
+            <div class="page-header__sub">Prova: {{ exam.name }}</div>
         </div>
-        <a href="{% url 'tests_app:edit' test.pk %}" class="btn btn--ghost btn--sm">← Voltar</a>
+        <a href="{% url 'exams:edit' exam.pk %}" class="btn btn--ghost btn--sm">← Voltar</a>
     </div>
 
     {% if errors %}
@@ -179,7 +179,7 @@
         </div>
 
         <div class="form-actions-footer">
-          <a href="{% url 'tests_app:edit' test.pk %}" class="btn btn--ghost">Cancelar</a>
+          <a href="{% url 'exams:edit' exam.pk %}" class="btn btn--ghost">Cancelar</a>
           <button type="submit" class="btn btn--primary">Salvar questão</button>
         </div>
     </form>
