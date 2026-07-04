@@ -30,15 +30,15 @@
         <div class="editor-section">
             <div class="editor-section__title">Tipo de questão</div>
             <div class="question-type-selector" id="typeSelectorContainer">
-                {% for val, label in form.question_type.field.choices %}
+                {% for val, label in type_form.question_type.field.choices %}
                     <button type="button"
-                        class="question-type-btn {% if form.question_type.value == val or forloop.first and not form.question_type.value %}question-type-btn--active{% endif %}"
+                        class="question-type-btn {% if type_form.question_type.value == val or forloop.first and not type_form.question_type.value %}question-type-btn--active{% endif %}"
                         data-type="{{ val }}">
                         <div class="question-type-btn__label">{{ label }}</div>
                     </button>
                 {% endfor %}
             </div>
-            <input type="hidden" name="question_type" id="selectedType" value="{{ form.question_type.value|default:'' }}">
+            <input type="hidden" name="question_type" id="selectedType" value="{{ type_form.question_type.value|default:'' }}">
         </div>
 
         <div class="editor-section">

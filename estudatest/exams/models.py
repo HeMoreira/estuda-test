@@ -10,7 +10,7 @@ import re
 class Exam(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='exams')
     category = models.ForeignKey(Category, on_delete=models.SET_NULL, null=True, blank=True, related_name='exams')
-    name = models.CharField(max_length=30)
+    name = models.CharField(max_length=30, unique=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
@@ -40,8 +40,8 @@ class Question(PolymorphicModel):
     exam = models.ForeignKey(Exam, on_delete=models.CASCADE, related_name='questions')
     order = models.PositiveIntegerField(default=0)
     question_type = models.CharField(max_length=20, choices=Types.choices, editable=False)
-    statement = models.TextField(validators=[MaxLengthValidator(1000)])
-    explanation = models.TextField(validators=[MaxLengthValidator(1000)])
+    statement = models.TextField(validators=[MaxLengthValidator(1000)], blank=False)
+    explanation = models.TextField(validators=[MaxLengthValidator(1000)], blank=False)
 
     is_automatable = True
  
@@ -100,13 +100,13 @@ class ChoiceQuestionMixin(models.Model):
  
 class QuestionOption(models.Model):
     question = models.ForeignKey(Question, on_delete=models.CASCADE, related_name='options')
-    text = models.CharField(max_length=255)
+    text = models.CharField(max_length=500)
     is_correct = models.BooleanField(default=False)
     order = models.PositiveIntegerField(default=0)
- 
+
     class Meta:
         ordering = ['order']
- 
+
     def __str__(self):
         return self.text
 
@@ -117,7 +117,10 @@ class MultipleChoiceQuestion(ChoiceQuestionMixin, Question):
 
     def clean(self):
         super().clean()
-        if self.pk and self.options.filter(is_correct=True).count() > 1:
+        if self.pk is None:
+            return
+        correct_count = self.options.filter(is_correct=True).count()
+        if correct_count > 1:
             raise ValidationError("Uma questão de Múltipla Escolha só pode ter uma alternativa correta.")
 
 class MultiAnswerQuestion(ChoiceQuestionMixin, Question):
@@ -147,7 +150,7 @@ class TrueFalseQuestion(Question):
 # Resposta escrita
 
 class WrittenQuestion(Question):
-    expected_answer = models.CharField(max_length=500)
+    expected_answer = models.CharField(max_length=255)
     case_sensitive = models.BooleanField(default=False)
     accepted_alternatives = models.JSONField(default=list, blank=True)
  
@@ -204,7 +207,7 @@ class OrderingQuestion(Question):
 
 class OrderingItem(models.Model):
     question = models.ForeignKey(OrderingQuestion, on_delete=models.CASCADE, related_name='items')
-    text = models.CharField(max_length=255)
+    text = models.CharField(max_length=500)
     position = models.PositiveIntegerField()
  
     class Meta:
@@ -243,8 +246,8 @@ class MatchingQuestion(Question):
 
 class MatchingPair(models.Model):
     question = models.ForeignKey(MatchingQuestion, on_delete=models.CASCADE, related_name='pairs')
-    left = models.CharField(max_length=255)
-    right = models.CharField(max_length=255)
+    left = models.CharField(max_length=500)
+    right = models.CharField(max_length=500)
     order = models.PositiveIntegerField(default=0)
  
     class Meta:
@@ -257,8 +260,8 @@ class MatchingPair(models.Model):
 # Flashcard
 
 class FlashcardQuestion(Question):
-    front = models.TextField()
-    back = models.TextField()
+    front = models.TextField(validators=[MaxLengthValidator(1000)], blank=False)
+    back = models.TextField(validators=[MaxLengthValidator(1000)], blank=False)
 
     is_automatable = False
  

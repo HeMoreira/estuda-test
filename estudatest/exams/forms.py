@@ -1,4 +1,5 @@
 from django import forms
+from django.core.exceptions import ValidationError
 from django.forms import inlineformset_factory, BaseInlineFormSet
 from django.db import models
 
@@ -17,7 +18,6 @@ from .models import (
 
 
 class ExamForm(forms.ModelForm):
-    """Formulário para criação e edição de Provas (Exams)."""
     class Meta:
         model = Exam
         fields = ['name', 'category']
@@ -32,11 +32,16 @@ class ExamForm(forms.ModelForm):
 
     def __init__(self, user, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        # Filtra as categorias para exibir apenas as do usuário atual (ou globais)
         if 'category' in self.fields:
             self.fields['category'].queryset = self.fields['category'].queryset.filter(
-                models.Q(user=user) | models.Q(user__isnull=True)
-            )
+                models.Q(user=user)
+            ).exclude(name='~ sem categoria')
+
+    def clean_name(self):
+        name = self.cleaned_data.get('name', '').strip()
+        if not name:
+            raise ValidationError('O nome da prova não pode ficar vazio.')
+        return name
 
 
 class QuestionTypeForm(forms.Form):
@@ -47,12 +52,12 @@ COMMON_WIDGETS = {
     'statement': forms.Textarea(attrs={
         'class': 'form__textarea', 'rows': 4,
         'placeholder': 'Digite o enunciado da questão...',
-        'maxlength': '500',
+        'maxlength': '1000',
     }),
     'explanation': forms.Textarea(attrs={
         'class': 'form__textarea', 'rows': 3,
         'placeholder': 'Explique por que a resposta é correta...',
-        'maxlength': '500',
+        'maxlength': '1000',
     }),
 }
 
@@ -63,10 +68,23 @@ COMMON_LABELS = {
 
 
 class BaseQuestionForm(forms.ModelForm):
+    statement = forms.CharField(widget=COMMON_WIDGETS['statement'], label=COMMON_LABELS['statement'], max_length=1000)
+    explanation = forms.CharField(widget=COMMON_WIDGETS['explanation'], label=COMMON_LABELS['explanation'], max_length=1000, required=False)
+
     class Meta:
         fields = ['statement', 'explanation']
-        widgets = COMMON_WIDGETS
-        labels = COMMON_LABELS
+
+    def clean_statement(self):
+        statement = self.cleaned_data.get('statement', '').strip()
+        if not statement:
+            raise ValidationError('O enunciado da questão não pode ficar vazio.')
+        return statement
+
+    def clean_explanation(self):
+        explanation = self.cleaned_data.get('explanation', '').strip()
+        if not explanation:
+            raise ValidationError('A explicação da questão não pode ficar vazio.')
+        return explanation
 
 
 class MultipleChoiceQuestionForm(BaseQuestionForm):
