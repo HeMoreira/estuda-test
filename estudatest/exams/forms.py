@@ -37,12 +37,6 @@ class ExamForm(forms.ModelForm):
                 models.Q(user=user)
             ).exclude(name='~ sem categoria')
 
-    def clean_name(self):
-        name = self.cleaned_data.get('name', '').strip()
-        if not name:
-            raise ValidationError('O nome da prova não pode ficar vazio.')
-        return name
-
 
 class QuestionTypeForm(forms.Form):
     question_type = forms.ChoiceField(choices=Question.Types.choices, label='Tipo de questão')
@@ -52,12 +46,10 @@ COMMON_WIDGETS = {
     'statement': forms.Textarea(attrs={
         'class': 'form__textarea', 'rows': 4,
         'placeholder': 'Digite o enunciado da questão...',
-        'maxlength': '1000',
     }),
     'explanation': forms.Textarea(attrs={
         'class': 'form__textarea', 'rows': 3,
         'placeholder': 'Explique por que a resposta é correta...',
-        'maxlength': '1000',
     }),
 }
 
@@ -68,23 +60,11 @@ COMMON_LABELS = {
 
 
 class BaseQuestionForm(forms.ModelForm):
-    statement = forms.CharField(widget=COMMON_WIDGETS['statement'], label=COMMON_LABELS['statement'], max_length=1000)
-    explanation = forms.CharField(widget=COMMON_WIDGETS['explanation'], label=COMMON_LABELS['explanation'], max_length=1000, required=False)
+    statement = forms.CharField(widget=COMMON_WIDGETS['statement'], label=COMMON_LABELS['statement'], max_length=1000, required=True)
+    explanation = forms.CharField(widget=COMMON_WIDGETS['explanation'], label=COMMON_LABELS['explanation'], max_length=1000, required=True)
 
     class Meta:
         fields = ['statement', 'explanation']
-
-    def clean_statement(self):
-        statement = self.cleaned_data.get('statement', '').strip()
-        if not statement:
-            raise ValidationError('O enunciado da questão não pode ficar vazio.')
-        return statement
-
-    def clean_explanation(self):
-        explanation = self.cleaned_data.get('explanation', '').strip()
-        if not explanation:
-            raise ValidationError('A explicação da questão não pode ficar vazio.')
-        return explanation
 
 
 class MultipleChoiceQuestionForm(BaseQuestionForm):
@@ -166,60 +146,23 @@ class MatchingQuestionForm(BaseQuestionForm):
 # Formsets para os dados relacionados (opções, itens, pares)
 # ==========================================================================
 
-class RequireMinimumFormSet(BaseInlineFormSet):
-    min_forms_required = 2
-
-    def clean(self):
-        super().clean()
-        if any(self.errors):
-            return
-        active = [f for f in self.forms if f.cleaned_data and not f.cleaned_data.get('DELETE')]
-        if len(active) < self.min_forms_required:
-            raise forms.ValidationError(f'Adicione ao menos {self.min_forms_required} itens.')
-
-
-class SingleCorrectOptionFormSet(RequireMinimumFormSet):
-    def clean(self):
-        super().clean()
-        if any(self.errors):
-            return
-        active = [f for f in self.forms if f.cleaned_data and not f.cleaned_data.get('DELETE')]
-        correct_count = sum(1 for f in active if f.cleaned_data.get('is_correct'))
-        if correct_count != 1:
-            raise forms.ValidationError('Marque exatamente uma opção como correta.')
-
-
-class MultiCorrectOptionFormSet(RequireMinimumFormSet):
-    def clean(self):
-        super().clean()
-        if any(self.errors):
-            return
-        active = [f for f in self.forms if f.cleaned_data and not f.cleaned_data.get('DELETE')]
-        correct_count = sum(1 for f in active if f.cleaned_data.get('is_correct'))
-        if correct_count < 1:
-            raise forms.ValidationError('Marque ao menos uma opção como correta.')
-
-
 OPTION_WIDGETS = {'text': forms.TextInput(attrs={'class': 'form__input', 'placeholder': 'Texto da opção'})}
 
 MultipleChoiceOptionFormSet = inlineformset_factory(
     MultipleChoiceQuestion, QuestionOption,
     fields=['text', 'is_correct', 'order'],
-    formset=SingleCorrectOptionFormSet,
     extra=2, can_delete=True, widgets=OPTION_WIDGETS,
 )
 
 MultiAnswerOptionFormSet = inlineformset_factory(
     MultiAnswerQuestion, QuestionOption,
     fields=['text', 'is_correct', 'order'],
-    formset=MultiCorrectOptionFormSet,
     extra=2, can_delete=True, widgets=OPTION_WIDGETS,
 )
 
 OrderingItemFormSet = inlineformset_factory(
     OrderingQuestion, OrderingItem,
     fields=['text', 'position'],
-    formset=RequireMinimumFormSet,
     extra=2, can_delete=True,
     widgets={'text': forms.TextInput(attrs={'class': 'form__input', 'placeholder': 'Elemento'})},
 )
@@ -227,7 +170,6 @@ OrderingItemFormSet = inlineformset_factory(
 MatchingPairFormSet = inlineformset_factory(
     MatchingQuestion, MatchingPair,
     fields=['left', 'right', 'order'],
-    formset=RequireMinimumFormSet,
     extra=2, can_delete=True,
     widgets={
         'left': forms.TextInput(attrs={'class': 'form__input', 'placeholder': 'Coluna A'}),

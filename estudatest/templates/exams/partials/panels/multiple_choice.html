@@ -1,0 +1,22 @@
+<div class="fieldset-panel" id="panel-multiple_choice">
+    <p class="fieldset-panel__hint">Marque a alternativa correta.</p>
+    <div class="option-list" id="mc-options">
+        <div class="option-row">
+            <input type="radio" name="data_correct" class="option-row__radio" value="0">
+            <input type="text" name="data_options" class="option-row__input" placeholder="Alternativa A">
+            <button type="button" class="option-row__remove js-remove-option">✕</button>
+        </div>
+        <div class="option-row">
+            <input type="radio" name="data_correct" class="option-row__radio" value="1">
+            <input type="text" name="data_options" class="option-row__input" placeholder="Alternativa B">
+            <button type="button" class="option-row__remove js-remove-option">✕</button>
+        </div>
+    </div>
+    <button type="button" class="add-option-btn" 
+            data-action="add-option" 
+            data-target="mc-options" 
+            data-input-name="data_options" 
+            data-input-type="radio" 
+            data-placeholder="Alternativa" 
+            data-max="5">+ Adicionar alternativa</button>
+</div>

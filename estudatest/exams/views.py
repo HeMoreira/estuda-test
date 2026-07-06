@@ -111,15 +111,13 @@ def question_add(request, exam_pk):
     errors = []
 
     if request.method == 'POST':
-        if any(k in request.POST for k in ('data_options', 'data_items', 'data_pairs_left', 'data_front')):
-            try:
-                with transaction.atomic():
-                    QuestionService.create_question(exam, question_type, request.POST)
-                return redirect('exams:edit', pk=exam.pk)
-            except ValidationError as exc:
-                errors = _flatten_validation_errors(exc)
-            except Exception:
-                errors = ['Ocorreu um erro ao salvar a estrutura dinâmica da questão.']
+        try:
+            QuestionService.create_question(exam, question_type, request.POST)
+            return redirect('exams:edit', pk=exam.pk)
+        except ValidationError as exc:
+            errors = _flatten_validation_errors(exc)
+        except Exception:
+            errors = ['Ocorreu um erro ao salvar a estrutura dinâmica da questão.']
     
     type_form = QuestionTypeForm(request.POST or None, initial={'question_type': question_type})
     return render(request, 'exams/question_form.html', {
@@ -155,8 +153,7 @@ def question_edit(request, exam_pk, pk):
     if request.method == 'POST':
         if any(k.startswith('data_') for k in request.POST.keys()):
             try:
-                with transaction.atomic():
-                    QuestionService.update_question(instance, question_type, request.POST)
+                QuestionService.update_question(instance, question_type, request.POST)
                 return redirect('exams:edit', pk=exam.pk)
             except ValidationError as e:
                 errors = e.messages

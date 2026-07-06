@@ -8,10 +8,12 @@ function selectType(type, btn) {
   document.getElementById('selectedType').value = type;
   document.querySelectorAll('.question-type-btn').forEach(b => b.classList.remove('question-type-btn--active'));
   btn.classList.add('question-type-btn--active');
-  
+
   PANELS.forEach(p => {
     const el = document.getElementById('panel-' + p);
-    if (el) el.classList.toggle('fieldset-panel--active', p === type);
+    if (!el) return;
+    el.classList.toggle('fieldset-panel--active', p === type);
+    el.style.display = p === type ? '' : 'none';
   });
 }
 

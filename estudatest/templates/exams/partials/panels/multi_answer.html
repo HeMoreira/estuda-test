@@ -1,0 +1,22 @@
+<div class="fieldset-panel" id="panel-multi_answer">
+    <p class="fieldset-panel__hint">Marque todas as corretas.</p>
+    <div class="option-list" id="ma-options">
+        <div class="option-row">
+            <input type="checkbox" name="data_correct" class="option-row__check" value="0">
+            <input type="text" name="data_options" class="option-row__input" placeholder="Opção A">
+            <button type="button" class="option-row__remove js-remove-option">✕</button>
+        </div>
+        <div class="option-row">
+            <input type="checkbox" name="data_correct" class="option-row__check" value="1">
+            <input type="text" name="data_options" class="option-row__input" placeholder="Opção B">
+            <button type="button" class="option-row__remove js-remove-option">✕</button>
+        </div>
+    </div>
+    <button type="button" class="add-option-btn" 
+            data-action="add-option" 
+            data-target="ma-options" 
+            data-input-name="data_options" 
+            data-input-type="checkbox" 
+            data-placeholder="Opção" 
+            data-max="6">+ Adicionar opção</button>
+</div>

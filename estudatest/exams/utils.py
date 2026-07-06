@@ -21,63 +21,73 @@ def save_exam_with_default_category_if_needed(request, form):
 def _normalize_text(value):
     return (value or '').strip()
 
-
 def _normalize_option_values(post_data):
     opts = [t.strip() for t in post_data.getlist('data_options') if t.strip() != '']
     if len(opts) > 10:
         raise ValidationError('A questão pode ter no máximo 10 alternativas.')
     return opts
 
-
-def validate_question_payload(q_type, post_data):
-    statement = _normalize_text(post_data.get('statement'))
-    explanation = _normalize_text(post_data.get('explanation'))
-
-    if not statement:
-        raise ValidationError({'statement': 'O enunciado da questão não pode ficar vazio.'})
-    if not explanation:
-        raise ValidationError({'explanation': 'A explicação da resposta não pode ficar vazia.'})
-
+def _validate_specific_question_types(q_type, post_data, errors):
     if q_type in (Question.Types.MULTIPLE_CHOICE, Question.Types.MULTI_ANSWER):
         opts = _normalize_option_values(post_data)
         if len(opts) < 2:
-            raise ValidationError('A questão precisa conter pelo menos 2 alternativas válidas e preenchidas.')
+            errors.append('A questão precisa conter pelo menos 2 alternativas válidas e preenchidas.')
 
         if q_type == Question.Types.MULTIPLE_CHOICE:
             correct_index = post_data.get('data_correct')
             if correct_index is None or correct_index == '':
-                raise ValidationError('É necessário marcar qual alternativa é a correta.')
+                errors.append('É necessário marcar qual alternativa é a correta.')
         else:
             if not post_data.getlist('data_correct'):
-                raise ValidationError('Marque pelo menos uma resposta como correta.')
+                errors.append('Marque pelo menos uma resposta como correta.')
 
     elif q_type == Question.Types.TRUE_FALSE:
         val = post_data.get('data_correct')
         if val not in ('true', 'false', '1', '0', 'verdadeiro', 'falso'):
-            raise ValidationError('Selecione verdadeiro ou falso.')
+            errors.append('Selecione verdadeiro ou falso.')
 
     elif q_type == Question.Types.WRITTEN:
         ans = _normalize_text(post_data.get('data_answer'))
         if not ans:
-            raise ValidationError('A resposta escrita esperada não pode ficar vazia.')
+            errors.append('A resposta escrita esperada não pode ficar vazia.')
 
     elif q_type == Question.Types.ORDERING:
         items = [t.strip() for t in post_data.getlist('data_items') if t.strip() != '']
         if len(items) < 2:
-            raise ValidationError('Forneça pelo menos 2 elementos ordenáveis preenchidos.')
+            errors.append('Forneça pelo menos 2 elementos ordenáveis preenchidos.')
 
     elif q_type == Question.Types.MATCHING:
         lefts = [l.strip() for l in post_data.getlist('data_pairs_left') if l.strip() != '']
         rights = [r.strip() for r in post_data.getlist('data_pairs_right') if r.strip() != '']
         if len(lefts) < 2 or len(lefts) != len(rights):
-            raise ValidationError('Garanta que todas as linhas de colunas (A e B) estejam preenchidas (pelo menos 2).')
+            errors.append('Garanta que todas as linhas de colunas (A e B) estejam preenchidas.')
 
     elif q_type == Question.Types.FLASHCARD:
         front = _normalize_text(post_data.get('data_front'))
         back = _normalize_text(post_data.get('data_back'))
         if not front or not back:
-            raise ValidationError('Texto de frente e verso são obrigatórios para o Flashcard.')
+            errors.append('Texto de frente e verso são obrigatórios para o Flashcard.')
 
+    return errors
+
+def validate_question_payload(q_type, post_data):
+    errors = []
+    statement = _normalize_text(post_data.get('statement'))
+    explanation = _normalize_text(post_data.get('explanation'))
+
+    if not statement or not explanation:
+        errors.append('O enunciado e a explicação da questão não podem ficar vazios.')
+        # raise ValidationError({'empty_fields': 'O enunciado e a explicação da questão não podem ficar vazios.'})
+
+    if len(statement) > 1000 or len(explanation) > 1000:
+        errors.append('O enunciado e a explicação da questão podem ter no máximo 1000 caracteres.')
+        # raise ValidationError({'too_long_fields': 'O enunciado e a explicação da questão podem ter no máximo 1000 caracteres.'})
+
+    if any(k in post_data for k in ('data_options', 'data_items', 'data_pairs_left', 'data_front')):
+        errors = _validate_specific_question_types(q_type, post_data, errors)
+
+    if errors:
+        raise ValidationError(errors)
     return statement, explanation
 
 def _create_polymorphic_instance(q_type, stmt, expl, post_data):
