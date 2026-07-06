@@ -48,8 +48,8 @@ def exam_edit(request, pk):
         'questions': questions,
         'action': 'edit',
     })
-  
-  
+
+
 @login_required
 def exam_detail_json(request, pk):
     exam = get_object_or_404(Exam, pk=pk, user=request.user)
@@ -82,8 +82,8 @@ def exam_detail_json(request, pk):
         'urgency_color': color,
         'urgency_ratio': ratio,
     })
-  
-  
+
+
 @login_required
 @require_http_methods(['DELETE'])
 def exam_delete(request, pk):
@@ -151,14 +151,13 @@ def question_edit(request, exam_pk, pk):
     errors = []
   
     if request.method == 'POST':
-        if any(k.startswith('data_') for k in request.POST.keys()):
-            try:
-                QuestionService.update_question(instance, question_type, request.POST)
-                return redirect('exams:edit', pk=exam.pk)
-            except ValidationError as e:
-                errors = e.messages
-            except Exception:
-                errors = ['Ocorreu um erro ao atualizar os dados dinâmicos da questão.']
+        try:
+            QuestionService.update_question(instance, question_type, request.POST)
+            return redirect('exams:edit', pk=exam.pk)
+        except ValidationError as e:
+            errors = e.messages
+        except Exception:
+            errors = ['Ocorreu um erro ao atualizar os dados dinâmicos da questão.']
   
     # Construir dados simples para popular o editor via JS
     qdata = _build_question_json_data(instance, question_type)
@@ -167,8 +166,7 @@ def question_edit(request, exam_pk, pk):
     context = {
         'form': form, 'formset': formset, 'exam': exam, 'question': instance,
         'question_data_json': json.dumps(qdata), 'question_type': question_type,
-        'errors': errors, 'action': 'edit',
-        'type_form': type_form,
+        'errors': errors, 'type_form': type_form, 'action': 'edit',
     }
     return render(request, 'exams/question_form.html', context)
 

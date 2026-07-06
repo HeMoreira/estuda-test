@@ -36,6 +36,11 @@ def attempt_question(request, attempt_id, n):
     questions = list(exam.questions.order_by('order').prefetch_related('options'))
     total = len(questions)
 
+    # Determine the sequence of "n" values that correspond to non-flashcard
+    # questions. Flashcards are treated as auxiliary and shouldn't affect
+    # the "is_last"/"next_n" navigation for regular questions.
+    nonflash_indexes = [i + 1 for i, q in enumerate(questions) if q.question_type != 'flashcard']
+
     if n < 1 or n > total:
         return redirect('attempts:review', attempt_id=attempt.id)
 
@@ -93,6 +98,24 @@ def attempt_question(request, attempt_id, n):
             'correct_answer': question.correct_answer_display(),  # Centralizado no Model
         }
 
+        # Compute navigation semantics relative to non-flashcard questions.
+        if question.question_type == 'flashcard':
+            is_last = True
+            next_n = None
+        else:
+            try:
+                pos = nonflash_indexes.index(n)
+            except ValueError:
+                pos = None
+
+            if pos is None:
+                # If current question isn't in the non-flash list, fall back
+                is_last = (n == total)
+                next_n = n + 1 if n < total else None
+            else:
+                is_last = (pos == len(nonflash_indexes) - 1)
+                next_n = nonflash_indexes[pos + 1] if not is_last else None
+
         return render(request, 'attempts/question.html', {
             'attempt': attempt,
             'question': question,
@@ -100,8 +123,8 @@ def attempt_question(request, attempt_id, n):
             'total': total,
             'progress_pct': progress_pct,
             'feedback': feedback,
-            'next_n': n + 1 if n < total else None,
-            'is_last': n == total,
+            'next_n': next_n,
+            'is_last': is_last,
             'shuffled': shuffled,
         })
 
@@ -138,6 +161,11 @@ def attempt_review(request, attempt_id):
     answer_data = []
     for ar in answers:
         q = ar.question
+        if hasattr(q, 'get_real_instance'):
+            try:
+                q = q.get_real_instance()
+            except Exception:
+                q = ar.question
         given = ar.given_answer
 
         # Build a human-readable representation of the given answer

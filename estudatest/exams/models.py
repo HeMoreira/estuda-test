@@ -115,14 +115,6 @@ class MultipleChoiceQuestion(ChoiceQuestionMixin, Question):
         self.question_type = Question.Types.MULTIPLE_CHOICE
         super().save(*args, **kwargs)
 
-    def clean(self):
-        super().clean()
-        if self.pk is None:
-            return
-        correct_count = self.options.filter(is_correct=True).count()
-        if correct_count > 1:
-            raise ValidationError("Uma questão de Múltipla Escolha só pode ter uma alternativa correta.")
-
 class MultiAnswerQuestion(ChoiceQuestionMixin, Question):
     def save(self, *args, **kwargs):
         self.question_type = Question.Types.MULTI_ANSWER

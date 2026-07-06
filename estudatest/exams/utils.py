@@ -41,6 +41,11 @@ def _validate_specific_question_types(q_type, post_data, errors):
             if not post_data.getlist('data_correct'):
                 errors.append('Marque pelo menos uma resposta como correta.')
 
+        for opt in opts:
+            if len(opt) > 500:
+                errors.append('As alternativas podem ter no máximo 500 caracteres.')
+                break
+
     elif q_type == Question.Types.TRUE_FALSE:
         val = post_data.get('data_correct')
         if val not in ('true', 'false', '1', '0', 'verdadeiro', 'falso'):
@@ -51,10 +56,18 @@ def _validate_specific_question_types(q_type, post_data, errors):
         if not ans:
             errors.append('A resposta escrita esperada não pode ficar vazia.')
 
+        if len(ans) > 255:
+            errors.append('A resposta escrita pode ter no máximo 255 caracteres.')
+
     elif q_type == Question.Types.ORDERING:
         items = [t.strip() for t in post_data.getlist('data_items') if t.strip() != '']
         if len(items) < 2:
             errors.append('Forneça pelo menos 2 elementos ordenáveis preenchidos.')
+
+        for _, text in enumerate(items, start=1):
+            if len(text) > 500:
+                errors.append('Os elementos podem ter no máximo 500 caracteres.')
+                break
 
     elif q_type == Question.Types.MATCHING:
         lefts = [l.strip() for l in post_data.getlist('data_pairs_left') if l.strip() != '']
@@ -62,12 +75,19 @@ def _validate_specific_question_types(q_type, post_data, errors):
         if len(lefts) < 2 or len(lefts) != len(rights):
             errors.append('Garanta que todas as linhas de colunas (A e B) estejam preenchidas.')
 
+        for _, (l, r) in enumerate(zip(lefts, rights), start=1):
+            if len(l) > 500 or len(r) > 500:
+                errors.append('Os elementos podem ter no máximo 500 caracteres.')
+                break
+
     elif q_type == Question.Types.FLASHCARD:
         front = _normalize_text(post_data.get('data_front'))
         back = _normalize_text(post_data.get('data_back'))
         if not front or not back:
             errors.append('Texto de frente e verso são obrigatórios para o Flashcard.')
 
+        if len(front) > 1000 or len(back) > 1000:
+            errors.append('O texto de frente e verso podem ter no máximo 1000 caracteres.')
     return errors
 
 def validate_question_payload(q_type, post_data):
@@ -83,8 +103,7 @@ def validate_question_payload(q_type, post_data):
         errors.append('O enunciado e a explicação da questão podem ter no máximo 1000 caracteres.')
         # raise ValidationError({'too_long_fields': 'O enunciado e a explicação da questão podem ter no máximo 1000 caracteres.'})
 
-    if any(k in post_data for k in ('data_options', 'data_items', 'data_pairs_left', 'data_front')):
-        errors = _validate_specific_question_types(q_type, post_data, errors)
+    errors = _validate_specific_question_types(q_type, post_data, errors)
 
     if errors:
         raise ValidationError(errors)
@@ -113,7 +132,6 @@ def _create_polymorphic_instance(q_type, stmt, expl, post_data):
         back = post_data.get('data_back', '').strip()
         return FlashcardQuestion(statement=stmt, explanation=expl, front=front, back=back)
     return None
-
 
 def _process_question_dependencies(q, q_type, post_data):
     """Gera e acopla dependências estruturais limpando strings vazias e aplicando validação de segurança."""
@@ -146,7 +164,6 @@ def _process_question_dependencies(q, q_type, post_data):
             
         for i, (l, r) in enumerate(zip(lefts, rights)):
             MatchingPair.objects.create(question=q, left=l, right=r, order=i)
-
 
 def _update_polymorphic_instance(instance, q_type, post_data):
     """Atualiza de forma atômica e limpa os campos internos e registros dependentes."""
@@ -222,7 +239,6 @@ def _update_polymorphic_instance(instance, q_type, post_data):
         instance.flashcardquestion.front = front
         instance.flashcardquestion.back = back
         instance.flashcardquestion.save()
-
 
 def _build_question_json_data(instance, q_type):
     """Mapeia os dados salvos em dicionários nativos para o script renderizar em tela."""
