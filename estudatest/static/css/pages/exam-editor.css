@@ -162,15 +162,6 @@
   gap: 0.5rem;
 }
 
-.option-row__radio,
-.option-row__check {
-  width: 16px;
-  height: 16px;
-  flex-shrink: 0;
-  accent-color: var(--color-accent);
-  cursor: pointer;
-}
-
 .true-false-wrapper {
   max-width: 280px;
 }

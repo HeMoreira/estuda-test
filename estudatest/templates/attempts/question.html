@@ -30,7 +30,6 @@
     <form method="post" id="answerForm">
       {% csrf_token %}
 
-      {# ── Múltipla escolha ── #}
       {% if question.question_type == 'multiple_choice' %}
         <div class="attempt-options">
           {% for opt in question.options.all %}
@@ -43,7 +42,6 @@
           {% endfor %}
         </div>
 
-      {# ── Resposta múltipla ── #}
       {% elif question.question_type == 'multi_answer' %}
         <p style="font-size:.8rem;color:var(--color-text-faint);margin-bottom:.75rem">Selecione todas as corretas.</p>
         <div class="attempt-options">
@@ -57,7 +55,6 @@
           {% endfor %}
         </div>
 
-      {# ── Verdadeiro ou Falso ── #}
       {% elif question.question_type == 'true_false' %}
         <div class="attempt-options" style="max-width:280px">
           <label class="attempt-option">
@@ -68,7 +65,6 @@
           </label>
         </div>
 
-      {# ── Resposta escrita ── #}
       {% elif question.question_type == 'written' %}
         <div class="form__group">
           <input type="text" name="answer" class="form__input"
@@ -76,7 +72,6 @@
           <div class="form__hint">Espaços, pontuação e acentos são ignorados.</div>
         </div>
 
-      {# ── Ordenar elementos (embaralhado, drag-and-drop) ── #}
       {% elif question.question_type == 'ordering' %}
         <p style="font-size:.8rem;color:var(--color-text-faint);margin-bottom:.75rem">
           Arraste os itens para colocá-los na ordem correta.
@@ -92,7 +87,6 @@
         {# Hidden inputs updated by JS #}
         <div id="orderingInputs"></div>
 
-      {# ── Relacionar colunas (clique para associar pares) ── #}
       {% elif question.question_type == 'matching' %}
         <p style="font-size:.8rem;color:var(--color-text-faint);margin-bottom:.75rem">
           Clique em um item da esquerda e depois em um da direita para associá-los.
@@ -115,6 +109,7 @@
             {% endfor %}
           </div>
         </div>
+        
         {# Pairs status display #}
         <div class="matching-pairs-done" id="matchPairsDone"></div>
         {# Hidden inputs built by JS #}
@@ -147,7 +142,6 @@
     </form>
 
     {% else %}
-    {# ── Feedback pós-resposta ── #}
     <div class="attempt-feedback {% if feedback.correct %}attempt-feedback--correct{% else %}attempt-feedback--wrong{% endif %}">
       <div class="attempt-feedback__title">
         {% if feedback.correct %}✓ Correto!{% else %}✗ Incorreto{% endif %}
@@ -180,10 +174,4 @@
 
 {% block extra_js %}
 <script src="{% static 'js/attempt.js' %}"></script>
-<script>
-  // Pass total matching pairs count to JS
-  {% if question.question_type == 'matching' %}
-  window.MATCH_TOTAL = {{ question.pairs.count }};
-  {% endif %}
-</script>
 {% endblock %}

@@ -48,6 +48,69 @@
   min-height: 80px;
 }
 
+input[type="radio"],
+input[type="checkbox"] {
+  appearance: none;
+  -webkit-appearance: none;
+
+  border: 2px solid var(--color-danger-bg);
+  background: var(--color-danger-bg);
+
+  display: inline-grid;
+  place-content: center;
+  position: relative;
+  cursor: pointer;
+  transition: all var(--transition);
+  flex-shrink: 0;
+}
+input[type="radio"] {
+  border-radius: 50%;
+  width: 16px;
+  height: 16px;
+}
+input[type="checkbox"] {
+  border-radius: var(--radius-sm);
+  width: 20px;
+  height: 20px;
+}
+
+input[type="radio"]::before,
+input[type="radio"]:checked::before {
+  content: "";
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background-color: transparent;
+  border: 2px solid var(--color-surface);
+}
+
+input[type="checkbox"]::before {
+  content: "✕";
+}
+input[type="checkbox"]:checked::before {
+  content: "✓";
+}
+input[type="checkbox"]::before,
+input[type="checkbox"]:checked::before {
+  width: 18px;
+  height: 18px;
+  border-radius: var(--radius-sm);
+  background-color: transparent;
+  border: 2px solid var(--color-surface);
+
+  color: var(--color-surface);
+  font-size: 1rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+input[type="radio"]:checked,
+input[type="checkbox"]:checked {
+  border-color: var(--color-success-border);
+  background-color: var(--color-success-border);
+}
+
 .form__error {
   color: var(--color-red);
   font-size: 0.8rem;
