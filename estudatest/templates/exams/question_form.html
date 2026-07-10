@@ -17,11 +17,11 @@
     </div>
 
     {% if errors %}
-        <div class="form__errors-list">
+        <ul class="form__errors-list">
         {% for e in errors %}
             <li>{{ e }}</li>
         {% endfor %}
-        </div>
+        </ul>
     {% endif %}
 
     <form method="post" id="questionForm">
@@ -29,7 +29,9 @@
 
         <div class="editor-section">
             <div class="editor-section__title">Tipo de questão</div>
-            <div class="question-type-selector" id="typeSelectorContainer">
+            <div class="question-type-selector {% if action == 'edit' %}question-type-selector--locked{% endif %}"
+                 id="typeSelectorContainer"
+                 data-locked="{% if action == 'edit' %}true{% else %}false{% endif %}">
                 {% for val, label in type_form.question_type.field.choices %}
                     <button type="button"
                         class="question-type-btn {% if question_type == val or not question_type and forloop.first %}question-type-btn--active{% endif %}"
@@ -38,15 +40,14 @@
                     </button>
                 {% endfor %}
             </div>
-            <input type="hidden" name="question_type" id="selectedType" value="{{ type_form.question_type.value|default:'' }}">
+            <input type="hidden" name="question_type" id="selectedType" value="{{ question_type|default:'' }}">
         </div>
 
         <div class="editor-section">
             <div class="editor-section__title">Enunciado</div>
             <div class="form__group margin-bottom-0">
                 <textarea name="statement" class="form__textarea" rows="4"
-                    placeholder="Digite o enunciado da questão..." maxlength="1000">{{ form.statement.value|default:'' }}</textarea>
-                {% if form.statement.errors %}<div class="form__error">{{ form.statement.errors|join:', ' }}</div>{% endif %}
+                    placeholder="Digite o enunciado da questão..." maxlength="1000">{{ statement|default:'' }}</textarea>
             </div>
         </div>
 
@@ -60,13 +61,12 @@
             {% include "exams/partials/panels/matching.html" %}
             {% include "exams/partials/panels/flashcard.html" %}
         </div>
-        
+
         <div class="editor-section">
             <div class="editor-section__title">Explicação da resposta</div>
             <div class="form__group margin-bottom-0">
                 <textarea name="explanation" class="form__textarea" rows="3"
-                    placeholder="Explique por que a resposta é correta..." maxlength="1000">{{ form.explanation.value|default:'' }}</textarea>
-                {% if form.explanation.errors %}<div class="form__error">{{ form.explanation.errors|join:', ' }}</div>{% endif %}
+                    placeholder="Explique por que a resposta é correta..." maxlength="1000">{{ explanation|default:'' }}</textarea>
             </div>
         </div>
 
@@ -75,16 +75,13 @@
             <button type="submit" class="btn btn--primary">Salvar questão</button>
         </div>
     </form>
+
+    {% if question_data_json %}
+        <script id="editData" type="application/json">{{ question_data_json|safe }}</script>
+    {% endif %}
 </div>
 {% endblock %}
 
 {% block extra_js %}
 <script src="{% static 'js/question-builder.js' %}"></script>
-{% if action == 'edit' and question_data_json %}
-<script>
-const _editData = {{ question_data_json|safe }};
-const _editType = '{{ question.question_type }}';
-document.addEventListener('DOMContentLoaded', () => populateEditData(_editType, _editData));
-</script>
-{% endif %}
 {% endblock %}

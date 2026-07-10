@@ -1,22 +1,42 @@
 // question-builder.js — controla os fieldsets por tipo de questão
+
 const PANELS = [
   'multiple_choice', 'multi_answer', 'true_false',
-  'written', 'ordering', 'matching', 'flashcard'
+  'written', 'ordering', 'matching', 'flashcard',
 ];
 
-function selectType(type, btn) {
+// ── Seleção de tipo ──
+function selectType(type, btn, container) {
   document.getElementById('selectedType').value = type;
-  document.querySelectorAll('.question-type-btn').forEach(b => b.classList.remove('question-type-btn--active'));
+  container.querySelectorAll('.question-type-btn').forEach(b => b.classList.remove('question-type-btn--active'));
   btn.classList.add('question-type-btn--active');
 
-  PANELS.forEach(p => {
-    const el = document.getElementById('panel-' + p);
-    if (!el) return;
-    el.classList.toggle('fieldset-panel--active', p === type);
-    el.style.display = p === type ? '' : 'none';
+  PANELS.forEach(panelType => {
+    const panel = document.getElementById('panel-' + panelType);
+    if (!panel) return;
+    const active = panelType === type;
+    panel.classList.toggle('fieldset-panel--active', active);
+    panel.style.display = active ? '' : 'none';
   });
 }
 
+function bindTypeSelector() {
+  const container = document.getElementById('typeSelectorContainer');
+  if (!container) return;
+
+  container.addEventListener('click', (e) => {
+    if (container.dataset.locked === 'true') return; // bloqueio continua só aqui
+    const btn = e.target.closest('.question-type-btn');
+    if (btn) selectType(btn.dataset.type, btn, container);
+  });
+
+  // sempre sincroniza visual + hidden input na carga inicial, mesmo bloqueado
+  const current = document.getElementById('selectedType').value || 'multiple_choice';
+  const initialBtn = document.querySelector(`[data-type="${current}"]`);
+  if (initialBtn) selectType(current, initialBtn, container);
+}
+
+// ── Fábricas de elementos de linha ──
 function createRemoveButton(className) {
   const btn = document.createElement('button');
   btn.type = 'button';
@@ -25,7 +45,7 @@ function createRemoveButton(className) {
   return btn;
 }
 
-function createOptionRow(inputType, radioName, inputName, value, textValue = '', placeholder = '') {
+function createOptionRow({ inputType, radioName, inputName, value, textValue = '', placeholder = '' }) {
   const row = document.createElement('div');
   row.className = 'option-row';
 
@@ -42,10 +62,7 @@ function createOptionRow(inputType, radioName, inputName, value, textValue = '',
   inputText.placeholder = placeholder;
   inputText.value = textValue;
 
-  row.appendChild(inputCheck);
-  row.appendChild(inputText);
-  row.appendChild(createRemoveButton('option-row__remove js-remove-option'));
-  
+  row.append(inputCheck, inputText, createRemoveButton('option-row__remove js-remove-option'));
   return row;
 }
 
@@ -64,10 +81,7 @@ function createOrderRow(index, textValue = '') {
   input.placeholder = `Item ${index}`;
   input.value = textValue;
 
-  row.appendChild(span);
-  row.appendChild(input);
-  row.appendChild(createRemoveButton('option-row__remove js-remove-order'));
-
+  row.append(span, input, createRemoveButton('option-row__remove js-remove-order'));
   return row;
 }
 
@@ -89,21 +103,22 @@ function createPairRow(leftVal = '', rightVal = '') {
   inputRight.placeholder = 'Coluna B (Significado/Resposta)';
   inputRight.value = rightVal;
 
-  row.appendChild(inputLeft);
-  row.appendChild(inputRight);
-  row.appendChild(createRemoveButton('option-row__remove js-remove-pair'));
-
+  row.append(inputLeft, inputRight, createRemoveButton('option-row__remove js-remove-pair'));
   return row;
 }
 
-// ── Funções de Gerenciamento de Estado de Listas ──
-function addOption(listId, inputName, radioName, inputType, placeholder, max) {
+// ── Gerenciamento de listas ──
+function reindexRadios(list, name) {
+  list.querySelectorAll(`input[name="${name}"]`).forEach((el, i) => { el.value = i; });
+}
+
+function addOption({ listId, inputName, radioName, inputType, placeholder, max }) {
   const list = document.getElementById(listId);
   const count = list.querySelectorAll('.option-row').length;
   if (count >= max) { alert(`Máximo de ${max} opções.`); return; }
-  
+
   const ph = `${placeholder} ${String.fromCharCode(65 + count)}`;
-  const row = createOptionRow(inputType, radioName, inputName, count, '', ph);
+  const row = createOptionRow({ inputType, radioName, inputName, value: count, placeholder: ph });
   list.appendChild(row);
   reindexRadios(list, radioName);
 }
@@ -117,10 +132,6 @@ function removeOption(btn) {
   if (radioName) reindexRadios(list, radioName);
 }
 
-function reindexRadios(list, name) {
-  list.querySelectorAll(`input[name="${name}"]`).forEach((el, i) => el.value = i);
-}
-
 function addOrderItem() {
   const list = document.getElementById('ord-options');
   const count = list.querySelectorAll('.option-row').length;
@@ -132,7 +143,7 @@ function removeOrderItem(btn) {
   const list = document.getElementById('ord-options');
   if (list.querySelectorAll('.option-row').length <= 2) { alert('Mínimo de 2 itens.'); return; }
   btn.closest('.option-row').remove();
-  list.querySelectorAll('.option-row .option-row__index').forEach((s, i) => s.textContent = i + 1);
+  list.querySelectorAll('.option-row .option-row__index').forEach((span, i) => { span.textContent = i + 1; });
 }
 
 function addPair() {
@@ -147,210 +158,130 @@ function removePair(btn) {
   btn.closest('.pair-row').remove();
 }
 
-// ── Inicialização de Eventos (Event Listeners) ──
-document.addEventListener('DOMContentLoaded', () => {
-  const typeSelector = document.getElementById('typeSelectorContainer');
-  if (typeSelector) {
-    typeSelector.addEventListener('click', (e) => {
-      const btn = e.target.closest('.question-type-btn');
-      if (btn) selectType(btn.dataset.type, btn);
-    });
-  }
+// ── Envio: consolida pares de matching em campos hidden ──
+function serializeMatchingPairsOnSubmit(form) {
+  const lefts = [...form.querySelectorAll('input[name="data_pairs_left"]')].map(i => i.value);
+  const rights = [...form.querySelectorAll('input[name="data_pairs_right"]')].map(i => i.value);
 
+  form.querySelectorAll('input[name="data_pairs_left"], input[name="data_pairs_right"]').forEach(i => i.remove());
+
+  lefts.forEach((left, idx) => {
+    const hiddenLeft = document.createElement('input');
+    hiddenLeft.type = 'hidden'; hiddenLeft.name = 'data_pairs_left'; hiddenLeft.value = left;
+    const hiddenRight = document.createElement('input');
+    hiddenRight.type = 'hidden'; hiddenRight.name = 'data_pairs_right'; hiddenRight.value = rights[idx];
+    form.append(hiddenLeft, hiddenRight);
+  });
+}
+
+// ── Popular formulário em modo edição ──
+function populateChoicePanel(listId, inputType, radioName, options, correctCheck, placeholder) {
+  const list = document.getElementById(listId);
+  list.innerHTML = '';
+  options.forEach((opt, i) => {
+    const row = createOptionRow({
+      inputType,
+      radioName,
+      inputName: 'data_options',
+      value: i,
+      textValue: opt,
+      placeholder: `${placeholder} ${String.fromCharCode(65 + i)}`,
+    });
+    if (correctCheck(i)) row.querySelector(`input[type="${inputType}"]`).checked = true;
+    list.appendChild(row);
+  });
+}
+
+function populateEditData(type, data) {
+  if (type === 'multiple_choice') {
+    populateChoicePanel('mc-options', 'radio', 'data_correct', data.options || [], i => data.correct == i, 'Alternativa');
+  } else if (type === 'multi_answer') {
+    populateChoicePanel('ma-options', 'checkbox', 'data_correct', data.options || [], i => (data.correct || []).includes(i), 'Opção');
+  } else if (type === 'true_false') {
+    const val = data.correct ? 'true' : 'false';
+    document.querySelectorAll('#panel-true_false input[name="data_correct"]').forEach(r => { r.checked = r.value === val; });
+  } else if (type === 'written') {
+    const el = document.querySelector('#panel-written input[name="data_answer"]');
+    if (el) el.value = data.answer || '';
+  } else if (type === 'ordering') {
+    const list = document.getElementById('ord-options');
+    list.innerHTML = '';
+    (data.items || []).forEach((item, i) => list.appendChild(createOrderRow(i + 1, item)));
+  } else if (type === 'matching') {
+    const list = document.getElementById('match-pairs');
+    list.innerHTML = '';
+    (data.pairs || []).forEach(pair => list.appendChild(createPairRow(pair.left, pair.right)));
+  } else if (type === 'flashcard') {
+    const front = document.querySelector('#panel-flashcard textarea[name="data_front"]');
+    const back = document.querySelector('#panel-flashcard textarea[name="data_back"]');
+    if (front) front.value = data.front || '';
+    if (back) back.value = data.back || '';
+  }
+}
+
+function initEditMode() {
+  const dataEl = document.getElementById('editData');
+  if (!dataEl) return;
+  const type = document.getElementById('selectedType').value;
+  populateEditData(type, JSON.parse(dataEl.textContent));
+}
+
+// ── Inicialização de eventos ──
+function bindTypeSelector() {
+  const container = document.getElementById('typeSelectorContainer');
+  if (!container) return;
+
+  container.addEventListener('click', (e) => {
+    if (container.dataset.locked === 'true') return; // bloqueia só a troca por clique
+    const btn = e.target.closest('.question-type-btn');
+    if (btn) selectType(btn.dataset.type, btn, container);
+  });
+
+  // A ativação inicial do painel deve acontecer sempre, mesmo bloqueado
   const current = document.getElementById('selectedType').value || 'multiple_choice';
   const initialBtn = document.querySelector(`[data-type="${current}"]`);
-  if (initialBtn) selectType(current, initialBtn);
+  if (initialBtn) selectType(current, initialBtn, container);
+}
 
+function bindDynamicPanels() {
   const panelsContainer = document.getElementById('dynamicPanelsContainer');
-  if (panelsContainer) {
-    panelsContainer.addEventListener('click', (e) => {
-      const target = e.target;
+  if (!panelsContainer) return;
 
-      if (target.classList.contains('js-remove-option')) return removeOption(target);
-      if (target.classList.contains('js-remove-order')) return removeOrderItem(target);
-      if (target.classList.contains('js-remove-pair')) return removePair(target);
+  panelsContainer.addEventListener('click', (e) => {
+    const target = e.target;
+    if (target.classList.contains('js-remove-option')) return removeOption(target);
+    if (target.classList.contains('js-remove-order')) return removeOrderItem(target);
+    if (target.classList.contains('js-remove-pair')) return removePair(target);
 
-      const action = target.dataset.action;
-      if (action === 'add-option') {
-        return addOption(
-          target.dataset.target,
-          target.dataset.inputName,
-          target.dataset.inputName === 'data_options' ? 'data_correct' : target.dataset.radioName,
-          target.dataset.inputType,
-          target.dataset.placeholder,
-          parseInt(target.dataset.max, 10)
-        );
-      }
-      if (action === 'add-order') return addOrderItem();
-      if (action === 'add-pair') return addPair();
-    });
-  }
-
-  const form = document.getElementById('questionForm');
-  if (form) {
-    form.addEventListener('submit', function(e) {
-      const type = document.getElementById('selectedType').value;
-      if (type === 'matching') {
-        const lefts  = [...form.querySelectorAll('input[name="data_pairs_left"]')].map(i => i.value);
-        const rights = [...form.querySelectorAll('input[name="data_pairs_right"]')].map(i => i.value);
-        
-        form.querySelectorAll('input[name="data_pairs_left"], input[name="data_pairs_right"]').forEach(i => i.remove());
-        
-        lefts.forEach((l, idx) => {
-          const hl = document.createElement('input'); hl.type = 'hidden'; hl.name = 'data_pairs_left'; hl.value = l; form.appendChild(hl);
-          const hr = document.createElement('input'); hr.type = 'hidden'; hr.name = 'data_pairs_right'; hr.value = rights[idx]; form.appendChild(hr);
-        });
-      }
-    });
-  }
-});
-
-// ── Populate on Edit ──
-function populateEditData(type, data) {
-  if (type === 'multiple_choice') {
-    const list = document.getElementById('mc-options');
-    list.innerHTML = '';
-    (data.options || []).forEach((opt, i) => {
-      const row = createOptionRow('radio', 'data_correct', 'data_options', i, opt);
-      if (data.correct == i) row.querySelector('input[type="radio"]').checked = true;
-      list.appendChild(row);
-    });
-
-  } else if (type === 'multi_answer') {
-    const list = document.getElementById('ma-options');
-    list.innerHTML = '';
-    (data.options || []).forEach((opt, i) => {
-      const row = createOptionRow('checkbox', 'data_correct', 'data_options', i, opt);
-      if ((data.correct || []).includes(i)) row.querySelector('input[type="checkbox"]').checked = true;
-      list.appendChild(row);
-    });
-
-  } else if (type === 'true_false') {
-    const val = data.correct ? 'true' : 'false';
-    document.querySelectorAll('#panel-true_false input[name="data_correct"]').forEach(r => {
-      r.checked = r.value === val;
-    });
-
-  } else if (type === 'written') {
-    const el = document.querySelector('#panel-written input[name="data_answer"]');
-    if (el) el.value = data.answer || '';
-
-  } else if (type === 'ordering') {
-    const list = document.getElementById('ord-options');
-    list.innerHTML = '';
-    (data.items || []).forEach((item, i) => {
-      list.appendChild(createOrderRow(i + 1, item));
-    });
-
-  } else if (type === 'matching') {
-    const list = document.getElementById('match-pairs');
-    list.innerHTML = '';
-    (data.pairs || []).forEach(pair => {
-      list.appendChild(createPairRow(pair.left, pair.right));
-    });
-
-  } else if (type === 'flashcard') {
-    const front = document.querySelector('#panel-flashcard textarea[name="data_front"]');
-    const back  = document.querySelector('#panel-flashcard textarea[name="data_back"]');
-    if (front) front.value = data.front || '';
-    if (back)  back.value  = data.back  || '';
-  }
-}
-
-// ── Populate on edit ──
-function populateEditData(type, data) {
-  if (type === 'multiple_choice') {
-    const list = document.getElementById('mc-options');
-    list.innerHTML = '';
-    (data.options || []).forEach((opt, i) => {
-      const row = document.createElement('div');
-      row.className = 'option-row';
-      row.innerHTML = `
-        <input type="radio" name="data_correct" class="option-row__radio" value="${i}" ${data.correct == i ? 'checked' : ''}>
-        <input type="text" name="data_options" class="option-row__input" value="${escHtml(opt)}">
-        <button type="button" class="option-row__remove" onclick="removeOption(this)">✕</button>`;
-      list.appendChild(row);
-    });
-
-  } else if (type === 'multi_answer') {
-    const list = document.getElementById('ma-options');
-    list.innerHTML = '';
-    (data.options || []).forEach((opt, i) => {
-      const row = document.createElement('div');
-      row.className = 'option-row';
-      const checked = (data.correct || []).includes(i) ? 'checked' : '';
-      row.innerHTML = `
-        <input type="checkbox" name="data_correct" class="option-row__check" value="${i}" ${checked}>
-        <input type="text" name="data_options" class="option-row__input" value="${escHtml(opt)}">
-        <button type="button" class="option-row__remove" onclick="removeOption(this)">✕</button>`;
-      list.appendChild(row);
-    });
-
-  } else if (type === 'true_false') {
-    const val = data.correct ? 'true' : 'false';
-    document.querySelectorAll('#panel-true_false input[name="data_correct"]').forEach(r => {
-      r.checked = r.value === val;
-    });
-
-  } else if (type === 'written') {
-    const el = document.querySelector('#panel-written input[name="data_answer"]');
-    if (el) el.value = data.answer || '';
-
-  } else if (type === 'ordering') {
-    const list = document.getElementById('ord-options');
-    list.innerHTML = '';
-    (data.items || []).forEach((item, i) => {
-      const row = document.createElement('div');
-      row.className = 'option-row';
-      row.innerHTML = `
-        <span style="color:var(--color-text-faint);font-size:.8rem;min-width:1.2rem">${i + 1}</span>
-        <input type="text" name="data_items" class="option-row__input" value="${escHtml(item)}">
-        <button type="button" class="option-row__remove" onclick="removeOrderItem(this)">✕</button>`;
-      list.appendChild(row);
-    });
-
-  } else if (type === 'matching') {
-    const list = document.getElementById('match-pairs');
-    list.innerHTML = '';
-    (data.pairs || []).forEach(pair => {
-      const row = document.createElement('div');
-      row.className = 'pair-row';
-      row.innerHTML = `
-        <input type="text" name="data_pairs_left" class="option-row__input" value="${escHtml(pair.left)}">
-        <span class="pair-row__sep">→</span>
-        <input type="text" name="data_pairs_right" class="option-row__input" value="${escHtml(pair.right)}">
-        <button type="button" class="option-row__remove" onclick="removePair(this)">✕</button>`;
-      list.appendChild(row);
-    });
-
-  } else if (type === 'flashcard') {
-    const front = document.querySelector('#panel-flashcard textarea[name="data_front"]');
-    const back  = document.querySelector('#panel-flashcard textarea[name="data_back"]');
-    if (front) front.value = data.front || '';
-    if (back)  back.value  = data.back  || '';
-  }
-}
-
-function escHtml(str) {
-  return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
-}
-
-// ── Fix matching POST: build pairs[] from pairs_left/right ──
-document.addEventListener('DOMContentLoaded', () => {
-  const form = document.getElementById('questionForm');
-  if (!form) return;
-  form.addEventListener('submit', function(e) {
-    const type = document.getElementById('selectedType').value;
-    if (type === 'matching') {
-      const lefts  = [...form.querySelectorAll('input[name="data_pairs_left"]')].map(i => i.value);
-      const rights = [...form.querySelectorAll('input[name="data_pairs_right"]')].map(i => i.value);
-      // Remove individual left/right fields and replace with combined pairs
-      form.querySelectorAll('input[name="data_pairs_left"], input[name="data_pairs_right"]').forEach(i => i.remove());
-      lefts.forEach((l, idx) => {
-        const hl = document.createElement('input'); hl.type='hidden'; hl.name='data_pairs_left';  hl.value=l;      form.appendChild(hl);
-        const hr = document.createElement('input'); hr.type='hidden'; hr.name='data_pairs_right'; hr.value=rights[idx]; form.appendChild(hr);
+    const action = target.dataset.action;
+    if (action === 'add-option') {
+      return addOption({
+        listId: target.dataset.target,
+        inputName: target.dataset.inputName,
+        radioName: target.dataset.radioName,
+        inputType: target.dataset.inputType,
+        placeholder: target.dataset.placeholder,
+        max: parseInt(target.dataset.max, 10),
       });
     }
+    if (action === 'add-order') return addOrderItem();
+    if (action === 'add-pair') return addPair();
   });
-});
+}
 
+function bindFormSubmit() {
+  const form = document.getElementById('questionForm');
+  if (!form) return;
+  form.addEventListener('submit', () => {
+    if (document.getElementById('selectedType').value === 'matching') {
+      serializeMatchingPairsOnSubmit(form);
+    }
+  });
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  bindTypeSelector();
+  bindDynamicPanels();
+  bindFormSubmit();
+  initEditMode();
+});

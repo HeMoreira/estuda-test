@@ -68,18 +68,6 @@ class Question(PolymorphicModel):
         """Representação legível da resposta correta, para telas de revisão."""
         raise NotImplementedError('Implementado pelas subclasses concretas.')
 
-
-_TYPE_REGISTRY = {}
- 
-def register_question_type(question_type):
-    """Associa um valor de Question.Types à classe concreta correspondente."""
-    def decorator(model_cls):
-        _TYPE_REGISTRY[question_type] = model_cls
-        return model_cls
-    return decorator
- 
-
-
 # Múltipla escolha / Resposta múltipla
 
 class ChoiceQuestionMixin(models.Model):

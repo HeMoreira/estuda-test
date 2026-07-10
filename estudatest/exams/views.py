@@ -1,3 +1,6 @@
+import json
+import logging
+
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
 from django.db.models import Avg
@@ -6,13 +9,19 @@ from django.views.decorators.http import require_http_methods
 from django.core.exceptions import ValidationError
 
 from .services import QuestionService
-  
 from attempts.models import Attempt
-from .utils import save_exam_with_default_category_if_needed, _flatten_validation_errors, _build_question_json_data
+from .utils import (
+    save_exam_with_default_category_if_needed,
+    flatten_validation_errors,
+    build_question_edit_data,
+    build_question_preview_data,
+)
 from .models import Exam, Question
-from .forms import ExamForm, QuestionTypeForm, QUESTION_TYPE_REGISTRY
+from .forms import ExamForm, QuestionTypeForm
+from .question_types import is_registered_type
 from .spaced_repetition import get_urgency_ratio, urgency_color
-import json
+
+logger = logging.getLogger(__name__)
 
 
 @login_required
@@ -37,16 +46,18 @@ def exam_edit(request, pk):
             return redirect('exams:edit', pk=exam.pk)
     else:
         form = ExamForm(request.user, instance=exam)
-    
-    # prefetch apenas opções por padrão; itens/pares serão carregados sob demanda
+
     questions = exam.questions.order_by('order').prefetch_related('options')
-    
     return render(request, 'exams/exam_form.html', {
-        'form': form,
-        'exam': exam,
-        'questions': questions,
-        'action': 'edit',
+        'form': form, 'exam': exam, 'questions': questions, 'action': 'edit',
     })
+
+
+def _format_duration(duration):
+    if not duration:
+        return None
+    minutes, seconds = divmod(int(duration.total_seconds()), 60)
+    return f'{minutes}min {seconds:02d}s'
 
 
 @login_required
@@ -56,17 +67,9 @@ def exam_detail_json(request, pk):
     attempt_count = attempts.count()
     last_attempt = attempts.order_by('-started_at').first()
     avg_duration = attempts.filter(duration__isnull=False).aggregate(avg=Avg('duration'))['avg']
-  
-    def fmt_duration(d):
-        if not d:
-            return None
-        total = int(d.total_seconds())
-        m, s = divmod(total, 60)
-        return f'{m}min {s:02d}s'
-  
+
     ratio = get_urgency_ratio(attempt_count, last_attempt.started_at if last_attempt else None)
-    color = urgency_color(ratio)
-  
+
     return JsonResponse({
         'id': exam.id,
         'name': exam.name,
@@ -75,10 +78,10 @@ def exam_detail_json(request, pk):
         'updated_at': exam.updated_at.strftime('%d/%m/%Y'),
         'attempt_count': attempt_count,
         'last_attempt_date': last_attempt.started_at.strftime('%d/%m/%Y') if last_attempt else None,
-        'last_duration': fmt_duration(last_attempt.duration) if last_attempt else None,
-        'avg_duration': fmt_duration(avg_duration),
+        'last_duration': _format_duration(last_attempt.duration) if last_attempt else None,
+        'avg_duration': _format_duration(avg_duration),
         'score_percent': last_attempt.score_percent() if last_attempt else None,
-        'urgency_color': color,
+        'urgency_color': urgency_color(ratio),
         'urgency_ratio': ratio,
     })
 
@@ -91,43 +94,45 @@ def exam_delete(request, pk):
     return JsonResponse({'ok': True})
 
 
+# ── Fluxo de questões ──
+
+def _render_type_selector(request, exam, redirect_path):
+    type_form = QuestionTypeForm(request.POST or None)
+    if request.method == 'POST' and type_form.is_valid():
+        chosen = type_form.cleaned_data['question_type']
+        return redirect(f'{redirect_path}?question_type={chosen}')
+    return render(request, 'exams/question_form.html', {'type_form': type_form, 'exam': exam})
+
+
 @login_required
 def question_add(request, exam_pk):
     exam = get_object_or_404(Exam, pk=exam_pk, user=request.user)
     question_type = request.POST.get('question_type') or request.GET.get('question_type')
 
-    if question_type not in QUESTION_TYPE_REGISTRY:
-        type_form = QuestionTypeForm(request.POST or None)
-        if request.method == 'POST' and type_form.is_valid():
-            return redirect(f"{request.path}?question_type={type_form.cleaned_data['question_type']}")
-        return render(request, 'exams/question_form.html', {
-            'type_form': type_form, 'exam': exam,
-        })
+    if not is_registered_type(question_type):
+        return _render_type_selector(request, exam, request.path)
 
-    FormClass, FormSetClass = QUESTION_TYPE_REGISTRY[question_type]
-    form = FormClass(request.POST or None)
-    formset = FormSetClass(request.POST or None, instance=form.instance) if FormSetClass else None
     errors = []
-
+    preview_data = {}
     if request.method == 'POST':
         try:
             QuestionService.create_question(exam, question_type, request.POST)
             return redirect('exams:edit', pk=exam.pk)
         except ValidationError as exc:
-            errors = _flatten_validation_errors(exc)
+            errors = flatten_validation_errors(exc)
         except Exception:
-            errors = ['Ocorreu um erro ao salvar a estrutura dinâmica da questão.']
-    
-    type_form = QuestionTypeForm(request.POST or None, initial={'question_type': question_type})
+            logger.exception('Erro ao criar questão tipo=%s exam=%s', question_type, exam.pk)
+            errors = ['Ocorreu um erro inesperado ao salvar a questão. Tente novamente.']
+        preview_data = build_question_preview_data(question_type, request.POST)
+
     return render(request, 'exams/question_form.html', {
-        'form': form, 
-        'type_form': type_form,
-        'formset': formset, 
-        'exam': exam,
-        'question_type': question_type, 
-        'errors': errors, 
-        'action': 'add',
+        'type_form': QuestionTypeForm(initial={'question_type': question_type}),
+        'exam': exam, 'question_type': question_type, 'errors': errors, 'action': 'add',
+        'statement': request.POST.get('statement', ''),
+        'explanation': request.POST.get('explanation', ''),
+        'question_data_json': json.dumps(preview_data) if preview_data else None,
     })
+
 
 
 @login_required
@@ -136,38 +141,32 @@ def question_edit(request, exam_pk, pk):
     instance = get_object_or_404(Question, pk=pk, exam=exam)
     question_type = instance.question_type
 
-    if question_type not in QUESTION_TYPE_REGISTRY:
-        type_form = QuestionTypeForm(request.POST or None)
-        if request.method == 'POST' and type_form.is_valid():
-            return redirect(f"{request.path}?question_type={type_form.cleaned_data['question_type']}")
-        return render(request, 'exams/question_form.html', {
-            'type_form': type_form, 'exam': exam,
-        })
-  
-    FormClass, FormSetClass = QUESTION_TYPE_REGISTRY[question_type]
-    form = FormClass(request.POST or None, instance=instance)
-    formset = FormSetClass(request.POST or None, instance=instance) if FormSetClass else None
     errors = []
-  
     if request.method == 'POST':
         try:
             QuestionService.update_question(instance, question_type, request.POST)
             return redirect('exams:edit', pk=exam.pk)
-        except ValidationError as e:
-            errors = e.messages
+        except ValidationError as exc:
+            errors = flatten_validation_errors(exc)
         except Exception:
-            errors = ['Ocorreu um erro ao atualizar os dados dinâmicos da questão.']
-  
-    # Construir dados simples para popular o editor via JS
-    qdata = _build_question_json_data(instance, question_type)
+            logger.exception('Erro ao atualizar questão pk=%s', instance.pk)
+            errors = ['Ocorreu um erro inesperado ao atualizar a questão.']
+        preview_data = build_question_preview_data(question_type, request.POST)
+        statement = request.POST.get('statement', instance.statement)
+        explanation = request.POST.get('explanation', instance.explanation)
+    else:
+        preview_data = build_question_edit_data(instance, question_type)
+        statement = instance.statement
+        explanation = instance.explanation
 
-    type_form = QuestionTypeForm(request.POST or None, initial={'question_type': question_type})
-    context = {
-        'form': form, 'formset': formset, 'exam': exam, 'question': instance,
-        'question_data_json': json.dumps(qdata), 'question_type': question_type,
-        'errors': errors, 'type_form': type_form, 'action': 'edit',
-    }
-    return render(request, 'exams/question_form.html', context)
+    return render(request, 'exams/question_form.html', {
+        'type_form': QuestionTypeForm(initial={'question_type': question_type}),
+        'exam': exam, 'question': instance, 'question_type': question_type,
+        'question_data_json': json.dumps(preview_data),
+        'errors': errors, 'action': 'edit',
+        'statement': statement,
+        'explanation': explanation,
+    })
 
 
 @login_required
@@ -176,8 +175,8 @@ def question_delete(request, exam_pk, pk):
     exam = get_object_or_404(Exam, pk=exam_pk, user=request.user)
     question = get_object_or_404(Question, pk=pk, exam=exam)
     question.delete()
-    for i, q in enumerate(exam.questions.order_by('order')):
-        if q.order != i:
-            q.order = i
-            q.save(update_fields=['order'])
+    for index, remaining in enumerate(exam.questions.order_by('order')):
+        if remaining.order != index:
+            remaining.order = index
+            remaining.save(update_fields=['order'])
     return JsonResponse({'ok': True})

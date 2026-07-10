@@ -1,32 +1,35 @@
 from django.core.exceptions import ValidationError
 from django.db import transaction
-from .utils import (
-    _create_polymorphic_instance,
-    _process_question_dependencies,
-    _update_polymorphic_instance,
-    validate_question_payload,
-)
+from .question_types import get_handler
+from .utils import validate_question_payload
+
 
 class QuestionService:
+    """Orquestra criação/edição de questões, delegando as regras
+    específicas de cada tipo ao handler correspondente (question_types/)."""
+
     @staticmethod
     @transaction.atomic
     def create_question(exam, question_type, post_data):
-        stmt, expl = validate_question_payload(question_type, post_data)
-        q = _create_polymorphic_instance(question_type, stmt, expl, post_data)
-        if q is None:
+        statement, explanation = validate_question_payload(question_type, post_data)
+        handler = get_handler(question_type)
+
+        question = handler.build_instance(statement, explanation, post_data)
+        if question is None:
             raise ValidationError('Tipo de questão inválido.')
-        q.exam = exam
-        q.order = exam.questions.count()
-        q.save()
-        _process_question_dependencies(q, question_type, post_data)
-        return q
+
+        question.exam = exam
+        question.order = exam.questions.count()
+        question.save()
+        handler.save_dependencies(question, post_data)
+        return question
 
     @staticmethod
     @transaction.atomic
     def update_question(instance, question_type, post_data):
-        stmt, expl = validate_question_payload(question_type, post_data)
-        instance.statement = stmt
-        instance.explanation = expl
+        statement, explanation = validate_question_payload(question_type, post_data)
+        instance.statement = statement
+        instance.explanation = explanation
         instance.save()
-        _update_polymorphic_instance(instance, question_type, post_data)
+        get_handler(question_type).update_dependencies(instance, post_data)
         return instance

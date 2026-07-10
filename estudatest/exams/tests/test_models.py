@@ -32,15 +32,14 @@ from exams.models import (
     MatchingPair,
     FlashcardQuestion,
 )
- 
- 
+
+
 class BaseExamTestCase(TestCase):
     def setUp(self):
         self.user = User.objects.create_user(username='ana', password='pass12345')
         self.category = Category.objects.create(user=self.user, name='Biologia')
         self.exam = Exam.objects.create(user=self.user, category=self.category, name='Prova 1')
- 
- 
+
 class ExamModelTests(BaseExamTestCase):
     def test_str_returns_name(self):
         self.assertEqual(str(self.exam), 'Prova 1')
@@ -77,8 +76,7 @@ class ExamModelTests(BaseExamTestCase):
         q = Question(exam=self.exam, statement='s', explanation='e')
         with self.assertRaises(NotImplementedError):
             q.correct_answer_display()
- 
- 
+
 class MultipleChoiceQuestionTests(BaseExamTestCase):
     def _make_question_with_options(self, correct_index=1, count=3):
         q = MultipleChoiceQuestion.objects.create(
@@ -113,8 +111,7 @@ class MultipleChoiceQuestionTests(BaseExamTestCase):
     def test_correct_answer_display_lists_correct_option_texts(self):
         q, options = self._make_question_with_options(correct_index=2)
         self.assertEqual(q.correct_answer_display(), options[2].text)
- 
- 
+
 class MultiAnswerQuestionTests(BaseExamTestCase):
     def test_save_sets_question_type(self):
         q = MultiAnswerQuestion.objects.create(exam=self.exam, statement='s', explanation='e')
@@ -134,8 +131,7 @@ class MultiAnswerQuestionTests(BaseExamTestCase):
         QuestionOption.objects.create(question=q, text='B', is_correct=True, order=1)
  
         self.assertFalse(q.check_answer([o1.pk]))
- 
- 
+
 class TrueFalseQuestionTests(BaseExamTestCase):
     def test_save_sets_question_type(self):
         q = TrueFalseQuestion.objects.create(
@@ -167,8 +163,7 @@ class TrueFalseQuestionTests(BaseExamTestCase):
         )
         self.assertEqual(q_true.correct_answer_display(), 'Verdadeiro')
         self.assertEqual(q_false.correct_answer_display(), 'Falso')
- 
- 
+
 class WrittenQuestionTests(BaseExamTestCase):
     def test_save_sets_question_type(self):
         q = WrittenQuestion.objects.create(
@@ -217,8 +212,7 @@ class WrittenQuestionTests(BaseExamTestCase):
             exam=self.exam, statement='s', explanation='e', expected_answer='Paris'
         )
         self.assertEqual(q.correct_answer_display(), 'Paris')
- 
- 
+
 class OrderingQuestionTests(BaseExamTestCase):
     def _make_ordered_question(self):
         q = OrderingQuestion.objects.create(exam=self.exam, statement='s', explanation='e')
@@ -255,8 +249,7 @@ class OrderingQuestionTests(BaseExamTestCase):
         q, items = self._make_ordered_question()
         display = q.correct_answer_display()
         self.assertEqual(display, 'Item 1 → Item 2 → Item 3')
- 
- 
+
 class MatchingQuestionTests(BaseExamTestCase):
     def _make_question_with_pairs(self):
         q = MatchingQuestion.objects.create(exam=self.exam, statement='s', explanation='e')
@@ -302,8 +295,7 @@ class MatchingQuestionTests(BaseExamTestCase):
         display = q.correct_answer_display()
         self.assertIn('Brasil — Brasília', display)
         self.assertIn('França — Paris', display)
- 
- 
+
 class FlashcardQuestionTests(BaseExamTestCase):
     def test_save_sets_question_type(self):
         q = FlashcardQuestion.objects.create(
@@ -329,4 +321,3 @@ class FlashcardQuestionTests(BaseExamTestCase):
             exam=self.exam, statement='s', explanation='e', front='P', back='R'
         )
         self.assertFalse(q.is_automatable)
- 
