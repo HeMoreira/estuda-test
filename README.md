@@ -19,24 +19,31 @@ pip install -r requirements.txt
 ```bash
 # Defina SECRET_KEY, DEBUG, ALLOWED_HOSTS e DATABASE_URL em um arquivo .env
 ```
+> Exemplo:
+> ```bash
+> SECRET_KEY=sua_chave_secreta
+> DEBUG=True
+> ALLOWED_HOSTS=127.0.0.1,localhost
+> DATABASE_URL=sqlite:///db.sqlite3
+> ```
 
-### 3. Aplicar migrations
+### 4. Aplicar migrations
 ```bash
 python manage.py migrate
 ```
 
-### 4. Criar superusuário (administrador)
+### 5. Criar superusuário (administrador)
 ```bash
 python manage.py createsuperuser
 ```
 > Contas de admin só podem ser criadas via terminal.
 
-### 5. Rodar o servidor
+### 6. Rodar o servidor
 ```bash
 python manage.py runserver
 ```
 
-Acesse: http://127.0.0.1:8000 ou localhost:8000
+Acesse: http://127.0.0.1:8000 ou https://localhost:8000
 
 ---
 
