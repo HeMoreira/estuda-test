@@ -20,22 +20,6 @@ function selectType(type, btn, container) {
   });
 }
 
-function bindTypeSelector() {
-  const container = document.getElementById('typeSelectorContainer');
-  if (!container) return;
-
-  container.addEventListener('click', (e) => {
-    if (container.dataset.locked === 'true') return; // bloqueio continua só aqui
-    const btn = e.target.closest('.question-type-btn');
-    if (btn) selectType(btn.dataset.type, btn, container);
-  });
-
-  // sempre sincroniza visual + hidden input na carga inicial, mesmo bloqueado
-  const current = document.getElementById('selectedType').value || 'multiple_choice';
-  const initialBtn = document.querySelector(`[data-type="${current}"]`);
-  if (initialBtn) selectType(current, initialBtn, container);
-}
-
 // ── Fábricas de elementos de linha ──
 function createRemoveButton(className) {
   const btn = document.createElement('button');

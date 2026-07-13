@@ -1,6 +1,6 @@
 from django.core.exceptions import ValidationError
 
-MAX_OPTIONS = 10
+MAX_OPTIONS = 8
 MAX_OPTION_LENGTH = 500
 
 

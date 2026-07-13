@@ -4,6 +4,7 @@ from .base import BaseQuestionTypeHandler
 
 MAX_ITEM_LENGTH = 500
 MIN_ITEMS = 2
+MAX_ITEMS = 8
 
 
 def _clean_items(post_data):
@@ -17,6 +18,8 @@ class OrderingHandler(BaseQuestionTypeHandler):
         items = _clean_items(post_data)
         if len(items) < MIN_ITEMS:
             errors.append(f'Forneça pelo menos {MIN_ITEMS} elementos ordenáveis preenchidos.')
+        if len(items) > MAX_ITEMS:
+            errors.append(f'Forneça no máximo {MAX_ITEMS} elementos ordenáveis preenchidos.')
         if any(len(item) > MAX_ITEM_LENGTH for item in items):
             errors.append(f'Os elementos podem ter no máximo {MAX_ITEM_LENGTH} caracteres.')
 

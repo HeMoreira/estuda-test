@@ -4,6 +4,7 @@ from .base import BaseQuestionTypeHandler
 
 MAX_PAIR_LENGTH = 500
 MIN_PAIRS = 2
+MAX_PAIRS = 8
 
 
 def _clean_pairs(post_data):
@@ -20,6 +21,8 @@ class MatchingHandler(BaseQuestionTypeHandler):
         if len(lefts) < MIN_PAIRS or len(lefts) != len(rights):
             errors.append('Garanta que todas as linhas de colunas (A e B) estejam preenchidas.')
             return
+        if len(lefts) > MAX_PAIRS or len(rights) > MAX_PAIRS:
+            errors.append(f'Forneça no máximo {MAX_PAIRS} pares de elementos.')
         if any(len(l) > MAX_PAIR_LENGTH or len(r) > MAX_PAIR_LENGTH for l, r in zip(lefts, rights)):
             errors.append(f'Os elementos podem ter no máximo {MAX_PAIR_LENGTH} caracteres.')
 
