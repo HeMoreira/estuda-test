@@ -28,7 +28,7 @@ class OrderingHandler(BaseQuestionTypeHandler):
 
     def save_dependencies(self, question, post_data):
         items = _clean_items(post_data)
-        if len(items) < MIN_ITEMS:
+        if len(items) < MIN_ITEMS or len(items) > MAX_ITEMS:
             raise ValidationError(f'Forneça pelo menos {MIN_ITEMS} elementos ordenáveis preenchidos.')
         OrderingItem.objects.bulk_create([
             OrderingItem(question=question, text=text, position=position)

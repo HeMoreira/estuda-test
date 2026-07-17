@@ -24,7 +24,7 @@ class WrittenHandler(BaseQuestionTypeHandler):
 
     def update_dependencies(self, question, post_data):
         answer = clean_text(post_data.get('data_answer'))
-        if not answer:
+        if not answer or len(answer) > MAX_ANSWER_LENGTH:
             raise ValidationError('A resposta escrita esperada não pode ficar vazia.')
         question.writtenquestion.expected_answer = answer
         question.writtenquestion.save()
