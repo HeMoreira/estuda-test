@@ -1,0 +1,1974 @@
+[
+{
+    "model": "admin.logentry",
+    "pk": 1,
+    "fields": {
+        "action_time": "2026-07-04T02:43:13.802Z",
+        "user": 1,
+        "content_type": 8,
+        "object_id": "2",
+        "object_repr": "Biologia Pokemon :()",
+        "action_flag": 2,
+        "change_message": "[{\"changed\": {\"fields\": [\"Category\"]}}]"
+    }
+},
+{
+    "model": "admin.logentry",
+    "pk": 2,
+    "fields": {
+        "action_time": "2026-07-04T02:43:18.265Z",
+        "user": 1,
+        "content_type": 8,
+        "object_id": "2",
+        "object_repr": "Biologia Pokemon :()",
+        "action_flag": 2,
+        "change_message": "[{\"changed\": {\"fields\": [\"Category\"]}}]"
+    }
+},
+{
+    "model": "admin.logentry",
+    "pk": 3,
+    "fields": {
+        "action_time": "2026-07-06T13:37:07.925Z",
+        "user": 1,
+        "content_type": 7,
+        "object_id": "4",
+        "object_repr": "Tecnologia Front-End",
+        "action_flag": 2,
+        "change_message": "[{\"changed\": {\"fields\": [\"Name\"]}}]"
+    }
+},
+{
+    "model": "admin.logentry",
+    "pk": 4,
+    "fields": {
+        "action_time": "2026-07-06T21:11:54.815Z",
+        "user": 1,
+        "content_type": 13,
+        "object_id": "31",
+        "object_repr": "Múltipla escolha — CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC",
+        "action_flag": 2,
+        "change_message": "[{\"changed\": {\"name\": \"question option\", \"object\": \"DDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD\", \"fields\": [\"Text\"]}}]"
+    }
+},
+{
+    "model": "admin.logentry",
+    "pk": 5,
+    "fields": {
+        "action_time": "2026-07-06T21:14:03.455Z",
+        "user": 1,
+        "content_type": 13,
+        "object_id": "31",
+        "object_repr": "Múltipla escolha — CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC",
+        "action_flag": 2,
+        "change_message": "[]"
+    }
+},
+{
+    "model": "admin.logentry",
+    "pk": 6,
+    "fields": {
+        "action_time": "2026-07-17T16:32:11.484Z",
+        "user": 1,
+        "content_type": 8,
+        "object_id": "4",
+        "object_repr": "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+        "action_flag": 3,
+        "change_message": ""
+    }
+},
+{
+    "model": "admin.logentry",
+    "pk": 7,
+    "fields": {
+        "action_time": "2026-07-17T16:32:19.123Z",
+        "user": 1,
+        "content_type": 8,
+        "object_id": "1",
+        "object_repr": "Biologia Pokemon :))))))))))))",
+        "action_flag": 3,
+        "change_message": ""
+    }
+},
+{
+    "model": "admin.logentry",
+    "pk": 8,
+    "fields": {
+        "action_time": "2026-07-17T16:32:24.718Z",
+        "user": 1,
+        "content_type": 8,
+        "object_id": "2",
+        "object_repr": "Biologia Pokemon :()",
+        "action_flag": 3,
+        "change_message": ""
+    }
+},
+{
+    "model": "admin.logentry",
+    "pk": 9,
+    "fields": {
+        "action_time": "2026-07-17T16:32:30.860Z",
+        "user": 1,
+        "content_type": 8,
+        "object_id": "3",
+        "object_repr": "sim",
+        "action_flag": 3,
+        "change_message": ""
+    }
+},
+{
+    "model": "auth.permission",
+    "pk": 1,
+    "fields": {
+        "name": "Can add log entry",
+        "content_type": 1,
+        "codename": "add_logentry"
+    }
+},
+{
+    "model": "auth.permission",
+    "pk": 2,
+    "fields": {
+        "name": "Can change log entry",
+        "content_type": 1,
+        "codename": "change_logentry"
+    }
+},
+{
+    "model": "auth.permission",
+    "pk": 3,
+    "fields": {
+        "name": "Can delete log entry",
+        "content_type": 1,
+        "codename": "delete_logentry"
+    }
+},
+{
+    "model": "auth.permission",
+    "pk": 4,
+    "fields": {
+        "name": "Can view log entry",
+        "content_type": 1,
+        "codename": "view_logentry"
+    }
+},
+{
+    "model": "auth.permission",
+    "pk": 5,
+    "fields": {
+        "name": "Can add permission",
+        "content_type": 3,
+        "codename": "add_permission"
+    }
+},
+{
+    "model": "auth.permission",
+    "pk": 6,
+    "fields": {
+        "name": "Can change permission",
+        "content_type": 3,
+        "codename": "change_permission"
+    }
+},
+{
+    "model": "auth.permission",
+    "pk": 7,
+    "fields": {
+        "name": "Can delete permission",
+        "content_type": 3,
+        "codename": "delete_permission"
+    }
+},
+{
+    "model": "auth.permission",
+    "pk": 8,
+    "fields": {
+        "name": "Can view permission",
+        "content_type": 3,
+        "codename": "view_permission"
+    }
+},
+{
+    "model": "auth.permission",
+    "pk": 9,
+    "fields": {
+        "name": "Can add group",
+        "content_type": 2,
+        "codename": "add_group"
+    }
+},
+{
+    "model": "auth.permission",
+    "pk": 10,
+    "fields": {
+        "name": "Can change group",
+        "content_type": 2,
+        "codename": "change_group"
+    }
+},
+{
+    "model": "auth.permission",
+    "pk": 11,
+    "fields": {
+        "name": "Can delete group",
+        "content_type": 2,
+        "codename": "delete_group"
+    }
+},
+{
+    "model": "auth.permission",
+    "pk": 12,
+    "fields": {
+        "name": "Can view group",
+        "content_type": 2,
+        "codename": "view_group"
+    }
+},
+{
+    "model": "auth.permission",
+    "pk": 13,
+    "fields": {
+        "name": "Can add user",
+        "content_type": 4,
+        "codename": "add_user"
+    }
+},
+{
+    "model": "auth.permission",
+    "pk": 14,
+    "fields": {
+        "name": "Can change user",
+        "content_type": 4,
+        "codename": "change_user"
+    }
+},
+{
+    "model": "auth.permission",
+    "pk": 15,
+    "fields": {
+        "name": "Can delete user",
+        "content_type": 4,
+        "codename": "delete_user"
+    }
+},
+{
+    "model": "auth.permission",
+    "pk": 16,
+    "fields": {
+        "name": "Can view user",
+        "content_type": 4,
+        "codename": "view_user"
+    }
+},
+{
+    "model": "auth.permission",
+    "pk": 17,
+    "fields": {
+        "name": "Can add content type",
+        "content_type": 5,
+        "codename": "add_contenttype"
+    }
+},
+{
+    "model": "auth.permission",
+    "pk": 18,
+    "fields": {
+        "name": "Can change content type",
+        "content_type": 5,
+        "codename": "change_contenttype"
+    }
+},
+{
+    "model": "auth.permission",
+    "pk": 19,
+    "fields": {
+        "name": "Can delete content type",
+        "content_type": 5,
+        "codename": "delete_contenttype"
+    }
+},
+{
+    "model": "auth.permission",
+    "pk": 20,
+    "fields": {
+        "name": "Can view content type",
+        "content_type": 5,
+        "codename": "view_contenttype"
+    }
+},
+{
+    "model": "auth.permission",
+    "pk": 21,
+    "fields": {
+        "name": "Can add session",
+        "content_type": 6,
+        "codename": "add_session"
+    }
+},
+{
+    "model": "auth.permission",
+    "pk": 22,
+    "fields": {
+        "name": "Can change session",
+        "content_type": 6,
+        "codename": "change_session"
+    }
+},
+{
+    "model": "auth.permission",
+    "pk": 23,
+    "fields": {
+        "name": "Can delete session",
+        "content_type": 6,
+        "codename": "delete_session"
+    }
+},
+{
+    "model": "auth.permission",
+    "pk": 24,
+    "fields": {
+        "name": "Can view session",
+        "content_type": 6,
+        "codename": "view_session"
+    }
+},
+{
+    "model": "auth.permission",
+    "pk": 25,
+    "fields": {
+        "name": "Can add Categoria",
+        "content_type": 7,
+        "codename": "add_category"
+    }
+},
+{
+    "model": "auth.permission",
+    "pk": 26,
+    "fields": {
+        "name": "Can change Categoria",
+        "content_type": 7,
+        "codename": "change_category"
+    }
+},
+{
+    "model": "auth.permission",
+    "pk": 27,
+    "fields": {
+        "name": "Can delete Categoria",
+        "content_type": 7,
+        "codename": "delete_category"
+    }
+},
+{
+    "model": "auth.permission",
+    "pk": 28,
+    "fields": {
+        "name": "Can view Categoria",
+        "content_type": 7,
+        "codename": "view_category"
+    }
+},
+{
+    "model": "auth.permission",
+    "pk": 29,
+    "fields": {
+        "name": "Can add Questão",
+        "content_type": 16,
+        "codename": "add_question"
+    }
+},
+{
+    "model": "auth.permission",
+    "pk": 30,
+    "fields": {
+        "name": "Can change Questão",
+        "content_type": 16,
+        "codename": "change_question"
+    }
+},
+{
+    "model": "auth.permission",
+    "pk": 31,
+    "fields": {
+        "name": "Can delete Questão",
+        "content_type": 16,
+        "codename": "delete_question"
+    }
+},
+{
+    "model": "auth.permission",
+    "pk": 32,
+    "fields": {
+        "name": "Can view Questão",
+        "content_type": 16,
+        "codename": "view_question"
+    }
+},
+{
+    "model": "auth.permission",
+    "pk": 33,
+    "fields": {
+        "name": "Can add Prova",
+        "content_type": 8,
+        "codename": "add_exam"
+    }
+},
+{
+    "model": "auth.permission",
+    "pk": 34,
+    "fields": {
+        "name": "Can change Prova",
+        "content_type": 8,
+        "codename": "change_exam"
+    }
+},
+{
+    "model": "auth.permission",
+    "pk": 35,
+    "fields": {
+        "name": "Can delete Prova",
+        "content_type": 8,
+        "codename": "delete_exam"
+    }
+},
+{
+    "model": "auth.permission",
+    "pk": 36,
+    "fields": {
+        "name": "Can view Prova",
+        "content_type": 8,
+        "codename": "view_exam"
+    }
+},
+{
+    "model": "auth.permission",
+    "pk": 37,
+    "fields": {
+        "name": "Can add flashcard question",
+        "content_type": 9,
+        "codename": "add_flashcardquestion"
+    }
+},
+{
+    "model": "auth.permission",
+    "pk": 38,
+    "fields": {
+        "name": "Can change flashcard question",
+        "content_type": 9,
+        "codename": "change_flashcardquestion"
+    }
+},
+{
+    "model": "auth.permission",
+    "pk": 39,
+    "fields": {
+        "name": "Can delete flashcard question",
+        "content_type": 9,
+        "codename": "delete_flashcardquestion"
+    }
+},
+{
+    "model": "auth.permission",
+    "pk": 40,
+    "fields": {
+        "name": "Can view flashcard question",
+        "content_type": 9,
+        "codename": "view_flashcardquestion"
+    }
+},
+{
+    "model": "auth.permission",
+    "pk": 41,
+    "fields": {
+        "name": "Can add matching question",
+        "content_type": 11,
+        "codename": "add_matchingquestion"
+    }
+},
+{
+    "model": "auth.permission",
+    "pk": 42,
+    "fields": {
+        "name": "Can change matching question",
+        "content_type": 11,
+        "codename": "change_matchingquestion"
+    }
+},
+{
+    "model": "auth.permission",
+    "pk": 43,
+    "fields": {
+        "name": "Can delete matching question",
+        "content_type": 11,
+        "codename": "delete_matchingquestion"
+    }
+},
+{
+    "model": "auth.permission",
+    "pk": 44,
+    "fields": {
+        "name": "Can view matching question",
+        "content_type": 11,
+        "codename": "view_matchingquestion"
+    }
+},
+{
+    "model": "auth.permission",
+    "pk": 45,
+    "fields": {
+        "name": "Can add multi answer question",
+        "content_type": 12,
+        "codename": "add_multianswerquestion"
+    }
+},
+{
+    "model": "auth.permission",
+    "pk": 46,
+    "fields": {
+        "name": "Can change multi answer question",
+        "content_type": 12,
+        "codename": "change_multianswerquestion"
+    }
+},
+{
+    "model": "auth.permission",
+    "pk": 47,
+    "fields": {
+        "name": "Can delete multi answer question",
+        "content_type": 12,
+        "codename": "delete_multianswerquestion"
+    }
+},
+{
+    "model": "auth.permission",
+    "pk": 48,
+    "fields": {
+        "name": "Can view multi answer question",
+        "content_type": 12,
+        "codename": "view_multianswerquestion"
+    }
+},
+{
+    "model": "auth.permission",
+    "pk": 49,
+    "fields": {
+        "name": "Can add multiple choice question",
+        "content_type": 13,
+        "codename": "add_multiplechoicequestion"
+    }
+},
+{
+    "model": "auth.permission",
+    "pk": 50,
+    "fields": {
+        "name": "Can change multiple choice question",
+        "content_type": 13,
+        "codename": "change_multiplechoicequestion"
+    }
+},
+{
+    "model": "auth.permission",
+    "pk": 51,
+    "fields": {
+        "name": "Can delete multiple choice question",
+        "content_type": 13,
+        "codename": "delete_multiplechoicequestion"
+    }
+},
+{
+    "model": "auth.permission",
+    "pk": 52,
+    "fields": {
+        "name": "Can view multiple choice question",
+        "content_type": 13,
+        "codename": "view_multiplechoicequestion"
+    }
+},
+{
+    "model": "auth.permission",
+    "pk": 53,
+    "fields": {
+        "name": "Can add ordering question",
+        "content_type": 15,
+        "codename": "add_orderingquestion"
+    }
+},
+{
+    "model": "auth.permission",
+    "pk": 54,
+    "fields": {
+        "name": "Can change ordering question",
+        "content_type": 15,
+        "codename": "change_orderingquestion"
+    }
+},
+{
+    "model": "auth.permission",
+    "pk": 55,
+    "fields": {
+        "name": "Can delete ordering question",
+        "content_type": 15,
+        "codename": "delete_orderingquestion"
+    }
+},
+{
+    "model": "auth.permission",
+    "pk": 56,
+    "fields": {
+        "name": "Can view ordering question",
+        "content_type": 15,
+        "codename": "view_orderingquestion"
+    }
+},
+{
+    "model": "auth.permission",
+    "pk": 57,
+    "fields": {
+        "name": "Can add true false question",
+        "content_type": 18,
+        "codename": "add_truefalsequestion"
+    }
+},
+{
+    "model": "auth.permission",
+    "pk": 58,
+    "fields": {
+        "name": "Can change true false question",
+        "content_type": 18,
+        "codename": "change_truefalsequestion"
+    }
+},
+{
+    "model": "auth.permission",
+    "pk": 59,
+    "fields": {
+        "name": "Can delete true false question",
+        "content_type": 18,
+        "codename": "delete_truefalsequestion"
+    }
+},
+{
+    "model": "auth.permission",
+    "pk": 60,
+    "fields": {
+        "name": "Can view true false question",
+        "content_type": 18,
+        "codename": "view_truefalsequestion"
+    }
+},
+{
+    "model": "auth.permission",
+    "pk": 61,
+    "fields": {
+        "name": "Can add written question",
+        "content_type": 19,
+        "codename": "add_writtenquestion"
+    }
+},
+{
+    "model": "auth.permission",
+    "pk": 62,
+    "fields": {
+        "name": "Can change written question",
+        "content_type": 19,
+        "codename": "change_writtenquestion"
+    }
+},
+{
+    "model": "auth.permission",
+    "pk": 63,
+    "fields": {
+        "name": "Can delete written question",
+        "content_type": 19,
+        "codename": "delete_writtenquestion"
+    }
+},
+{
+    "model": "auth.permission",
+    "pk": 64,
+    "fields": {
+        "name": "Can view written question",
+        "content_type": 19,
+        "codename": "view_writtenquestion"
+    }
+},
+{
+    "model": "auth.permission",
+    "pk": 65,
+    "fields": {
+        "name": "Can add question option",
+        "content_type": 17,
+        "codename": "add_questionoption"
+    }
+},
+{
+    "model": "auth.permission",
+    "pk": 66,
+    "fields": {
+        "name": "Can change question option",
+        "content_type": 17,
+        "codename": "change_questionoption"
+    }
+},
+{
+    "model": "auth.permission",
+    "pk": 67,
+    "fields": {
+        "name": "Can delete question option",
+        "content_type": 17,
+        "codename": "delete_questionoption"
+    }
+},
+{
+    "model": "auth.permission",
+    "pk": 68,
+    "fields": {
+        "name": "Can view question option",
+        "content_type": 17,
+        "codename": "view_questionoption"
+    }
+},
+{
+    "model": "auth.permission",
+    "pk": 69,
+    "fields": {
+        "name": "Can add matching pair",
+        "content_type": 10,
+        "codename": "add_matchingpair"
+    }
+},
+{
+    "model": "auth.permission",
+    "pk": 70,
+    "fields": {
+        "name": "Can change matching pair",
+        "content_type": 10,
+        "codename": "change_matchingpair"
+    }
+},
+{
+    "model": "auth.permission",
+    "pk": 71,
+    "fields": {
+        "name": "Can delete matching pair",
+        "content_type": 10,
+        "codename": "delete_matchingpair"
+    }
+},
+{
+    "model": "auth.permission",
+    "pk": 72,
+    "fields": {
+        "name": "Can view matching pair",
+        "content_type": 10,
+        "codename": "view_matchingpair"
+    }
+},
+{
+    "model": "auth.permission",
+    "pk": 73,
+    "fields": {
+        "name": "Can add ordering item",
+        "content_type": 14,
+        "codename": "add_orderingitem"
+    }
+},
+{
+    "model": "auth.permission",
+    "pk": 74,
+    "fields": {
+        "name": "Can change ordering item",
+        "content_type": 14,
+        "codename": "change_orderingitem"
+    }
+},
+{
+    "model": "auth.permission",
+    "pk": 75,
+    "fields": {
+        "name": "Can delete ordering item",
+        "content_type": 14,
+        "codename": "delete_orderingitem"
+    }
+},
+{
+    "model": "auth.permission",
+    "pk": 76,
+    "fields": {
+        "name": "Can view ordering item",
+        "content_type": 14,
+        "codename": "view_orderingitem"
+    }
+},
+{
+    "model": "auth.permission",
+    "pk": 77,
+    "fields": {
+        "name": "Can add Tentativa",
+        "content_type": 21,
+        "codename": "add_attempt"
+    }
+},
+{
+    "model": "auth.permission",
+    "pk": 78,
+    "fields": {
+        "name": "Can change Tentativa",
+        "content_type": 21,
+        "codename": "change_attempt"
+    }
+},
+{
+    "model": "auth.permission",
+    "pk": 79,
+    "fields": {
+        "name": "Can delete Tentativa",
+        "content_type": 21,
+        "codename": "delete_attempt"
+    }
+},
+{
+    "model": "auth.permission",
+    "pk": 80,
+    "fields": {
+        "name": "Can view Tentativa",
+        "content_type": 21,
+        "codename": "view_attempt"
+    }
+},
+{
+    "model": "auth.permission",
+    "pk": 81,
+    "fields": {
+        "name": "Can add Resposta",
+        "content_type": 20,
+        "codename": "add_answerrecord"
+    }
+},
+{
+    "model": "auth.permission",
+    "pk": 82,
+    "fields": {
+        "name": "Can change Resposta",
+        "content_type": 20,
+        "codename": "change_answerrecord"
+    }
+},
+{
+    "model": "auth.permission",
+    "pk": 83,
+    "fields": {
+        "name": "Can delete Resposta",
+        "content_type": 20,
+        "codename": "delete_answerrecord"
+    }
+},
+{
+    "model": "auth.permission",
+    "pk": 84,
+    "fields": {
+        "name": "Can view Resposta",
+        "content_type": 20,
+        "codename": "view_answerrecord"
+    }
+},
+{
+    "model": "auth.user",
+    "pk": 1,
+    "fields": {
+        "password": "pbkdf2_sha256$1200000$PduJWhkElV1i640KHO6P9e$ad1EZ80aeCA2a+CnR8Gw3p1zCIkVfgQ+38MWjBUJSus=",
+        "last_login": "2026-07-17T15:48:34.083Z",
+        "is_superuser": true,
+        "username": "Tech_Exams",
+        "first_name": "",
+        "last_name": "",
+        "email": "henrique2@gmail.com",
+        "is_staff": true,
+        "is_active": true,
+        "date_joined": "2026-07-04T02:12:14.066Z",
+        "groups": [],
+        "user_permissions": []
+    }
+},
+{
+    "model": "contenttypes.contenttype",
+    "pk": 1,
+    "fields": {
+        "app_label": "admin",
+        "model": "logentry"
+    }
+},
+{
+    "model": "contenttypes.contenttype",
+    "pk": 2,
+    "fields": {
+        "app_label": "auth",
+        "model": "group"
+    }
+},
+{
+    "model": "contenttypes.contenttype",
+    "pk": 3,
+    "fields": {
+        "app_label": "auth",
+        "model": "permission"
+    }
+},
+{
+    "model": "contenttypes.contenttype",
+    "pk": 4,
+    "fields": {
+        "app_label": "auth",
+        "model": "user"
+    }
+},
+{
+    "model": "contenttypes.contenttype",
+    "pk": 5,
+    "fields": {
+        "app_label": "contenttypes",
+        "model": "contenttype"
+    }
+},
+{
+    "model": "contenttypes.contenttype",
+    "pk": 6,
+    "fields": {
+        "app_label": "sessions",
+        "model": "session"
+    }
+},
+{
+    "model": "contenttypes.contenttype",
+    "pk": 7,
+    "fields": {
+        "app_label": "categories",
+        "model": "category"
+    }
+},
+{
+    "model": "contenttypes.contenttype",
+    "pk": 8,
+    "fields": {
+        "app_label": "exams",
+        "model": "exam"
+    }
+},
+{
+    "model": "contenttypes.contenttype",
+    "pk": 9,
+    "fields": {
+        "app_label": "exams",
+        "model": "flashcardquestion"
+    }
+},
+{
+    "model": "contenttypes.contenttype",
+    "pk": 10,
+    "fields": {
+        "app_label": "exams",
+        "model": "matchingpair"
+    }
+},
+{
+    "model": "contenttypes.contenttype",
+    "pk": 11,
+    "fields": {
+        "app_label": "exams",
+        "model": "matchingquestion"
+    }
+},
+{
+    "model": "contenttypes.contenttype",
+    "pk": 12,
+    "fields": {
+        "app_label": "exams",
+        "model": "multianswerquestion"
+    }
+},
+{
+    "model": "contenttypes.contenttype",
+    "pk": 13,
+    "fields": {
+        "app_label": "exams",
+        "model": "multiplechoicequestion"
+    }
+},
+{
+    "model": "contenttypes.contenttype",
+    "pk": 14,
+    "fields": {
+        "app_label": "exams",
+        "model": "orderingitem"
+    }
+},
+{
+    "model": "contenttypes.contenttype",
+    "pk": 15,
+    "fields": {
+        "app_label": "exams",
+        "model": "orderingquestion"
+    }
+},
+{
+    "model": "contenttypes.contenttype",
+    "pk": 16,
+    "fields": {
+        "app_label": "exams",
+        "model": "question"
+    }
+},
+{
+    "model": "contenttypes.contenttype",
+    "pk": 17,
+    "fields": {
+        "app_label": "exams",
+        "model": "questionoption"
+    }
+},
+{
+    "model": "contenttypes.contenttype",
+    "pk": 18,
+    "fields": {
+        "app_label": "exams",
+        "model": "truefalsequestion"
+    }
+},
+{
+    "model": "contenttypes.contenttype",
+    "pk": 19,
+    "fields": {
+        "app_label": "exams",
+        "model": "writtenquestion"
+    }
+},
+{
+    "model": "contenttypes.contenttype",
+    "pk": 20,
+    "fields": {
+        "app_label": "attempts",
+        "model": "answerrecord"
+    }
+},
+{
+    "model": "contenttypes.contenttype",
+    "pk": 21,
+    "fields": {
+        "app_label": "attempts",
+        "model": "attempt"
+    }
+},
+{
+    "model": "sessions.session",
+    "pk": "cr0i8fq6o1xhvhyqcm4fdsjqcxmi6mip",
+    "fields": {
+        "session_data": ".eJxVjDsOwjAQBe_iGln-YpuSPmewNrtrHECOFCcV4u4QKQW0b2beS2TY1pq3zkueSFyEFqffbQR8cNsB3aHdZolzW5dplLsiD9rlMBM_r4f7d1Ch128N0aJOZzYWCvrEVNgZgzFaDtYajcqi98VRhJBSVBQiuOSgqJKIShDvD-jeOCA:1wkkni:uoiiEEww3kXoVMrYK7LspCRxRN0scia_QBUfXmKf9Rw",
+        "expire_date": "2026-07-31T15:48:34.086Z"
+    }
+},
+{
+    "model": "sessions.session",
+    "pk": "fe9p7x628caak1i6zjcqu82lsaj93wnd",
+    "fields": {
+        "session_data": ".eJxVjDsOwjAQBe_iGln-YpuSPmewNrtrHECOFCcV4u4QKQW0b2beS2TY1pq3zkueSFyEFqffbQR8cNsB3aHdZolzW5dplLsiD9rlMBM_r4f7d1Ch128N0aJOZzYWCvrEVNgZgzFaDtYajcqi98VRhJBSVBQiuOSgqJKIShDvD-jeOCA:1wfprp:NboKJMLAUk0AWGc2flIc-gS8U4UO_AG9aj5jjPbOdQY",
+        "expire_date": "2026-07-18T02:12:29.343Z"
+    }
+},
+{
+    "model": "categories.category",
+    "pk": 1,
+    "fields": {
+        "user": 1,
+        "name": "~ sem categoria",
+        "created_at": "2026-07-04T02:12:47.783Z"
+    }
+},
+{
+    "model": "categories.category",
+    "pk": 2,
+    "fields": {
+        "user": 1,
+        "name": "Kaká Mestre Pokémon",
+        "created_at": "2026-07-04T02:13:04.419Z"
+    }
+},
+{
+    "model": "categories.category",
+    "pk": 3,
+    "fields": {
+        "user": 1,
+        "name": "BBBBBBBBBBBBBBBBBBBBBBBBB",
+        "created_at": "2026-07-04T14:24:08.915Z"
+    }
+},
+{
+    "model": "categories.category",
+    "pk": 4,
+    "fields": {
+        "user": 1,
+        "name": "Tecnologia Front-End",
+        "created_at": "2026-07-06T13:33:15.774Z"
+    }
+},
+{
+    "model": "exams.exam",
+    "pk": 5,
+    "fields": {
+        "user": 1,
+        "category": 4,
+        "name": "HTML Básico",
+        "created_at": "2026-07-06T13:34:18.072Z",
+        "updated_at": "2026-07-06T13:34:18.072Z"
+    }
+},
+{
+    "model": "exams.exam",
+    "pk": 6,
+    "fields": {
+        "user": 1,
+        "category": 4,
+        "name": "HTML Intermediário",
+        "created_at": "2026-07-06T15:18:20.400Z",
+        "updated_at": "2026-07-06T15:18:20.400Z"
+    }
+},
+{
+    "model": "exams.exam",
+    "pk": 7,
+    "fields": {
+        "user": 1,
+        "category": 4,
+        "name": "HTML Avançado",
+        "created_at": "2026-07-06T15:18:33.061Z",
+        "updated_at": "2026-07-06T15:18:33.061Z"
+    }
+},
+{
+    "model": "exams.question",
+    "pk": 26,
+    "fields": {
+        "polymorphic_ctype": 11,
+        "exam": 5,
+        "order": 0,
+        "question_type": "matching",
+        "statement": "Todo arquivo HTML possui uma estrutura básica:\r\n\r\n<!DOCTYPE html>\r\n<html>\r\n    <head>\r\n    </head>\r\n    <body>\r\n    </body>\r\n</html>\r\n\r\nTodo o seu arquivo html é escrito dentro dessa estrutura, mas de que forma exatamente? Qual a função de cada uma das divisões dessa estrutura?",
+        "explanation": "- <!DOCTYPE html> serve para informar a versão do html para o navegador.\r\n- <html> é uma tag responsável por abrigar todo e qualquer conteúdo que deve ser interpretado pelo navegador.\r\n- <head> é uma tag responsável por definir informações sobre o navegador que não são exibidas para o usuário final.\r\n- <body> é uma tag responsável por definir as características da sua página para o usuário final.\r\n\r\nApesar de não serem essenciais, tags como <title>Nome da Aba</title> e <meta charset=\"UTF-8\"> são comumente definidas no <head> de todo site que se preze."
+    }
+},
+{
+    "model": "exams.question",
+    "pk": 27,
+    "fields": {
+        "polymorphic_ctype": 13,
+        "exam": 5,
+        "order": 1,
+        "question_type": "multiple_choice",
+        "statement": "Tags HTML funcionam como etiquetas que definem como certo conteúdo deve se comportar. Qual dessas tags representa corretamente um parágrafo com uma classe CSS definida?",
+        "explanation": "A estrutura de tags html seguem o padrão: <tag property=\"property-value\"> Conteúdo tag </tag>."
+    }
+},
+{
+    "model": "exams.question",
+    "pk": 28,
+    "fields": {
+        "polymorphic_ctype": 13,
+        "exam": 5,
+        "order": 2,
+        "question_type": "multiple_choice",
+        "statement": "Explique o funcionamento da tag <title> em um template html:",
+        "explanation": "A tag <title> é definida dentro de <head> pois não se trata de conteúdo da página em si, sendo exibida como texto na aba da sua página no seu navegador."
+    }
+},
+{
+    "model": "exams.question",
+    "pk": 29,
+    "fields": {
+        "polymorphic_ctype": 12,
+        "exam": 6,
+        "order": 0,
+        "question_type": "multi_answer",
+        "statement": "Tags <html> costumam ser definidas junto a uma língua, como <html lang=\"en\"> ou <html lang=\"pt-br\" por exemplo. Para que serve a definição dessa língua por meio da propriedade lang de uma tag <html>? Assinale todas as alternativas corretas:",
+        "explanation": "A propriedade lang é útil para a tradução automática, entrega em buscas e na leitura do conteúdo por leitores de tela."
+    }
+},
+{
+    "model": "exams.question",
+    "pk": 30,
+    "fields": {
+        "polymorphic_ctype": 11,
+        "exam": 5,
+        "order": 3,
+        "question_type": "matching",
+        "statement": "Tags meta (ou meta tags) são responsáveis por definir metadados sobre a sua página. Essas definições nunca vão aparecer para o usuário final de qualquer forma, mas elas ajudam o seu site a ser encontrado pelo público certo e a configurar a forma como ele é exibido em alguns casos.\r\n\r\nRelacione as meta tags mais comuns às suas funções:",
+        "explanation": "As meta tags name, http-equiv e property possuem, ao todo, centenas de configurações, mas você só precisa conhecer o básico para que você consiga pesquisar quando precisar de alguma."
+    }
+},
+{
+    "model": "exams.question",
+    "pk": 33,
+    "fields": {
+        "polymorphic_ctype": 13,
+        "exam": 6,
+        "order": 1,
+        "question_type": "multiple_choice",
+        "statement": "O que significa a sigla SEO e o que nós precisamos saber sobre ela?",
+        "explanation": "SEO é a sigla para Search Engine Optimization e se trata do sistema de rankeamento de sites em navegadores. Menos de 10% dos usuários escolhem um site na segunda página do google e em cerca de 40% das buscas o primeiro site que aparece é clicado, então ter um bom SEO é essencial para o sucesso de um site."
+    }
+},
+{
+    "model": "exams.question",
+    "pk": 34,
+    "fields": {
+        "polymorphic_ctype": 11,
+        "exam": 6,
+        "order": 2,
+        "question_type": "matching",
+        "statement": "Você pode melhorar o SEO do seu site de diversas formas, e uma delas é através de meta tags.\r\nMeta tags te permitem definir características específicas do seu site para que as ferramentas dos navegadores consigam entrega-lo para o público certo.\r\n\r\nAssocie algumas das meta tags mais comuns ao seu funcionamento:",
+        "explanation": "Não é essencial se lembrar do nome de todas as meta tags, até porque existem centenas e elas são frequentemente descontinuadas. Ainda assim, conhecer as mais comuns pode te poupar um bom tempo."
+    }
+},
+{
+    "model": "exams.question",
+    "pk": 35,
+    "fields": {
+        "polymorphic_ctype": 11,
+        "exam": 5,
+        "order": 4,
+        "question_type": "matching",
+        "statement": "a tag <link> é responsável por conectar arquivos externos ao documento html. Através dessa possibilidade você consegue, por exemplo, dividir a parte de script do seu projeto em arquivos diferentes menores, o que melhora muito a legibilidade do seu projeto.\r\n\r\nAssocie as tags links e seus usos mais básicos:",
+        "explanation": "A tag <link> pode ter várias funções, mas essas são as mais básicas e comuns em projetos."
+    }
+},
+{
+    "model": "exams.question",
+    "pk": 36,
+    "fields": {
+        "polymorphic_ctype": 11,
+        "exam": 6,
+        "order": 3,
+        "question_type": "matching",
+        "statement": "a tag <link> é responsável por conectar arquivos externos ao documento html. Através dessa possibilidade você consegue, por exemplo, dividir a parte de script e style do seu projeto em arquivos diferentes menores ou mesmo controlar processos ainda mais complexos.\r\n\r\nAssocie as tags links e seus usos mais comuns:",
+        "explanation": "A tag <link> tem várias funções, mas essas são as mais comuns."
+    }
+},
+{
+    "model": "exams.question",
+    "pk": 37,
+    "fields": {
+        "polymorphic_ctype": 11,
+        "exam": 7,
+        "order": 0,
+        "question_type": "matching",
+        "statement": "a tag <link> é responsável por conectar arquivos externos ao documento html. Através dessa possibilidade você consegue, por exemplo, dividir a parte de script e style do seu projeto ou mesmo controlar processos muito mais complexos.\r\n\r\nAssocie as tags links e seus usos mais avançados:",
+        "explanation": "Existem muitas variações da tag <link>, mas se você conhece essas já está de ótimo tamanho."
+    }
+},
+{
+    "model": "exams.question",
+    "pk": 38,
+    "fields": {
+        "polymorphic_ctype": 13,
+        "exam": 7,
+        "order": 1,
+        "question_type": "multiple_choice",
+        "statement": "Usando um <link> com a relação \"manifest\", você pode conectar um arquivo JSON de manifesto à uma página do seu site, permitindo que a mesma seja instalada como se fosse um aplicativo nativo em dispositivos móveis.\r\nCom base nisso, responda quais as propriedades mais comuns de um arquivo de manifesto:",
+        "explanation": "Arquivos manifest.json podem possuir diversas propriedades, mas essas são as mais comuns:\r\n\r\n{\r\n  \"name\": \"My Web App\",\r\n  \"short_name\": \"App\",\r\n  \"start_url\": \"/\",\r\n  \"display\": \"standalone\",\r\n  \"background_color\": \"#ffffff\",\r\n  \"theme_color\": \"#000000\",\r\n  \"icons\": [\r\n    {\r\n      \"src\": \"icon-192x192.png\",\r\n      \"sizes\": \"192x192\",\r\n      \"type\": \"image/png\"\r\n    }\r\n  ]\r\n}"
+    }
+},
+{
+    "model": "exams.question",
+    "pk": 48,
+    "fields": {
+        "polymorphic_ctype": 11,
+        "exam": 5,
+        "order": 5,
+        "question_type": "matching",
+        "statement": "Pode-se dizer por meio de uma analogia que o HTML é a estrutura de uma casa (a página do seu site), enquanto o CSS é a decoração dessa casa, como a tinta usada nas paredes, os móveis, etc.\r\nExistem três formas de aplicar essa estilização em um template HTML. Associe cada forma a sua respectiva explicação:",
+        "explanation": "Você pode estilizar suas tags HTML de várias formas com a ajuda do CSS. Para mais detalhes de como fazer isso, consulte as provas de CSS."
+    }
+},
+{
+    "model": "exams.question",
+    "pk": 49,
+    "fields": {
+        "polymorphic_ctype": 11,
+        "exam": 6,
+        "order": 4,
+        "question_type": "matching",
+        "statement": "Pode-se dizer por meio de uma analogia que o HTML é a estrutura de uma casa (a página do seu site), o CSS é a decoração dessa casa e o JS é a eletricidade que dá movimento e funcionalidades complexas para os objetos.\r\nExistem três formas de aplicar CSS e JS em um template HTML. Associe cada forma a sua respectiva explicação:",
+        "explanation": "s"
+    }
+},
+{
+    "model": "exams.question",
+    "pk": 50,
+    "fields": {
+        "polymorphic_ctype": 11,
+        "exam": 7,
+        "order": 2,
+        "question_type": "matching",
+        "statement": "Comumente, lógica javascript é definida em um arquivo diferente de um template html. Porém, as vezes é necessário definir um pequeno bloco <script> ao final de um arquivo html para passar contexto para o javascript. Para esses casos, se faz útil conhecer alguns atributos úteis para a tag <script>.\r\nCom base nisso, relacione os atributos de tags <script> às suas funcionalidades:",
+        "explanation": "Explicação"
+    }
+},
+{
+    "model": "exams.questionoption",
+    "pk": 37,
+    "fields": {
+        "question": 27,
+        "text": "<p class=\"paragrafo\"> Texto do parágrafo. </p>",
+        "is_correct": true,
+        "order": 0
+    }
+},
+{
+    "model": "exams.questionoption",
+    "pk": 38,
+    "fields": {
+        "question": 27,
+        "text": "<p> Texto do parágrafo. </p class=\"paragrafo\">",
+        "is_correct": false,
+        "order": 1
+    }
+},
+{
+    "model": "exams.questionoption",
+    "pk": 39,
+    "fields": {
+        "question": 27,
+        "text": "<p Texto do parágrafo.></p>",
+        "is_correct": false,
+        "order": 2
+    }
+},
+{
+    "model": "exams.questionoption",
+    "pk": 40,
+    "fields": {
+        "question": 27,
+        "text": "<p class=\"paragrafo\" content=\"Texto do parágrafo.\">",
+        "is_correct": false,
+        "order": 3
+    }
+},
+{
+    "model": "exams.questionoption",
+    "pk": 41,
+    "fields": {
+        "question": 28,
+        "text": "Definida na tag <head> do html, o nome definido como <title> aparece como nome da aba da página na maioria dos navegadores.",
+        "is_correct": true,
+        "order": 0
+    }
+},
+{
+    "model": "exams.questionoption",
+    "pk": 42,
+    "fields": {
+        "question": 28,
+        "text": "Definida na tag <body> do html, o nome definido como <title> aparece como nome da aba da página na maioria dos navegadores.",
+        "is_correct": false,
+        "order": 1
+    }
+},
+{
+    "model": "exams.questionoption",
+    "pk": 43,
+    "fields": {
+        "question": 28,
+        "text": "Definida na tag <head> do html, o nome definido como <title> aparece como cabeçalho principal acima de todo o seu conteúdo.",
+        "is_correct": false,
+        "order": 2
+    }
+},
+{
+    "model": "exams.questionoption",
+    "pk": 44,
+    "fields": {
+        "question": 28,
+        "text": "Definida na tag <body> do html, o nome definido como <title> aparece como cabeçalho principal acima de todo o seu conteúdo.",
+        "is_correct": false,
+        "order": 3
+    }
+},
+{
+    "model": "exams.questionoption",
+    "pk": 45,
+    "fields": {
+        "question": 29,
+        "text": "Ajudar o tradutor automático dos navegadores, permitindo traduzir a partir da língua definida pelo desenvolvedor.",
+        "is_correct": true,
+        "order": 0
+    }
+},
+{
+    "model": "exams.questionoption",
+    "pk": 46,
+    "fields": {
+        "question": 29,
+        "text": "Ajudar na definição de uma língua universal para o site, impedindo o funcionamento de tradutores automáticos para a página.",
+        "is_correct": false,
+        "order": 1
+    }
+},
+{
+    "model": "exams.questionoption",
+    "pk": 47,
+    "fields": {
+        "question": 29,
+        "text": "Ajudar no SEO do site, entregando o conteúdo principalmente para pessoas da mesma língua do conteúdo.",
+        "is_correct": true,
+        "order": 2
+    }
+},
+{
+    "model": "exams.questionoption",
+    "pk": 48,
+    "fields": {
+        "question": 29,
+        "text": "Ajudar leitores de tela a lerem o conteúdo em voz alta para pessoas com deficiência visual.",
+        "is_correct": true,
+        "order": 3
+    }
+},
+{
+    "model": "exams.questionoption",
+    "pk": 54,
+    "fields": {
+        "question": 33,
+        "text": "SEO é a sigla para Search Engine Optimization e é o que define quais sites ficam no topo de um navegador.",
+        "is_correct": true,
+        "order": 0
+    }
+},
+{
+    "model": "exams.questionoption",
+    "pk": 55,
+    "fields": {
+        "question": 33,
+        "text": "SEO é a sigla para Software Engineering Organization e caracteriza a forma de pensar de um engenheiro de software.",
+        "is_correct": false,
+        "order": 1
+    }
+},
+{
+    "model": "exams.questionoption",
+    "pk": 56,
+    "fields": {
+        "question": 33,
+        "text": "SEO é a sigla para Search Engine Optimization e caracteriza a forma de pensar de um engenheiro de software.",
+        "is_correct": false,
+        "order": 2
+    }
+},
+{
+    "model": "exams.questionoption",
+    "pk": 57,
+    "fields": {
+        "question": 33,
+        "text": "SEO é a sigla para Software Engineering Organization e é o que define quais sites ficam no topo de um navegador.",
+        "is_correct": false,
+        "order": 3
+    }
+},
+{
+    "model": "exams.questionoption",
+    "pk": 58,
+    "fields": {
+        "question": 38,
+        "text": "name, short_name, start_url, display, background_color, theme_color, icons",
+        "is_correct": true,
+        "order": 0
+    }
+},
+{
+    "model": "exams.questionoption",
+    "pk": 59,
+    "fields": {
+        "question": 38,
+        "text": "name, start_url, display, background_color, theme_color1, theme_color2, icons",
+        "is_correct": false,
+        "order": 1
+    }
+},
+{
+    "model": "exams.questionoption",
+    "pk": 60,
+    "fields": {
+        "question": 38,
+        "text": "name, short_name, index_url, display, background_color, theme_color, icons",
+        "is_correct": false,
+        "order": 2
+    }
+},
+{
+    "model": "exams.questionoption",
+    "pk": 61,
+    "fields": {
+        "question": 38,
+        "text": "name, index_url, display, background_color, theme_color1, theme_color2, icons",
+        "is_correct": false,
+        "order": 3
+    }
+},
+{
+    "model": "exams.multiplechoicequestion",
+    "pk": 27,
+    "fields": {}
+},
+{
+    "model": "exams.multiplechoicequestion",
+    "pk": 33,
+    "fields": {}
+},
+{
+    "model": "exams.multiplechoicequestion",
+    "pk": 38,
+    "fields": {}
+},
+{
+    "model": "exams.multiplechoicequestion",
+    "pk": 28,
+    "fields": {}
+},
+{
+    "model": "exams.multianswerquestion",
+    "pk": 29,
+    "fields": {}
+},
+{
+    "model": "exams.matchingquestion",
+    "pk": 26,
+    "fields": {}
+},
+{
+    "model": "exams.matchingquestion",
+    "pk": 37,
+    "fields": {}
+},
+{
+    "model": "exams.matchingquestion",
+    "pk": 34,
+    "fields": {}
+},
+{
+    "model": "exams.matchingquestion",
+    "pk": 50,
+    "fields": {}
+},
+{
+    "model": "exams.matchingquestion",
+    "pk": 30,
+    "fields": {}
+},
+{
+    "model": "exams.matchingquestion",
+    "pk": 36,
+    "fields": {}
+},
+{
+    "model": "exams.matchingquestion",
+    "pk": 35,
+    "fields": {}
+},
+{
+    "model": "exams.matchingquestion",
+    "pk": 49,
+    "fields": {}
+},
+{
+    "model": "exams.matchingquestion",
+    "pk": 48,
+    "fields": {}
+},
+{
+    "model": "exams.matchingpair",
+    "pk": 7,
+    "fields": {
+        "question": 26,
+        "left": "<!DOCTYPE html>",
+        "right": "Instrução que informa ao navegador a versão do html sendo usada atualmente. Sem ela, alguns navegadores podem tentar imitar comportamentos de versões mais antigas e causar diferenças na renderização, problemas com CSS, etc.",
+        "order": 0
+    }
+},
+{
+    "model": "exams.matchingpair",
+    "pk": 8,
+    "fields": {
+        "question": 26,
+        "left": "<html>...</html>",
+        "right": "Bloco que agrupa tudo o que é instrução html. Se está fora dessa tag, o navegador desconsidera. Dentre outras propriedades, você pode definir lang dentro da definição dessa tag para que o navegador saiba como traduzir o texto da sua lingua para outras (dentre outras vantagens).",
+        "order": 1
+    }
+},
+{
+    "model": "exams.matchingpair",
+    "pk": 9,
+    "fields": {
+        "question": 26,
+        "left": "<head>...</head>",
+        "right": "Bloco que agrupa tudo o que é instrução sobre a página para o navegador, sendo que nenhum conteúdo dentro dessa tag é exibido em sua página.",
+        "order": 2
+    }
+},
+{
+    "model": "exams.matchingpair",
+    "pk": 10,
+    "fields": {
+        "question": 26,
+        "left": "<body>...</body>",
+        "right": "Bloco que agrupa tudo o que será exibido para o usuário, como textos, imagens, vídeos, links e muito mais.",
+        "order": 3
+    }
+},
+{
+    "model": "exams.matchingpair",
+    "pk": 11,
+    "fields": {
+        "question": 30,
+        "left": "<meta name=\"\">",
+        "right": "Instrui robôs de busca para que entreguem seu conteúdo para o público desejado por meio da definição de descrições, palavras chave, nome do autor, copyright, etc.",
+        "order": 0
+    }
+},
+{
+    "model": "exams.matchingpair",
+    "pk": 12,
+    "fields": {
+        "question": 30,
+        "left": "<meta http-equiv=\"\">",
+        "right": "Controla o comportamento do navegador para o site, como controle de cache, refresh automático, etc.",
+        "order": 1
+    }
+},
+{
+    "model": "exams.matchingpair",
+    "pk": 13,
+    "fields": {
+        "question": 30,
+        "left": "<meta property=\"\">",
+        "right": "Define a exibição do link do seu site em redes sociais, como imagem, videos, títulos, descrições, audios, etc.",
+        "order": 2
+    }
+},
+{
+    "model": "exams.matchingpair",
+    "pk": 14,
+    "fields": {
+        "question": 30,
+        "left": "<meta charset=\"\">",
+        "right": "Informa a codificação do site. Geralmente recebe \"utf-8\" como argumento, o que permite a presença de caractéres como \"ç\", \"ã\", \"é\", entre outros.",
+        "order": 3
+    }
+},
+{
+    "model": "exams.matchingpair",
+    "pk": 15,
+    "fields": {
+        "question": 34,
+        "left": "<meta name=\"description\" content=\"Descrição\">",
+        "right": "Pode ser exibido como uma preview do seu site antes do clique, mas não impacta diretamente o rankeamento do site em si..",
+        "order": 0
+    }
+},
+{
+    "model": "exams.matchingpair",
+    "pk": 16,
+    "fields": {
+        "question": 34,
+        "left": "<meta name=\"keywords\" content=\"terms or phrases, divided, by commas\">",
+        "right": "Define os termos chave do seu site, o que ajuda o buscador a entregar o seu site quando usuários fazem uma pesquisa relacionada. Seja bastante específico nos termos e utilize sempre de 3 a 5 keywords.",
+        "order": 1
+    }
+},
+{
+    "model": "exams.matchingpair",
+    "pk": 17,
+    "fields": {
+        "question": 34,
+        "left": "<meta name=\"rating\" content=\"General\">",
+        "right": "Permite definir uma faixa etária para o conteúdo, impedindo que ele apareça para pessoas de uma idade menor que a definida. Pode usar palavras chave como 'Adult', 'Mature' e 'Safe' ou uma definição específica como '14 years' por exemplo.",
+        "order": 2
+    }
+},
+{
+    "model": "exams.matchingpair",
+    "pk": 18,
+    "fields": {
+        "question": 34,
+        "left": "<meta charset=\"UTF-8\">",
+        "right": "Indica a codificação do site. O valor padrão definido permite o uso de caractéres especiais como ç, ã, é, entre outros.",
+        "order": 3
+    }
+},
+{
+    "model": "exams.matchingpair",
+    "pk": 19,
+    "fields": {
+        "question": 34,
+        "left": "<meta http-equiv=\"refresh\" content=\"número em segundos\">",
+        "right": "Permite configurar o site para que o conteúdo seja recarregado após um certo período de tempo. Útil para páginas com tempo limite, mas podem ser irritante se usado sem necessidade.",
+        "order": 4
+    }
+},
+{
+    "model": "exams.matchingpair",
+    "pk": 20,
+    "fields": {
+        "question": 34,
+        "left": "<meta property=\"og:title\" content=\"Título\">",
+        "right": "Define um título para ser exibido quando o link do site é compartilhado em redes sociais.",
+        "order": 5
+    }
+},
+{
+    "model": "exams.matchingpair",
+    "pk": 21,
+    "fields": {
+        "question": 34,
+        "left": "<meta property=\"og:image\" content=\"path/image\">",
+        "right": "Define uma imagem para ser exibida quando o link do site é compartilhado em redes sociais.",
+        "order": 6
+    }
+},
+{
+    "model": "exams.matchingpair",
+    "pk": 22,
+    "fields": {
+        "question": 34,
+        "left": "<meta property=\"description\" content=\"descrição\">",
+        "right": "Essa meta tag não existe.",
+        "order": 7
+    }
+},
+{
+    "model": "exams.matchingpair",
+    "pk": 23,
+    "fields": {
+        "question": 35,
+        "left": "<link rel=\"stylesheet\" href=\"css/style.css\">",
+        "right": "Estabelece uma conexão entre o template html e um arquivo de estilização no caminho definido.",
+        "order": 0
+    }
+},
+{
+    "model": "exams.matchingpair",
+    "pk": 24,
+    "fields": {
+        "question": 35,
+        "left": "<link rel=\"icon\" href=\"/favicon.ico\" type=\"path/to/image\">",
+        "right": "Define o ícone que aparece ao lado do <title> do seu template com base no formato ICO.",
+        "order": 1
+    }
+},
+{
+    "model": "exams.matchingpair",
+    "pk": 25,
+    "fields": {
+        "question": 35,
+        "left": "<link rel=\"icon\" href=\"images/favicon.png\" type=\"image/png\">",
+        "right": "Define o ícone que aparece ao lado do <title> do seu template como sendo uma imagem no caminho definido.",
+        "order": 2
+    }
+},
+{
+    "model": "exams.matchingpair",
+    "pk": 33,
+    "fields": {
+        "question": 37,
+        "left": "<link rel=\"preload\" href=\"font.woff2\" as=\"font\" type=\"font/woff2\" crossorigin=\"anonymous\">",
+        "right": "Força o navegador a carregar um recurso crítico, como fontes ou imagens pesadas que aparecem logo no topo da página, bem mais cedo que o de costume.",
+        "order": 0
+    }
+},
+{
+    "model": "exams.matchingpair",
+    "pk": 34,
+    "fields": {
+        "question": 37,
+        "left": "<link rel=\"prefetch\" href=\"proxima-pagina.html\">",
+        "right": "Baixa, em segundo plano, alguns recursos de uma próxima página html que você julga ser comumente acessada após a atual. Isso reduz o tempo de carregamento daquela página caso o usuário realmente se redirecione para ela.",
+        "order": 1
+    }
+},
+{
+    "model": "exams.matchingpair",
+    "pk": 35,
+    "fields": {
+        "question": 37,
+        "left": "<link rel=\"dns-prefetch\" href=\"//incrivel-api.com\">",
+        "right": "Resolve o DNS de um domínio externo antes que o usuário faça uma requisição para ele. Muito útil para APIs externas que você sabe que serão carregadas em pouco tempo (mas não imediatamente).)",
+        "order": 2
+    }
+},
+{
+    "model": "exams.matchingpair",
+    "pk": 36,
+    "fields": {
+        "question": 37,
+        "left": "<link rel=\"manifest\" href=\"/site.webmanifest\">",
+        "right": "Conecta a página a um arquivo JSON que permite a instalação do mesmo, como se fosse um aplicativo nativo, em dispositivos móveis.",
+        "order": 3
+    }
+},
+{
+    "model": "exams.matchingpair",
+    "pk": 37,
+    "fields": {
+        "question": 37,
+        "left": "<link rel=\"prerender\" href=\"https://meusite.com/proxima-pagina\">",
+        "right": "Baixa e renderiza, em segundo plano, todos os recursos de uma próxima página html que você julga ser comumente acessada após a atual. Isso praticamente anula o tempo de carregamento daquela página caso o usuário realmente se redirecione para ela.",
+        "order": 4
+    }
+},
+{
+    "model": "exams.matchingpair",
+    "pk": 38,
+    "fields": {
+        "question": 37,
+        "left": "<link rel=\"modulepreload\" href=\"script.js\">",
+        "right": "Força o navegador a carregar módulos ES de um arquivo javascript bem mais cedo que o de costume.",
+        "order": 5
+    }
+},
+{
+    "model": "exams.matchingpair",
+    "pk": 39,
+    "fields": {
+        "question": 37,
+        "left": "<link rel=\"license\" href=\"https://opensource.org/licenses/MIT\">",
+        "right": "Indica à robôs e indexadores qual é a licença de direito autoral daquela página.",
+        "order": 6
+    }
+},
+{
+    "model": "exams.matchingpair",
+    "pk": 40,
+    "fields": {
+        "question": 36,
+        "left": "<link rel=\"preconnect\" href=\"https://fonts.googleapis.com\"> <link rel=\"stylesheet\" href=\"https://fonts.googleapis.com/css2?family=Roboto&display=swap\">",
+        "right": "Permite estabelecer uma pré-conexão com outro servidor para acelerar o carregamento.",
+        "order": 0
+    }
+},
+{
+    "model": "exams.matchingpair",
+    "pk": 41,
+    "fields": {
+        "question": 36,
+        "left": "<link rel=\"apple-touch-icon\" sizes=\"180x180\" href=\"/apple-touch-icon.png\"",
+        "right": "Define o ícone que será definido se o usuário salvar o seu site na tela inicial de um dispositivo móvel da Apple.",
+        "order": 1
+    }
+},
+{
+    "model": "exams.matchingpair",
+    "pk": 42,
+    "fields": {
+        "question": 36,
+        "left": "<link rel=\"canonical\" href=\"https://www.seusite.com/pagina-principal\">",
+        "right": "Define uma espécie de \"versão oficial\" da sua página. Isso evita problemas de duplicação de conteúdo e pode melhorar o SEO do site.",
+        "order": 2
+    }
+},
+{
+    "model": "exams.matchingpair",
+    "pk": 43,
+    "fields": {
+        "question": 36,
+        "left": "<link rel=\"alternate\" hreflang=\"en\" href=\"https://escola.com/en/page\"> <link rel=\"alternate\" hreflang=\"es\" href=\"https://escola.com/es/page\">",
+        "right": "Define versões alternativas da mesma página para idiomas diferentes, o que interrompe o tradutor automático e direciona o usuário para a página traduzida.",
+        "order": 3
+    }
+},
+{
+    "model": "exams.matchingpair",
+    "pk": 44,
+    "fields": {
+        "question": 48,
+        "left": "Estilização Inline",
+        "right": "A estilização é definida diretamente dentro da tag html que deve sofrer a modificação.",
+        "order": 0
+    }
+},
+{
+    "model": "exams.matchingpair",
+    "pk": 45,
+    "fields": {
+        "question": 48,
+        "left": "Estilização Interna",
+        "right": "A estilização é definida dentro de uma tag <style></style> no próprio arquivo html.",
+        "order": 1
+    }
+},
+{
+    "model": "exams.matchingpair",
+    "pk": 46,
+    "fields": {
+        "question": 48,
+        "left": "Estilização Externa",
+        "right": "A estilização é definida em um arquivo com a extensão .css e conectada com o arquivo HTML através de uma tag <link>.",
+        "order": 2
+    }
+},
+{
+    "model": "exams.matchingpair",
+    "pk": 49,
+    "fields": {
+        "question": 49,
+        "left": "Definição Inline",
+        "right": "A estilização/funcionalidade é definida diretamente dentro da tag html que deve sofrer a modificação.",
+        "order": 0
+    }
+},
+{
+    "model": "exams.matchingpair",
+    "pk": 50,
+    "fields": {
+        "question": 49,
+        "left": "Definição Interna",
+        "right": "A estilização é definida dentro de uma tag <style></style> ou <script></script> no próprio arquivo html.",
+        "order": 1
+    }
+},
+{
+    "model": "exams.matchingpair",
+    "pk": 51,
+    "fields": {
+        "question": 49,
+        "left": "Definição Externa",
+        "right": "A estilização/funcionalidade é definida em um arquivo com a extensão .css/.js e conectada com o arquivo HTML através de uma tag <link rel=\"stylesheet\" href=\"\">/<script src=\"\">.",
+        "order": 2
+    }
+},
+{
+    "model": "exams.matchingpair",
+    "pk": 52,
+    "fields": {
+        "question": 50,
+        "left": "<script src=\"app.js\" defer>",
+        "right": "Força o arquivo .js a ser carregado apenas depois que o HTML foi completamente carregado. Uma prática comum para melhorar o desempenho do carregamento.",
+        "order": 0
+    }
+},
+{
+    "model": "exams.matchingpair",
+    "pk": 53,
+    "fields": {
+        "question": 50,
+        "left": "<script src=\"app.js\" async>",
+        "right": "Faz o arquivo .js ser baixado em paralelo, o executando assim que finalizado. Útil para scripts independentes do conteúdo do template a que está atrelado.",
+        "order": 1
+    }
+},
+{
+    "model": "exams.matchingpair",
+    "pk": 54,
+    "fields": {
+        "question": 50,
+        "left": "<script src=\"app.js\" crossorigin=\"\">",
+        "right": "Permite configurar o funcionamento da tag para requisições CORS, o que é usado principalmente para permitir logs de erro em sites que usam domínios diferentes para arquivos estáticos.",
+        "order": 2
+    }
+}
+]
