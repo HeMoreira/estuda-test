@@ -32,18 +32,26 @@ pip install -r requirements.txt
 python manage.py migrate
 ```
 
-### 5. Criar superusuário (administrador)
+### 5. Popular banco de dados (Opcional)
+```bash
+# Provas e questões de exemplo para testes / estudos
+python manage.py loaddata tech_exams.json
+```
+> Esse comando popula o banco de dados com um usuário e algumas provas/questões úteis para desenvolvimento/estudos. Caso opte por pular essa etapa, você ainda poderá criar seu próprio usuário e exames.
+> A senha do usuário 'Tech_Exams' é `3$tud@T3$t`
+
+### 6. Criar superusuário (administrador)
 ```bash
 python manage.py createsuperuser
 ```
 > Contas de admin só podem ser criadas via terminal.
 
-### 6. Rodar o servidor
+### 7. Rodar o servidor
 ```bash
 python manage.py runserver
 ```
 
-Acesse: http://127.0.0.1:8000 ou https://localhost:8000
+Acesse: http://127.0.0.1:8000 ou http://localhost:8000
 
 ---
 
