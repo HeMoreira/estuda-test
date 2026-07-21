@@ -251,7 +251,6 @@ class FlashcardQuestion(Question):
  
     def check_answer(self, given_answer):
         if isinstance(given_answer, str):
-            print(given_answer)
             if given_answer.strip().lower() in ('false', '0', 'falso'): given_answer = False
             elif given_answer.strip().lower() in ('true', '1', 'verdadeiro'): given_answer = True
             else: given_answer = None
