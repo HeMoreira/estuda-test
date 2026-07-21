@@ -34,7 +34,7 @@ class FullAttemptFlowAllCorrectTests(TestCase):
             reverse('attempts:question', args=[attempt_id, n]), data
         )
 
-    def test_full_flow_all_correct_except_flashcard(self):
+    def test_full_flow_all_correct(self):
         start_response = self.client.post(reverse('attempts:start', args=[self.exam.pk]))
         attempt = Attempt.objects.get(user=self.user, exam=self.exam)
         self.assertRedirects(start_response, reverse('attempts:question', args=[attempt.id, 1]))
@@ -68,9 +68,9 @@ class FullAttemptFlowAllCorrectTests(TestCase):
         self.assertTrue(r.context['is_last'])
         self.assertIsNone(r.context['next_n'])
 
-        # 7. Flashcard - self-graded, check_answer always False by design
+        # 7. Flashcard - self-graded
         r = self._post_answer(attempt.id, 7, {'answer': 'true'})
-        self.assertFalse(r.context['feedback']['correct'])
+        self.assertTrue(r.context['feedback']['correct'])
         self.assertTrue(r.context['is_last'])
 
         # All seven answers were recorded

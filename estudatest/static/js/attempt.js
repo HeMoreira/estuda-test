@@ -1,46 +1,62 @@
-// attempt.js — option highlight, drag-to-order, flashcard, matching by click
+// attempt.js — option highlight, drag-to-order, flashcard reveal, matching by click
 
-// ── Generic option highlight ──
-document.querySelectorAll('.attempt-option').forEach(label => {
-  const input = label.querySelector('input');
-  if (!input) return;
-  input.addEventListener('change', () => {
-    if (input.type === 'radio') {
-      document.querySelectorAll(`input[name="${input.name}"]`).forEach(r =>
-        r.closest('.attempt-option')?.classList.remove('attempt-option--selected')
-      );
-    }
-    label.classList.toggle('attempt-option--selected', input.checked);
-  });
+document.addEventListener('DOMContentLoaded', () => {
+  initOptionHighlight();
+  initFlashcard();
+  initOrdering();
+  initMatching();
+  initFormValidation();
 });
 
+// ── Generic option highlight (radio/checkbox selected state) ──
+function initOptionHighlight() {
+  document.querySelectorAll('.attempt-option').forEach(label => {
+    const input = label.querySelector('input');
+    if (!input) return;
+
+    input.addEventListener('change', () => {
+      if (input.type === 'radio') {
+        document.querySelectorAll(`input[name="${input.name}"]`).forEach(radio =>
+          radio.closest('.attempt-option')?.classList.remove('attempt-option--selected')
+        );
+      }
+      label.classList.toggle('attempt-option--selected', input.checked);
+    });
+  });
+}
+
 // ── Flashcard reveal ──
-function revealFlashcard() {
-  document.getElementById('flashcardBack')?.classList.add('flashcard-back--visible');
+function initFlashcard() {
+  const revealBtn = document.querySelector('[data-action="reveal-flashcard"]');
+  const back = document.getElementById('flashcardBack');
+  if (!revealBtn || !back) return;
+
+  revealBtn.addEventListener('click', () => back.classList.add('flashcard-back--visible'));
 }
 
 // ── Drag-to-order ──
-(function initOrdering() {
+function initOrdering() {
   const list = document.getElementById('orderingList');
   if (!list) return;
 
+  const inputsContainer = document.getElementById('orderingInputs');
   let dragged = null;
 
   function syncInputs() {
-    const container = document.getElementById('orderingInputs');
-    container.innerHTML = '';
+    inputsContainer.innerHTML = '';
     list.querySelectorAll('.ordering-item').forEach(item => {
-      const inp = document.createElement('input');
-      inp.type = 'hidden'; inp.name = 'answer'; inp.value = item.dataset.orig;
-      container.appendChild(inp);
+      const input = document.createElement('input');
+      input.type = 'hidden';
+      input.name = 'answer';
+      input.value = item.dataset.orig;
+      inputsContainer.appendChild(input);
     });
   }
-  syncInputs();
 
   list.querySelectorAll('.ordering-item').forEach(item => {
     item.addEventListener('dragstart', () => {
       dragged = item;
-      requestAnimationFrame(() => item.style.opacity = '0.4');
+      requestAnimationFrame(() => { item.style.opacity = '0.4'; });
     });
     item.addEventListener('dragend', () => {
       item.style.opacity = '1';
@@ -50,106 +66,109 @@ function revealFlashcard() {
     item.addEventListener('dragover', e => {
       e.preventDefault();
       if (!dragged || dragged === item) return;
-      const mid = item.getBoundingClientRect().top + item.offsetHeight / 2;
-      list.insertBefore(dragged, e.clientY < mid ? item : item.nextSibling);
+      const midpoint = item.getBoundingClientRect().top + item.offsetHeight / 2;
+      list.insertBefore(dragged, e.clientY < midpoint ? item : item.nextSibling);
     });
   });
-})();
+
+  syncInputs();
+}
 
 // ── Matching by click ──
-(function initMatching() {
-  const leftCol  = document.getElementById('matchLeft');
+function initMatching() {
+  const leftCol = document.getElementById('matchLeft');
   const rightCol = document.getElementById('matchRight');
   if (!leftCol || !rightCol) return;
 
-  const total    = window.MATCH_TOTAL || 0;
-  const pairsDoneEl = document.getElementById('matchPairsDone');
-  const statusEl    = document.getElementById('matchStatus');
-
-  let selLeft  = null;
-  let selRight = null;
-  let done     = 0;
-
-  function setStatus() {
-    if (statusEl) statusEl.textContent = `${done} / ${total} pares associados`;
-  }
+  const inputsContainer = document.getElementById('matchingInputs');
+  let selectedLeft = null;
+  let selectedRight = null;
 
   function syncInputs() {
-    const container = document.getElementById('matchingInputs');
-    container.innerHTML = '';
-    // Emit right-side values in left-column DOM order (matched ones only)
-    leftCol.querySelectorAll('.matching-btn--matched').forEach(lb => {
-      const inp = document.createElement('input');
-      inp.type = 'hidden'; inp.name = 'answer'; inp.value = lb.dataset.pairedRight;
-      container.appendChild(inp);
+    inputsContainer.innerHTML = '';
+    // Emite os valores da direita na ordem do DOM da esquerda (apenas os já pareados)
+    leftCol.querySelectorAll('.matching-btn--matched').forEach(leftBtn => {
+      const input = document.createElement('input');
+      input.type = 'hidden';
+      input.name = 'answer';
+      input.value = leftBtn.dataset.pairedRight;
+      inputsContainer.appendChild(input);
     });
   }
 
   function tryLock() {
-    if (!selLeft || !selRight) return;
-    const lb = selLeft, rb = selRight;
-    selLeft = null; selRight = null;
+    if (!selectedLeft || !selectedRight) return;
 
-    // Store pairing on left button
-    lb.dataset.pairedRight = rb.dataset.right;
+    const leftBtn = selectedLeft;
+    const rightBtn = selectedRight;
+    selectedLeft = null;
+    selectedRight = null;
 
-    [lb, rb].forEach(b => {
-      b.classList.remove('matching-btn--selected');
-      b.classList.add('matching-btn--matched');
-      b.disabled = true;
+    leftBtn.dataset.pairedRight = rightBtn.dataset.right;
+
+    [leftBtn, rightBtn].forEach(btn => {
+      btn.classList.remove('matching-btn--selected');
+      btn.classList.add('matching-btn--matched');
+      btn.disabled = true;
     });
 
-    done++;
     syncInputs();
-    setStatus();
-
-    // Show confirmation tag
-    const tag = document.createElement('div');
-    tag.className = 'matching-pair-tag';
-    tag.textContent = `✓ ${lb.dataset.left} → ${rb.dataset.right}`;
-    pairsDoneEl.appendChild(tag);
   }
 
-  // Expose click handler globally (called from template onclick)
-  window.matchClick = function(side, btn) {
-    if (btn.disabled || btn.classList.contains('matching-btn--matched')) return;
+  function handleClick(e) {
+    const btn = e.target.closest('.matching-btn');
+    if (!btn || btn.disabled || btn.classList.contains('matching-btn--matched')) return;
 
-    if (side === 'left') {
-      if (selLeft) selLeft.classList.remove('matching-btn--selected');
-      selLeft = (selLeft === btn) ? null : btn;
-      if (selLeft) selLeft.classList.add('matching-btn--selected');
+    if (btn.dataset.matchSide === 'left') {
+      selectedLeft?.classList.remove('matching-btn--selected');
+      selectedLeft = (selectedLeft === btn) ? null : btn;
+      selectedLeft?.classList.add('matching-btn--selected');
     } else {
-      if (selRight) selRight.classList.remove('matching-btn--selected');
-      selRight = (selRight === btn) ? null : btn;
-      if (selRight) selRight.classList.add('matching-btn--selected');
+      selectedRight?.classList.remove('matching-btn--selected');
+      selectedRight = (selectedRight === btn) ? null : btn;
+      selectedRight?.classList.add('matching-btn--selected');
     }
 
     tryLock();
-  };
+  }
 
-  setStatus();
-})();
+  leftCol.addEventListener('click', handleClick);
+  rightCol.addEventListener('click', handleClick);
+}
 
 // ── Form validation ──
-const answerForm = document.getElementById('answerForm');
-if (answerForm) {
-  answerForm.addEventListener('submit', function(e) {
-    // Multi-answer
-    const cbs = answerForm.querySelectorAll('input[type="checkbox"][name="answer"]');
-    if (cbs.length > 0 && ![...cbs].some(c => c.checked)) {
+function initFormValidation() {
+  const form = document.getElementById('answerForm');
+  if (!form) return;
+
+  form.addEventListener('submit', e => {
+    if (!validateMultiAnswer(form)) {
       e.preventDefault();
       alert('Selecione ao menos uma opção.');
       return;
     }
-    // Matching: all pairs done
-    const total = window.MATCH_TOTAL || 0;
-    if (total > 0) {
-      const done = document.querySelectorAll('#matchLeft .matching-btn--matched').length;
-      if (done < total) {
-        e.preventDefault();
-        alert(`Associe todos os ${total} pares antes de confirmar.`);
-        return;
-      }
+    if (!validateMatching()) {
+      e.preventDefault();
     }
   });
+}
+
+function validateMultiAnswer(form) {
+  const checkboxes = form.querySelectorAll('input[type="checkbox"][name="answer"]');
+  if (checkboxes.length === 0) return true;
+  return [...checkboxes].some(cb => cb.checked);
+}
+
+function validateMatching() {
+  const leftCol = document.getElementById('matchLeft');
+  if (!leftCol) return true;
+
+  const total = leftCol.querySelectorAll('.matching-btn').length;
+  const matched = leftCol.querySelectorAll('.matching-btn--matched').length;
+
+  if (matched < total) {
+    alert(`Associe todos os ${total} pares antes de confirmar.`);
+    return false;
+  }
+  return true;
 }

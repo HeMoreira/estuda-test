@@ -1,13 +1,22 @@
 # attempts/views.py
-from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
-from django.utils import timezone
+from django.shortcuts import get_object_or_404, redirect, render
 from django.views.decorators.http import require_POST
-from exams.models import Exam, Question
+from django.utils import timezone
+from exams.models import Exam
 from .models import Attempt, AnswerRecord
-import random
+from .utils import _get_given_answer, _get_shuffled_data, _compute_navigation
 
 SESSION_KEY = 'attempt_progress'
+
+
+def _mark_answered(request, session, question_id):
+    answered_ids = session.get('answered', [])
+    if question_id not in answered_ids:
+        answered_ids.append(question_id)
+        session['answered'] = answered_ids
+        request.session[SESSION_KEY] = session
+        request.session.modified = True
 
 
 @login_required
@@ -28,107 +37,22 @@ def attempt_start(request, exam_pk):
 
 @login_required
 def attempt_question(request, attempt_id, n):
-    attempt = get_object_or_404(Attempt, pk=attempt_id, user=request.user, finished_at__isnull=True)
+    attempt = get_object_or_404(
+        Attempt, pk=attempt_id, user=request.user, finished_at__isnull=True
+    )
     exam = attempt.exam
-    
-    # O django-polymorphic traz as instâncias corretas e os dados necessários eficientemente
-    # prefetch apenas opções por padrão; itens/pares serão carregados quando necessário
+
     questions = list(exam.questions.order_by('order').prefetch_related('options'))
     total = len(questions)
-
-    # Determine the sequence of "n" values that correspond to non-flashcard
-    # questions. Flashcards are treated as auxiliary and shouldn't affect
-    # the "is_last"/"next_n" navigation for regular questions.
-    nonflash_indexes = [i + 1 for i, q in enumerate(questions) if q.question_type != 'flashcard']
 
     if n < 1 or n > total:
         return redirect('attempts:review', attempt_id=attempt.id)
 
     question = questions[n - 1]
     progress_pct = round((n - 1) / total * 100)
+    shuffled = _get_shuffled_data(request, attempt_id, question)
 
-    session = request.session.get(SESSION_KEY, {})
-    answered_ids = session.get('answered', [])
-
-    shuffle_key = f'shuffle_{attempt_id}_{question.id}'
-    shuffled = request.session.get(shuffle_key)
-
-    # Lógica de embaralhamento adaptada para ler as propriedades das novas classes
-    if shuffled is None:
-        if question.question_type == 'ordering':
-            # 'items' agora é um relacionamento do modelo OrderingQuestion
-            items = list(question.items.all())
-            indexed = [(item.id, item.text) for item in items]
-            random.shuffle(indexed)
-            shuffled = {'indexed': indexed}
-        elif question.question_type == 'matching':
-            # 'pairs' agora é um relacionamento do modelo MatchingQuestion
-            rights = [p.right for p in question.pairs.all()]
-            random.shuffle(rights)
-            shuffled = {'rights': rights}
-        else:
-            shuffled = {}
-        request.session[shuffle_key] = shuffled
-        request.session.modified = True
-
-    if request.method == 'POST':
-        if question.question_type in ['multi_answer', 'ordering', 'matching', 'multiple_choice']:
-            given = request.POST.getlist('answer')
-        else:
-            given = request.POST.get('answer', '')
-
-        # Método direto, limpo e polimórfico gerado pela nova estrutura
-        correct = question.check_answer(given)
-        
-        AnswerRecord.objects.update_or_create(
-            attempt=attempt,
-            question=question,
-            defaults={'given_answer': given, 'is_correct': correct},
-        )
-
-        if question.id not in answered_ids:
-            answered_ids.append(question.id)
-            session['answered'] = answered_ids
-            request.session[SESSION_KEY] = session
-            request.session.modified = True
-
-        feedback = {
-            'correct': correct,
-            'explanation': question.explanation,
-            'correct_answer': question.correct_answer_display(),  # Centralizado no Model
-        }
-
-        # Compute navigation semantics relative to non-flashcard questions.
-        if question.question_type == 'flashcard':
-            is_last = True
-            next_n = None
-        else:
-            try:
-                pos = nonflash_indexes.index(n)
-            except ValueError:
-                pos = None
-
-            if pos is None:
-                # If current question isn't in the non-flash list, fall back
-                is_last = (n == total)
-                next_n = n + 1 if n < total else None
-            else:
-                is_last = (pos == len(nonflash_indexes) - 1)
-                next_n = nonflash_indexes[pos + 1] if not is_last else None
-
-        return render(request, 'attempts/question.html', {
-            'attempt': attempt,
-            'question': question,
-            'n': n,
-            'total': total,
-            'progress_pct': progress_pct,
-            'feedback': feedback,
-            'next_n': next_n,
-            'is_last': is_last,
-            'shuffled': shuffled,
-        })
-
-    return render(request, 'attempts/question.html', {
+    context = {
         'attempt': attempt,
         'question': question,
         'n': n,
@@ -136,7 +60,35 @@ def attempt_question(request, attempt_id, n):
         'progress_pct': progress_pct,
         'feedback': None,
         'shuffled': shuffled,
+    }
+
+    if request.method != 'POST':
+        return render(request, 'attempts/question.html', context)
+
+    given = _get_given_answer(request, question.question_type)
+    correct = question.check_answer(given)
+
+    AnswerRecord.objects.update_or_create(
+        attempt=attempt,
+        question=question,
+        defaults={'given_answer': given, 'is_correct': correct},
+    )
+
+    session = request.session.get(SESSION_KEY, {})
+    _mark_answered(request, session, question.id)
+
+    is_last, next_n = _compute_navigation(n, total)
+
+    context.update({
+        'feedback': {
+            'correct': correct,
+            'explanation': question.explanation,
+            'correct_answer': question.correct_answer_display(),  # Centralizado no Model
+        },
+        'next_n': next_n,
+        'is_last': is_last,
     })
+    return render(request, 'attempts/question.html', context)
 
 
 @login_required

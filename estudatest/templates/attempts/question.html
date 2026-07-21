@@ -43,7 +43,7 @@
         </div>
 
       {% elif question.question_type == 'multi_answer' %}
-        <p style="font-size:.8rem;color:var(--color-text-faint);margin-bottom:.75rem">Selecione todas as corretas.</p>
+        <p class="attempt-hint">Selecione todas as corretas.</p>
         <div class="attempt-options">
           {% for opt in question.options.all %}
             {% if opt.text %}
@@ -56,7 +56,7 @@
         </div>
 
       {% elif question.question_type == 'true_false' %}
-        <div class="attempt-options" style="max-width:280px">
+        <div class="attempt-options attempt-options--narrow">
           <label class="attempt-option">
             <input type="radio" name="answer" value="true" required> Verdadeiro
           </label>
@@ -73,9 +73,7 @@
         </div>
 
       {% elif question.question_type == 'ordering' %}
-        <p style="font-size:.8rem;color:var(--color-text-faint);margin-bottom:.75rem">
-          Arraste os itens para colocá-los na ordem correta.
-        </p>
+        <p class="attempt-hint">Arraste os itens para colocá-los na ordem correta.</p>
         <div class="ordering-list" id="orderingList">
           {% for pair in shuffled.indexed %}
           <div class="ordering-item" draggable="true" data-orig="{{ pair.0 }}">
@@ -88,16 +86,14 @@
         <div id="orderingInputs"></div>
 
       {% elif question.question_type == 'matching' %}
-        <p style="font-size:.8rem;color:var(--color-text-faint);margin-bottom:.75rem">
-          Clique em um item da esquerda e depois em um da direita para associá-los.
-        </p>
+        <p class="attempt-hint">Clique em um item da esquerda e depois em um da direita para associá-los.</p>
         <div class="matching-ui">
           <div class="matching-col" id="matchLeft">
             {% for pair in question.pairs.all %}
             <button type="button"
               class="matching-btn matching-btn--left"
               data-left="{{ pair.left }}"
-              onclick="matchClick('left', this)">{{ pair.left }}</button>
+              data-match-side="left">{{ pair.left }}</button>
             {% endfor %}
           </div>
           <div class="matching-col" id="matchRight">
@@ -105,28 +101,22 @@
             <button type="button"
               class="matching-btn matching-btn--right"
               data-right="{{ r }}"
-              onclick="matchClick('right', this)">{{ r }}</button>
+              data-match-side="right">{{ r }}</button>
             {% endfor %}
           </div>
         </div>
-        
-        {# Pairs status display #}
-        <div class="matching-pairs-done" id="matchPairsDone"></div>
+
         {# Hidden inputs built by JS #}
         <div id="matchingInputs"></div>
-        {# How many pairs to complete #}
-        <p style="font-size:.75rem;color:var(--color-text-faint);margin-top:.5rem"
-          id="matchStatus">0 / {{ question.pairs.count }} pares associados</p>
 
-      {# ── Flashcard ── #}
       {% elif question.question_type == 'flashcard' %}
         <div class="flashcard-reveal">
           <div class="flashcard-front">{{ question.front }}</div>
           <div class="flashcard-back" id="flashcardBack">{{ question.back }}</div>
         </div>
-        <button type="button" class="btn btn--ghost btn--sm" style="margin-bottom:1rem"
-          onclick="revealFlashcard()">Revelar resposta</button>
-        <div class="attempt-options" style="max-width:280px" id="flashcardOptions">
+        <button type="button" class="btn btn--ghost btn--sm attempt-reveal-btn"
+          data-action="reveal-flashcard">Revelar resposta</button>
+        <div class="attempt-options attempt-options--narrow" id="flashcardOptions">
           <label class="attempt-option">
             <input type="radio" name="answer" value="true" required> Acertei ✓
           </label>
@@ -136,7 +126,7 @@
         </div>
       {% endif %}
 
-      <div style="display:flex;justify-content:flex-end;margin-top:1rem">
+      <div class="attempt-actions">
         <button type="submit" class="btn btn--primary" id="submitBtn">Confirmar resposta</button>
       </div>
     </form>
@@ -154,7 +144,7 @@
       <div class="attempt-feedback__explanation">{{ feedback.explanation }}</div>
     </div>
 
-    <div style="display:flex;justify-content:flex-end;margin-top:1rem">
+    <div class="attempt-actions">
       {% if is_last %}
         <a href="{% url 'attempts:review' attempt.id %}" class="btn btn--primary">Ver resultado →</a>
       {% else %}
@@ -165,8 +155,8 @@
 
   </div>
 
-  <div style="text-align:center;margin-top:1.5rem">
-    <a href="{% url 'dashboard' %}" style="font-size:.8rem;color:var(--color-text-faint)">Abandonar prova</a>
+  <div class="attempt-abandon">
+    <a href="{% url 'dashboard' %}" class="attempt-abandon__link">Abandonar prova</a>
   </div>
 
 </div>
